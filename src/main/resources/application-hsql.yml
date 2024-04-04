@@ -1,0 +1,22 @@
+spring:
+   datasource:
+      driver-class-name: "org.hsqldb.jdbc.JDBCDriver"
+      jdbc-url: "jdbc:hsqldb:hsql://localhost:9138/springboot_sample;DB_CLOSE_DELAY=-1"
+      username: "<username>"
+      password: "<password>"
+   #jpa:
+      #properties:
+         #hibernate:
+            #dialect: "org.hibernate.dialect.HSQLDialect"
+            
+app:
+   audit:
+      datasource:
+         driver-class-name: "org.hsqldb.jdbc.JDBCDriver"
+         jdbc-url: "jdbc:hsqldb:hsql://localhost:9139/audit_springboot_sample;DB_CLOSE_DELAY=-1"
+         username: "<username>"
+         password: "<password>"   
+      #jpa:
+         #properties:
+            #hibernate:
+               #dialect: "org.hibernate.dialect.HSQLDialect"

@@ -1,0 +1,14 @@
+spring:
+   datasource:
+      driver-class-name: "com.mysql.cj.jdbc.Driver"
+      jdbc-url: "jdbc:mysql://localhost:3306/springboot_sample?createDatabaseIfNotExist=true&autoReconnect=true"
+      username: "<username>"
+      password: "<password>"
+            
+app:
+   audit:
+      datasource:
+         driver-class-name: "com.mysql.cj.jdbc.Driver"
+         jdbc-url: "jdbc:mysql://localhost:3306/__audit_springboot_sample?createDatabaseIfNotExist=true&autoReconnect=true"
+         username: "<username>"
+         password: "<password>"

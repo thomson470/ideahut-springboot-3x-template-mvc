@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>net.ideahut.springboot.template</groupId>
+	<artifactId>ideahut-springboot-3x-template-mvc</artifactId>
+	<version>1.0.0</version>
+	<packaging>jar</packaging>
+
+	<name>ideahut-springboot-3x-sample-mvc</name>
+	<description>Ideahut Springboot 3x Template MVC</description>
+
+	<!--
+		Daftar versi springboot yang tersedia
+	-->
+	
+	<!--
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.1.6</version>
+		<relativePath/>
+	</parent>
+	-->
+	
+	<!--
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.2.1</version>
+		<relativePath/>
+	</parent>
+	-->
+	
+	<!--
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.2.2</version>
+		<relativePath/>
+	</parent>
+	-->
+	
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.2.3</version>
+		<relativePath/>
+	</parent>
+
+	<properties>
+		<maven.test.skip>true</maven.test.skip>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <java.version>17</java.version>
+        
+        <version.ideahut-springboot>0.0.4</version.ideahut-springboot>
+
+        <version.commons-io>2.15.1</version.commons-io>
+        <version.commons-httpclient>3.1</version.commons-httpclient>
+        <version.mysql-connector-java>8.0.33</version.mysql-connector-java>
+        <version.springdoc-openapi>2.3.0</version.springdoc-openapi>
+        <version.jbcrypt>0.4</version.jbcrypt>
+        <version.jakarta.mail>2.0.1</version.jakarta.mail>
+        <version.jasperreports>6.21.0</version.jasperreports>
+		<version.jedis>5.0.2</version.jedis>
+		<version.apache-poi>5.2.5</version.apache-poi>
+        
+	</properties>
+
+
+	<dependencies>
+
+		<!-- IDEAHUT -->
+		<dependency>
+			<groupId>net.ideahut</groupId>
+			<!--<artifactId>ideahut-springboot-3.1.6</artifactId>-->
+			<!--<artifactId>ideahut-springboot-3.2.1</artifactId>-->
+			<!--<artifactId>ideahut-springboot-3.2.2</artifactId>-->
+			<artifactId>ideahut-springboot-3.2.3</artifactId>
+			<version>${version.ideahut-springboot}</version>
+		</dependency>
+
+
+		<!-- SPRINGBOOT -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+		        <exclusion>
+		            <groupId>org.springframework.boot</groupId>
+		            <artifactId>spring-boot-starter-tomcat</artifactId>
+		        </exclusion>
+		    </exclusions>
+		</dependency>
+		<!--
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-jetty</artifactId>
+		</dependency>
+		-->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-undertow</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+		</dependency>
+		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+
+		<!-- APACHE COMMONS -->
+        <dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId> 
+		</dependency>
+		<dependency>
+		    <groupId>commons-io</groupId>
+		    <artifactId>commons-io</artifactId>
+		    <version>${version.commons-io}</version>
+		</dependency>
+		<dependency>
+		    <groupId>commons-httpclient</groupId>
+		    <artifactId>commons-httpclient</artifactId>
+		    <version>${version.commons-httpclient}</version>
+		</dependency>
+
+
+		<!-- JACKSON -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-xml</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+		</dependency>
+
+
+		<!-- LOMBOK -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+
+
+		<!-- REDIS -->
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-redis</artifactId>
+		</dependency>
+		
+		
+		<!-- QUARTZ -->
+		<dependency>
+		    <groupId>org.quartz-scheduler</groupId>
+		    <artifactId>quartz</artifactId>
+		</dependency>
+
+
+		<!-- MAIL -->
+		<dependency>
+		    <groupId>com.sun.mail</groupId>
+		    <artifactId>jakarta.mail</artifactId>
+		    <version>${version.jakarta.mail}</version>
+		</dependency>
+
+
+		<!-- JASPER REPORT -->
+		<dependency>
+		    <groupId>net.sf.jasperreports</groupId>
+		    <artifactId>jasperreports</artifactId>
+		    <version>${version.jasperreports}</version>
+		</dependency>
+		<dependency>
+		    <groupId>net.sf.jasperreports</groupId>
+		    <artifactId>jasperreports-fonts</artifactId>
+		    <version>${version.jasperreports}</version>
+		</dependency>
+
+
+		<!-- POI -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>${version.apache-poi}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>${version.apache-poi}</version>
+		</dependency>
+		
+		
+		<!-- JBCRYPT -->
+		<dependency>
+		    <groupId>org.mindrot</groupId>
+		    <artifactId>jbcrypt</artifactId>
+		    <version>${version.jbcrypt}</version>
+		</dependency>
+
+
+		<!-- MYSQL -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${version.mysql-connector-java}</version>
+		</dependency>
+
+
+		<!-- POSTGRESQL -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+		</dependency>
+		
+
+		<!-- SQL SERVER -->
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
+		</dependency>
+		
+
+		<!-- ORACLE -->
+		<dependency>
+		    <groupId>com.oracle.database.jdbc</groupId>
+		    <artifactId>ojdbc8</artifactId>
+		</dependency>
+		
+
+		<!-- MARIADB -->
+		<dependency>
+  			<groupId>org.mariadb.jdbc</groupId>
+  			<artifactId>mariadb-java-client</artifactId>
+		</dependency>
+		
+
+		<!-- DB2 -->
+		<dependency>
+			<groupId>com.ibm.db2</groupId>
+		  	<artifactId>jcc</artifactId>
+		</dependency>
+		
+
+		<!-- H2 -->
+		<dependency>
+		    <groupId>com.h2database</groupId>
+		    <artifactId>h2</artifactId>
+		</dependency>
+		
+
+		<!-- HSQLDB -->
+		<dependency>
+		    <groupId>org.hsqldb</groupId>
+		    <artifactId>hsqldb</artifactId>
+		</dependency>
+		
+
+		<!-- DERBY -->
+		<dependency>
+		    <groupId>org.apache.derby</groupId>
+		    <artifactId>derby</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.derby</groupId>
+		    <artifactId>derbyclient</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.derby</groupId>
+		    <artifactId>derbytools</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.derby</groupId>
+		    <artifactId>derbyshared</artifactId>
+		</dependency>
+		
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+	
+</project>

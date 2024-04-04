@@ -1,0 +1,167 @@
+{
+    "order": 1,
+    "name": "SysParam",
+    "title": "SysParam",
+    "crud": {
+        "name": "net.ideahut.springboot.template.entity.SysParam"
+    },
+    "id": {
+        "type": "EMBEDDED",
+        "fields": [
+            "id"
+        ],
+        "members": [
+            "sysCode",
+            "paramCode"
+        ]
+    },
+    "table": {
+        "separator": "cell",
+        "selection": "single",
+        "page": {
+            "options": [
+                5,
+                10,
+                15,
+                20,
+                25,
+                30,
+                50
+            ],
+            "default": 20,
+            "count": false
+        },
+        "order": {
+            "field": "createdOn",
+            "descending": true
+        },
+        "filters": [
+            {
+                "name": "id.sysCode",
+                "label": "SysCode",
+                "type": "text",
+                "condition": "ANY_LIKE"
+            },
+            {
+                "name": "id.paramCode",
+                "label": "ParamCode",
+                "type": "text",
+                "condition": "ANY_LIKE"
+            },
+            {
+                "name": "description",
+                "label": "Description",
+                "type": "text",
+                "condition": "ANY_LIKE"
+            }
+        ],
+        "visibles": [
+            "id.sysCode",
+            "id.paramCode",
+            "value",
+            "description",
+            "updatedOn",
+            "createdOn"
+        ],
+        "columns": [
+            {
+                "name": "id.sysCode",
+                "label": "SysCode",
+                "field": "id",
+                "align": "left",
+                "sortable": true,
+                "format": "function(val, row) { try { return val.sysCode; } catch(e) { return val; } }"
+            },
+            {
+                "name": "id.paramCode",
+                "label": "ParamCode",
+                "field": "id",
+                "align": "left",
+                "sortable": true,
+                "format": "function(val, row) { try { return val.paramCode; } catch(e) { return val; } }"
+            },
+            {
+                "name": "value",
+                "label": "Value",
+                "field": "value",
+                "align": "left",
+                "sortable": true
+            },
+            {
+                "name": "description",
+                "label": "Description",
+                "field": "description",
+                "align": "left",
+                "sortable": true
+            },
+            {
+                "name": "updatedOn",
+                "label": "UpdatedOn",
+                "field": "updatedOn",
+                "align": "center",
+                "sortable": true,
+                "format": "function(val, row) { try { return __util__.format.date(val, {format: 'YYYY-MM-DD HH:mm', months: __grid__[row._grid_id_].additionals.MONTHS, days: __grid__[row._grid_id_].additionals.DAYS}); } catch(e) { return val; } }"
+            },
+            {
+                "name": "createdOn",
+                "label": "CreatedOn",
+                "field": "createdOn",
+                "align": "center",
+                "sortable": true,
+                "format": "function(val, row) { try { return __util__.format.date(val, {format: 'YYYY-MM-DD HH:mm', months: __grid__[row._grid_id_].additionals.MONTHS, days: __grid__[row._grid_id_].additionals.DAYS}); } catch(e) { return val; } }"
+            }
+        ]
+    },
+    "fields": [
+        {
+            "name": "id.sysCode",
+            "label": "SysCode",
+            "type": "text",
+            "nullable": false,
+            "insertable": true,
+            "editable": false,
+            "validations": [
+                "required",
+                "maxlength:255"
+            ]
+        },
+        {
+            "name": "id.paramCode",
+            "label": "ParamCode",
+            "type": "text",
+            "nullable": false,
+            "insertable": true,
+            "editable": false,
+            "validations": [
+                "required",
+                "maxlength:255"
+            ]
+        },
+        {
+            "name": "value",
+            "label": "Value",
+            "type": "text",
+            "nullable": true,
+            "insertable": true,
+            "editable": true,
+            "validations": [
+                "required"
+            ]
+        },
+        {
+            "name": "description",
+            "label": "Description",
+            "type": "text",
+            "nullable": true,
+            "insertable": true,
+            "editable": true,
+            "validations": [
+                "maxlength:255"
+            ]
+        }
+    ],
+    "additionals": [
+        "MONTHS",
+        "DAYS"
+    ]
+}

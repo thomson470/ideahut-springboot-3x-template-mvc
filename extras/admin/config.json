@@ -1,0 +1,19 @@
+{
+	"api": {
+		"requestPath": "/admin"
+	},
+	"resource": {
+		"requestPath": "/_",
+		"locations": "file:{user.dir}/extras/admin/resource/",
+		"indexFile": "index.html",
+		"alwaysToIndex": true,
+		"allowedPaths": ["css", "fonts", "icons", "img", "js"]
+	},
+	"grid": {
+		"location": "file:{user.dir}/extras/admin/grid/**/*.json"
+	},
+	"crud": {
+		"maxLimit": 200,
+		"useNative": false
+	}
+}

@@ -1,0 +1,204 @@
+server:
+   port: 5401
+      
+debug: false
+
+management:
+   endpoints:
+      web:
+         exposure:
+            include: "*"
+
+spring:
+   application:
+      name: ideahut-springboot-3x-sample-flux
+   quartz:
+      auto-startup: false
+   servlet:
+      multipart:
+         max-file-size: 256MB
+         max-request-size: 256MB
+   main:
+      banner-mode: "off"
+   
+      
+   #
+   # Ganti profile sesuai dengan database yang mau dicoba
+   #
+   profiles:
+      #active: "db2"
+      #active: "h2"
+      #active: "mariadb"
+      active: "mysql"
+      #active: "oracle"
+      #active: "postgresql"
+      #active: "sqlserver"
+      #active: "hsql"
+      #active: "derby"
+
+   datasource:
+      hikari:
+         connection-timeout: "10000"
+         minimum-idle: "10"
+         maximum-pool-size: "10"
+         idle-timeout: "5000"
+         max-lifetime: "1000"
+         auto-commit: "true"
+         
+   jpa:
+      open-in-view: false
+      properties:
+         hibernate:
+            hbm2ddl:
+               auto: update
+               #auto: none
+            show_sql: true
+            #generate_statistics: true
+            audit_identifier: spring_sample
+            audit_bean_name: auditSessionFactory_1
+
+app:
+   instanceId: ideahut-springboot-3x-sample-flux
+   loggingError: true
+   gridLocation: "file:{user.dir}/extras/grid/**/*.json"
+   messagePath: "file:{user.dir}/extras/message/"
+   reportPath: "file:{user.dir}/extras/report/"
+   
+   cors:
+      "Access-Control-Allow-Credentials": "true"
+      "Access-Control-Allow-Origin": "*"
+      "Access-Control-Allow-Methods": "*"
+      "Access-Control-Max-Age": "360"
+      "Access-Control-Allow-Headers": "*"
+      "Access-Control-Expose-Headers": "*"
+                     
+   ignored-handler-classes:
+      - org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController
+      
+   audit:
+      jpa:
+         properties:
+            hibernate:
+               hbm2ddl:
+                  auto: update
+               show_sql: true
+               #generate_statistics: true
+      properties:
+         generate:
+            table: true
+         enable:
+            audit: true
+         #table:
+         #   index: false   
+   
+   task:      
+      common:
+         threadNamePrefix: "TASK-COMMON"
+         corePoolSize: 2
+         maxPoolSize: 8
+         waitForJobsToCompleteOnShutdown: true
+         allowCoreThreadTimeOut: true
+      audit:
+         threadNamePrefix: "TASK-AUDIT"
+         corePoolSize: 2
+         maxPoolSize: 8
+         waitForJobsToCompleteOnShutdown: true
+         allowCoreThreadTimeOut: true
+
+   redis:
+      common:
+         type: 1
+         testOnStartup: true
+         standalone:
+            host: 127.0.0.1
+            port: 6379
+            password: "<password>"
+            database: 0
+            
+   cache:
+      groups:
+         - name: TEST1
+           limit: 20
+           expiry: 3600
+           nullable: true
+         - name: TEST2
+           limit: -1
+           expiry: 0
+           nullable: true
+
+   mail:
+      host: smtp.gmail.com
+      port: 587
+      username: "<username>"
+      password: "<password>"
+      properties:
+         "mail.smtp.host": "smtp.gmail.com"
+         "mail.smtp.ssl.trust": "smtp.gmail.com"
+         "mail.smtp.port": "587"
+         "mail.smtp.auth": "true"
+         "mail.smtp.starttls.enable": "true"
+         "mail.imap.ssl.enable": "true"
+         "mail.transport.protocol": "smtp"
+         "mail.debug": "true"
+         "mail.smtp.ssl.protocols": "TLSv1.2"
+
+   admin:
+      configFile: "file:{user.dir}/extras/admin/config.json"
+      credentialFile: "file:{user.dir}/extras/admin/credential-bcrypt.json"
+      #credentialFile: "file:{user.dir}/extras/admin/credential-sha256.json"
+
+other:   
+   trxManager:
+      second:
+         datasource:
+            driver-class-name: com.mysql.cj.jdbc.Driver
+            jdbc-url: jdbc:mysql://localhost:3306/springboot_sample_2?createDatabaseIfNotExist=true&autoReconnect=true
+            username: "<username>"
+            password: "<password>"  
+         jpa:
+            properties:
+               hibernate:
+                  hbm2ddl:
+                     auto: update
+                  dialect: org.hibernate.dialect.MySQL8Dialect
+                  show_sql: true
+                  audit_identifier: spring_sample_2
+                  audit_bean_name: auditSessionFactory_2
+         audit:
+            datasource:
+               driver-class-name: com.mysql.cj.jdbc.Driver
+               jdbc-url: jdbc:mysql://localhost:3306/__audit_springboot_sample_2?createDatabaseIfNotExist=true&autoReconnect=true
+               username: "<username>"
+               password: "<password>"  
+            jpa:
+               properties:
+                  hibernate:
+                     hbm2ddl:
+                        auto: update
+                     show_sql: true
+            properties:
+               generate:
+                  table: true
+               enable:
+                  audit: true
+               table:
+                  index: false 
+             
+logging:
+   file: logs/ideahut-springboot-3x-template.log
+   pattern:
+      console: '%d %p [%X{traceId}] %F\(%M:%L\) : %msg%n'
+      file: '%d %p [%X{traceId}] %F\(%M:%L\) : %msg%n'
+   level:
+      org:
+         hibernate: INFO
+         springframework: INFO
+      redis:
+         clients:
+            jedis:
+               JedisFactory: OFF
+      com:
+         fasterxml:
+            jackson:
+               dataformat:
+                  xml: OFF

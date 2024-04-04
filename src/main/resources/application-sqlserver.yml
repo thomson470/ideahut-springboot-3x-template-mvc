@@ -1,0 +1,25 @@
+spring:  
+   datasource:
+      driver-class-name: "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+      jdbc-url: "jdbc:sqlserver://localhost:1433;encrypt=true;trustServerCertificate=true;databaseName=springboot_sample"
+      username: "<username>"
+      password: "<password>" 
+   #jpa:
+      #properties:
+         #hibernate:
+            #dialect: org.hibernate.dialect.SQLServerDialect
+            #Tambah property ini supaya bisa paging
+            #legacy_limit_handler: true
+            
+app:
+   audit:
+      datasource:
+         driver-class-name: "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+         jdbc-url: "jdbc:sqlserver://localhost:1433;encrypt=true;trustServerCertificate=true;databaseName=__audit_springboot_sample"
+         username: "<username>"
+         password: "<password>"    
+      #jpa:
+         #properties:
+            #hibernate:
+               #dialect: org.hibernate.dialect.SQLServerDialect
+               #legacy_limit_handler: true
