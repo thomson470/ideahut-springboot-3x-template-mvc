@@ -3,8 +3,8 @@ package net.ideahut.springboot.template.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -23,12 +23,12 @@ class GridController {
 	private GridHandler gridHandler;
 
 	@Public
-	@GetMapping(value = "/{name}/{parent}")
+	@GetMapping
 	protected Result get(
-		@PathVariable("name") String name,
-		@PathVariable("parent") String parent
+		@RequestParam("name") String name,
+		@RequestParam("parent") String parent
 	) {
-		ObjectNode grid = (ObjectNode) gridHandler.getGrid(parent, name);
+		ObjectNode grid = gridHandler.getGrid(parent, name);
 		ArrayNode actions = grid.putArray("actions");
 		actions.add("PAGE");
 		actions.add("CREATE");

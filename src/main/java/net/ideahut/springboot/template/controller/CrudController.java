@@ -1,6 +1,5 @@
 package net.ideahut.springboot.template.controller;
 
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -61,9 +60,10 @@ class CrudController extends net.ideahut.springboot.crud.CrudController {
 	 */
 	@PostMapping(value = "/action/{action}")
 	protected Result action(
-		@PathVariable("action") String action
+		@PathVariable("action") String action,
+		HttpServletRequest request
 	) throws Exception {
-		byte[] data = IOUtils.toByteArray(RequestUtil.getRequest().getInputStream());
+		byte[] data = RequestUtil.getBodyAsBytes(request);
 		return super.body(CrudAction.valueOf(action.toUpperCase()), data);
 	}
 	
@@ -131,9 +131,10 @@ class CrudController extends net.ideahut.springboot.crud.CrudController {
 	protected Result create(
 		@PathVariable("name") String name,
 		@RequestParam(value = "manager", required = false) String manager,
-		@RequestParam(value = "value", required = false) String value
+		@RequestParam(value = "value", required = false) String value,
+		HttpServletRequest request
 	) throws Exception {
-		byte[] data = IOUtils.toByteArray(RequestUtil.getRequest().getInputStream());
+		byte[] data = RequestUtil.getBodyAsBytes(request);
 		return super.create(manager, name, value, data);
 	}
 	
@@ -147,9 +148,10 @@ class CrudController extends net.ideahut.springboot.crud.CrudController {
 		@PathVariable("name") String name,
 		@PathVariable("id") String id,
 		@RequestParam(value = "manager", required = false) String manager,
-		@RequestParam(value = "value", required = false) String value
+		@RequestParam(value = "value", required = false) String value,
+		HttpServletRequest request
 	) throws Exception {
-		byte[] data = IOUtils.toByteArray(RequestUtil.getRequest().getInputStream());
+		byte[] data = RequestUtil.getBodyAsBytes(request);
 		return super.update(manager, name, id, value, data);
 	}
 	

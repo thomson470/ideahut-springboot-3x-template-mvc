@@ -32,6 +32,7 @@ import net.ideahut.springboot.message.MessageHandler;
 import net.ideahut.springboot.object.Message;
 import net.ideahut.springboot.object.Option;
 import net.ideahut.springboot.template.properties.AppProperties;
+import net.ideahut.springboot.util.FrameworkUtil;
 import net.ideahut.springboot.util.RequestUtil;
 import net.ideahut.springboot.util.StringUtil;
 
@@ -153,7 +154,7 @@ public class MessageServiceImpl implements MessageService, BeanReload, BeanConfi
 	 */
 	private Map<String, byte[]> loadResource(String type) throws Exception {
 		Map<String, byte[]> map = new HashMap<>();
-		String path = StringUtil.removeEnd(appProperties.getMessagePath(), "/");
+		String path = FrameworkUtil.replacePath(StringUtil.removeEnd(appProperties.getMessagePath(), "/"));
 		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(this.getClass().getClassLoader());
 		Resource[] resources = resolver.getResources(path + "/" + type + "/*.json");
 		for (Resource resource : resources) {

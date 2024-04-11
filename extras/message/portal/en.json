@@ -16,21 +16,10 @@
         "page_not_found": "Oops. Nothing here...",
         "data_not_available": "Data not available"
     },
-    "prompt": {
+    "confirm": {
     	"logout": "Are you sure want to logout ?",
         "delete": "Are you sure want to delete ?",
         "continue": "Continue ?"
-    },
-    "login": {
-        "title": "Login",
-        "button": "Login",
-        "email": "Email",
-        "password": "Password",
-        "forgot_password": "Forgot Password ?",
-        "passcode": "Code",
-        "passcode_sent": "System have sent the Forgot Password Code to your email.",
-        "new_password": "New Password",
-        "saved_successfully": "The new password has been saved successfully."
     },
     "menu": {
         "title": "Menu",

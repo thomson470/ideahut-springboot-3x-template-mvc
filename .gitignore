@@ -11,7 +11,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .env
-__backup
+__data
 
 # Editor directories and files
 .idea

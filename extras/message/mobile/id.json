@@ -16,7 +16,7 @@
         "page_not_found": "Oops. Laman tidak tersedia...",
         "data_not_available": "Data tidak tersedia"
     },
-    "prompt": {
+    "confirm": {
     	"logout": "Anda yakin mau keluar ?",
         "delete": "Apakah Anda yakin ingin menghapus ?",
         "continue": "Lanjut ?"

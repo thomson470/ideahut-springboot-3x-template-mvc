@@ -29,12 +29,11 @@ class MenuController {
 	
 	@GetMapping("list")
 	protected Result list() {
-		List<Menu> menus = new ArrayList<Menu>();
+		List<Menu> menus = new ArrayList<>();
 		menus.add(cache());
 		Map<String, List<GridSource>> grids = gridHandler.getSources();
 		for (Map.Entry<String, List<GridSource>> entry : grids.entrySet()) {
-			Menu menu = new Menu();
-			//menus
+			Menu menu = grid(entry);
 			menus.add(menu);
 		}
 		return Result.success(menus);
@@ -49,7 +48,7 @@ class MenuController {
 		return menu;
 	}
 	
-	private Menu grid(Map.Entry<String, List<String>> entry) {
+	private Menu grid(Map.Entry<String, List<GridSource>> entry) {
 		Menu parent = new Menu();
 		String pkey = entry.getKey();
 		if (pkey.isEmpty() || "_".equals(pkey)) {
@@ -60,12 +59,12 @@ class MenuController {
 		parent.setIcon("apps");
 		Menu menu = dataMapper.copy(parent, Menu.class);
 		menu.setChildren(new ArrayList<>());
-		for (String name : entry.getValue()) {
+		for (GridSource source : entry.getValue()) {
 			Menu child = new Menu();
-			child.setId(new MenuId("grid_" + pkey + "_" + name, ""));
-			child.setTitle(name);
+			child.setId(new MenuId("grid_" + pkey + "_" + source.getName(), ""));
+			child.setTitle(source.getName().substring(0, 1).toUpperCase() + source.getName().substring(1));
 			child.setIcon("table_view");
-			child.setLink("/grid/" + name + "/" + entry.getKey());
+			child.setLink("/grid?name=" + source.getName() + "&parent=" + entry.getKey());
 			child.setParent(parent);
 			menu.getChildren().add(child);
 		}
