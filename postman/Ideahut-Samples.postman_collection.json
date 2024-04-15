@@ -4119,34 +4119,6 @@
 									"response": []
 								},
 								{
-									"name": "Request-Join",
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n    \"name\": \"User\",\n    \"page\": {\n        \"index\": 1,\n        \"size\": 10,\n        \"count\": false\n    },\n    \"join\": [\n        {\n            \"name\": \"UserDetail\",\n            \"store\": \"detail\",\n            \"relation\": [\n                {\n                    \"source\": \"userId\",\n                    \"target\": \"userId\"\n                }\n            ]\n        }\n    ],\n    \"filter\": [\n        {\n            \"field\": \"userId\",\n            \"condition\": \"NOT_NULL\"\n        }   \n    ],\n    \"order\":[\"-createdOn\"]\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{url}}/test/crud/request",
-											"host": [
-												"{{url}}"
-											],
-											"path": [
-												"test",
-												"crud",
-												"request"
-											]
-										}
-									},
-									"response": []
-								},
-								{
 									"name": "Page-Join",
 									"request": {
 										"method": "POST",
@@ -5391,14 +5363,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{url}}/repo/AutoGenStrIdHardDel/2024-102107-1804-10303-25200-0002",
+									"raw": "{{url}}/repo/AutoGenStrIdHardDel/2024-204056-1134-39526-25200-0000",
 									"host": [
 										"{{url}}"
 									],
 									"path": [
 										"repo",
 										"AutoGenStrIdHardDel",
-										"2024-102107-1804-10303-25200-0002"
+										"2024-204056-1134-39526-25200-0000"
 									]
 								}
 							},
@@ -5446,14 +5418,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{url}}/repo/AutoGenStrIdHardDel/2024-102111-1641-45204-25200-0016",
+									"raw": "{{url}}/repo/AutoGenStrIdHardDel/2024-204137-1721-26053-25200-0011",
 									"host": [
 										"{{url}}"
 									],
 									"path": [
 										"repo",
 										"AutoGenStrIdHardDel",
-										"2024-102111-1641-45204-25200-0016"
+										"2024-204137-1721-26053-25200-0011"
 									]
 								}
 							},
@@ -6167,21 +6139,10 @@
 								],
 								"body": {
 									"mode": "urlencoded",
-									"urlencoded": [
-										{
-											"key": "handler",
-											"value": "schedulerHandler",
-											"type": "text"
-										},
-										{
-											"key": "triggerId",
-											"value": "ff8080818e5ba97a018e5bab1bf80000",
-											"type": "text"
-										}
-									]
+									"urlencoded": []
 								},
 								"url": {
-									"raw": "{{url}}/admin/scheduler/resume",
+									"raw": "{{url}}/admin/scheduler/resume?handler=schedulerHandler&triggerId=ff8080818e5ba97a018e5bab1bf80000",
 									"host": [
 										"{{url}}"
 									],
@@ -6189,6 +6150,16 @@
 										"admin",
 										"scheduler",
 										"resume"
+									],
+									"query": [
+										{
+											"key": "handler",
+											"value": "schedulerHandler"
+										},
+										{
+											"key": "triggerId",
+											"value": "ff8080818e5ba97a018e5bab1bf80000"
+										}
 									]
 								}
 							},

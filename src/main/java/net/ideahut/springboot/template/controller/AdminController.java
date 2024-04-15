@@ -26,6 +26,6 @@ class AdminController extends net.ideahut.springboot.admin.AdminController {
 	@Override
 	protected DataMapper dataMapper() {
 		return dataMapper;
-	}	
+	}
 
 }

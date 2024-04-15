@@ -11,7 +11,7 @@ management:
 
 spring:
    application:
-      name: ideahut-springboot-3x-template-mvc
+      name: ideahut-springboot-3x-template
    quartz:
       auto-startup: false
    servlet:
@@ -58,7 +58,7 @@ spring:
             audit_bean_name: auditSessionFactory_1
 
 app:
-   instanceId: ideahut-springboot-3x-template-mvc
+   instanceId: ideahut-springboot-3x-template
    loggingError: true
    gridLocation: "file:{user.dir}/extras/grid/**/*.json"
    messagePath: "file:{user.dir}/extras/message/"
@@ -186,7 +186,7 @@ other:
              
 logging:
    file:
-      name: "./logs/ideahut-springboot-3x-template-mvc.log"
+      name: "./logs/ideahut-springboot-3x-template.log"
    pattern:
       console: '%d %p [%X{traceId}] %F\(%M:%L\) : %msg%n'
       file: '%d %p [%X{traceId}] %F\(%M:%L\) : %msg%n'
