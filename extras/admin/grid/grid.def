@@ -1,0 +1,24 @@
+{
+	"parents": [
+		{
+			"name": "api",
+			"title": "Api",
+			"order": 2
+		},
+		{
+			"name": "explore",
+			"title": "Explore",
+			"order": 4
+		},
+		{
+			"name": "main",
+			"title": "Main",
+			"order": 3
+		},
+		{
+			"name": "system",
+			"title": "System",
+			"order": 1
+		}
+	]
+}

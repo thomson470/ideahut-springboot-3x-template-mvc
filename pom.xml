@@ -58,11 +58,11 @@
         <java.version>17</java.version>
 
         <version.commons-io>2.15.1</version.commons-io>
-        <version.commons-httpclient>3.1</version.commons-httpclient>
         <version.jbcrypt>0.4</version.jbcrypt>
         <version.jakarta.mail>2.0.1</version.jakarta.mail>
         <version.jasperreports>6.21.0</version.jasperreports>
 		<version.jedis>5.0.2</version.jedis>
+		<version.jjwt>0.12.5</version.jjwt>
 		<version.apache-poi>5.2.5</version.apache-poi>
         
 	</properties>
@@ -74,11 +74,11 @@
 		<dependency>
 			<groupId>net.ideahut</groupId>
 			<artifactId>ideahut-springboot-3x</artifactId>
-			<version>1.0.0</version>
+			<version>2.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>net.ideahut</groupId>
-			<version>1.0.0</version>
+			<version>2.0.0</version>
 			<!--<artifactId>ideahut-springboot-3.1.6</artifactId>-->
 			<!--<artifactId>ideahut-springboot-3.2.1</artifactId>-->
 			<!--<artifactId>ideahut-springboot-3.2.2</artifactId>-->
@@ -131,11 +131,6 @@
 		    <groupId>commons-io</groupId>
 		    <artifactId>commons-io</artifactId>
 		    <version>${version.commons-io}</version>
-		</dependency>
-		<dependency>
-		    <groupId>commons-httpclient</groupId>
-		    <artifactId>commons-httpclient</artifactId>
-		    <version>${version.commons-httpclient}</version>
 		</dependency>
 
 
@@ -218,6 +213,39 @@
 		    <groupId>org.mindrot</groupId>
 		    <artifactId>jbcrypt</artifactId>
 		    <version>${version.jbcrypt}</version>
+		</dependency>
+		
+		
+		<!-- HTMLUNIT -->
+		<dependency>
+			<groupId>net.sourceforge.htmlunit</groupId>
+			<artifactId>htmlunit</artifactId>
+			<optional>true</optional>
+		</dependency>
+		
+		
+		<!-- OKHTTP -->
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+		</dependency>
+		
+		
+		<!-- JJWT -->
+		<dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt-api</artifactId>
+		    <version>${version.jjwt}</version>
+		</dependency>
+		<dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt-impl</artifactId>
+		    <version>${version.jjwt}</version>
+		</dependency>
+		<dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt-jackson</artifactId>
+		    <version>${version.jjwt}</version>
 		</dependency>
 
 

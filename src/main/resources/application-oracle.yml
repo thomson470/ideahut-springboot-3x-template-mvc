@@ -2,8 +2,8 @@ spring:
    datasource:
       driver-class-name: "oracle.jdbc.OracleDriver"
       jdbc-url: "jdbc:oracle:thin:@localhost:1521/XEPDB1"
-      username: "<username>"
-      password: "<password>>"
+      username: "SPRINGBOOT_SAMPLE"
+      password: "a3213c419"
    #jpa:
       #properties:
          #hibernate:
@@ -14,8 +14,8 @@ app:
       datasource:
          driver-class-name: "oracle.jdbc.OracleDriver"
          jdbc-url: "jdbc:oracle:thin:@localhost:1521/XEPDB1"
-         username: "<username>"
-         password: "<password>"   
+         username: "AUDIT_SPRINGBOOT_SAMPLE"
+         password: "a3213c419"   
       #jpa:
          #properties:
             #hibernate:

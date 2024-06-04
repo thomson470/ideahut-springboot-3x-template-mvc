@@ -17,8 +17,14 @@ import net.ideahut.springboot.template.service.MessageService;
 @RequestMapping("/message")
 class MessageController {
 
+	private final MessageService messageService;
+	
 	@Autowired
-	private MessageService messageService;
+	MessageController(
+		MessageService messageService		
+	) {
+		this.messageService = messageService;
+	}
 
 	@Public
 	@GetMapping(value = "/mobile")

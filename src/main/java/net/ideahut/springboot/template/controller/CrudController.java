@@ -18,19 +18,25 @@ import net.ideahut.springboot.crud.CrudAction;
 import net.ideahut.springboot.crud.CrudHandler;
 import net.ideahut.springboot.crud.CrudPermission;
 import net.ideahut.springboot.object.Result;
-import net.ideahut.springboot.util.RequestUtil;
+import net.ideahut.springboot.util.WebMvcUtil;
 
+@Public
 @ComponentScan
 @RestController
 @RequestMapping("/crud")
-class CrudController extends net.ideahut.springboot.crud.CrudController {
+class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
+	
+	private final CrudHandler handler;
+	private final CrudPermission permission;
 	
 	@Autowired
-	private CrudHandler handler;
-	
-	@Autowired
-	private CrudPermission permission;
-	
+	CrudController(
+		CrudHandler handler, 
+		CrudPermission permission
+	) {
+		this.handler = handler;
+		this.permission = permission;
+	}
 	
 	@Override
 	protected CrudHandler handler() {
@@ -63,7 +69,7 @@ class CrudController extends net.ideahut.springboot.crud.CrudController {
 		@PathVariable("action") String action,
 		HttpServletRequest request
 	) throws Exception {
-		byte[] data = RequestUtil.getBodyAsBytes(request);
+		byte[] data = WebMvcUtil.getBodyAsBytes(request);
 		return super.body(CrudAction.valueOf(action.toUpperCase()), data);
 	}
 	
@@ -93,6 +99,7 @@ class CrudController extends net.ideahut.springboot.crud.CrudController {
 	/*
 	 * OBJECT (CrudAction.SINGLE)
 	 */
+	@Override
 	@GetMapping(value = "/rest/{name}/{id}")
 	protected Result object(
 		@PathVariable("name") String name, 
@@ -134,7 +141,7 @@ class CrudController extends net.ideahut.springboot.crud.CrudController {
 		@RequestParam(value = "value", required = false) String value,
 		HttpServletRequest request
 	) throws Exception {
-		byte[] data = RequestUtil.getBodyAsBytes(request);
+		byte[] data = WebMvcUtil.getBodyAsBytes(request);
 		return super.create(manager, name, value, data);
 	}
 	
@@ -151,7 +158,7 @@ class CrudController extends net.ideahut.springboot.crud.CrudController {
 		@RequestParam(value = "value", required = false) String value,
 		HttpServletRequest request
 	) throws Exception {
-		byte[] data = RequestUtil.getBodyAsBytes(request);
+		byte[] data = WebMvcUtil.getBodyAsBytes(request);
 		return super.update(manager, name, id, value, data);
 	}
 	
@@ -161,6 +168,7 @@ class CrudController extends net.ideahut.springboot.crud.CrudController {
 	/*
 	 * DELETE 
 	 */
+	@Override
 	@DeleteMapping(value = "/rest/{name}/{id}")
 	protected Result delete(
 		@PathVariable("name") String name,

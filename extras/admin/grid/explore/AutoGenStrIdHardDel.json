@@ -2,7 +2,7 @@
     "name": "AutoGenStrIdHardDel",
     "title": "AutoGenStrIdHardDel",
     "crud": {
-        "name": "net.ideahut.springboot.template.entity.AutoGenStrIdHardDel"
+        "name": "net.ideahut.springboot.template.entity.app.AutoGenStrIdHardDel"
     },
     "id": {
         "type": "STANDARD",

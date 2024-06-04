@@ -58,9 +58,7 @@ spring:
             audit_bean_name: auditSessionFactory_1
 
 app:
-   instanceId: ideahut-springboot-3x-template
    loggingError: true
-   gridLocation: "file:{user.dir}/extras/grid/**/*.json"
    messagePath: "file:{user.dir}/extras/message/"
    reportPath: "file:{user.dir}/extras/report/"
    
@@ -112,7 +110,7 @@ app:
          standalone:
             host: 127.0.0.1
             port: 6379
-            password: "<password>"
+            password: "a3213c419771fbd1a05cdde7127e6393ef852db97328b21a45de700e9bbe85db"
             database: 0
             
    cache:
@@ -129,8 +127,8 @@ app:
    mail:
       host: smtp.gmail.com
       port: 587
-      username: "<username>"
-      password: "<password>"
+      username: "socrates.apps.team@gmail.com"
+      password: "csbyvmyazduwlamw"
       properties:
          "mail.smtp.host": "smtp.gmail.com"
          "mail.smtp.ssl.trust": "smtp.gmail.com"
@@ -141,7 +139,10 @@ app:
          "mail.transport.protocol": "smtp"
          "mail.debug": "true"
          "mail.smtp.ssl.protocols": "TLSv1.2"
-
+   grid:
+      location: "file:{user.dir}/extras/grid/**/*.json"
+      #definition: "file:{user.dir}/extras/grid/grid.def"
+      
    admin:
       configFile: "file:{user.dir}/extras/admin/config.json"
       credentialFile: "file:{user.dir}/extras/admin/credential-bcrypt.json"
@@ -153,8 +154,8 @@ other:
          datasource:
             driver-class-name: com.mysql.cj.jdbc.Driver
             jdbc-url: jdbc:mysql://localhost:3306/springboot_sample_2?createDatabaseIfNotExist=true&autoReconnect=true
-            username: "<username>"
-            password: "<password>"  
+            username: root
+            password: a3213c419771fbd1a05cdde7127e6393ef852db97328b21a45de700e9bbe85db  
          jpa:
             properties:
                hibernate:
@@ -168,8 +169,8 @@ other:
             datasource:
                driver-class-name: com.mysql.cj.jdbc.Driver
                jdbc-url: jdbc:mysql://localhost:3306/__audit_springboot_sample_2?createDatabaseIfNotExist=true&autoReconnect=true
-               username: "<username>"
-               password: "<password>"  
+               username: root
+               password: a3213c419771fbd1a05cdde7127e6393ef852db97328b21a45de700e9bbe85db  
             jpa:
                properties:
                   hibernate:

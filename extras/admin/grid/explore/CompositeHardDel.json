@@ -2,7 +2,7 @@
     "name": "CompositeHardDel",
     "title": "CompositeHardDel",
     "crud": {
-        "name": "net.ideahut.springboot.template.entity.CompositeHardDel"
+        "name": "net.ideahut.springboot.template.entity.app.CompositeHardDel"
     },
     "id": {
         "type": "COMPOSITE",

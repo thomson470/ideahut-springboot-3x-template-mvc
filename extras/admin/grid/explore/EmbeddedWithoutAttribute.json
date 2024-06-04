@@ -2,7 +2,7 @@
     "name": "EmbeddedWithoutAttribute",
     "title": "EmbeddedWithoutAttribute",
     "crud": {
-        "name": "net.ideahut.springboot.template.entity.EmbeddedWithoutAttribute"
+        "name": "net.ideahut.springboot.template.entity.app.EmbeddedWithoutAttribute"
     },
     "id": {
         "type": "EMBEDDED",

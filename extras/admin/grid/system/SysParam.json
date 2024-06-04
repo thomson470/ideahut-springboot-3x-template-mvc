@@ -3,7 +3,7 @@
     "name": "SysParam",
     "title": "SysParam",
     "crud": {
-        "name": "net.ideahut.springboot.template.entity.SysParam"
+        "name": "net.ideahut.springboot.template.entity.system.SysParam"
     },
     "id": {
         "type": "EMBEDDED",
@@ -140,7 +140,7 @@
         {
             "name": "value",
             "label": "Value",
-            "type": "text",
+            "type": "words",
             "nullable": true,
             "insertable": true,
             "editable": true,
@@ -151,7 +151,7 @@
         {
             "name": "description",
             "label": "Description",
-            "type": "text",
+            "type": "words",
             "nullable": true,
             "insertable": true,
             "editable": true,

@@ -2,10 +2,10 @@
     "name": "LongIdJoinEmbedded",
     "title": "LongIdJoinEmbedded",
     "crud": {
-        "name": "net.ideahut.springboot.template.entity.LongIdJoinEmbedded",
+        "name": "net.ideahut.springboot.template.entity.app.LongIdJoinEmbedded",
         "joins": [
             {
-                "name": "net.ideahut.springboot.template.entity.EmbeddedHardDel",
+                "name": "net.ideahut.springboot.template.entity.app.EmbeddedHardDel",
                 "store": "embedded",
                 "match": "contain",
                 "relations": [
@@ -178,7 +178,7 @@
         "embedded": {
             "title": "EmbeddedHardDel",
             "crud": {
-                "name": "net.ideahut.springboot.template.entity.EmbeddedHardDel"
+                "name": "net.ideahut.springboot.template.entity.app.EmbeddedHardDel"
             },
             "id": {
                 "type": "EMBEDDED",

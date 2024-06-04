@@ -2,99 +2,67 @@ package net.ideahut.springboot.template.support;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.context.ApplicationContext;
-
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-import net.ideahut.springboot.crud.Condition;
+import net.ideahut.springboot.crud.CrudAction;
 import net.ideahut.springboot.grid.GridAdditional;
 import net.ideahut.springboot.grid.GridOption;
 import net.ideahut.springboot.mapper.DataMapper;
-import net.ideahut.springboot.mapper.DataMapperImpl;
 import net.ideahut.springboot.object.Option;
-import net.ideahut.springboot.template.AppConstants;
 
 public final class GridSupport {
 	
 	private GridSupport() {}
-	
-	private static DataMapper mapper = new DataMapperImpl();
 	
 	/*
 	 * OPTIONS
 	 */
 	public static Map<String, GridOption> getOptions() {
 		Map<String, GridOption> options = new HashMap<>();
-		options.put("CRUD_CONDITION", StaticOption.CRUD_CONDITION);
+		options.put("CRUD_ACTION", StaticOption.CRUD_ACTION);
 		options.put("GENDER", StaticOption.GENDER);
 		options.put("YES_NO", StaticOption.YES_NO);
-		options.put("USER_STATUS", StaticOption.USER_STATUS);
 		options.put("MENU_TYPE", StaticOption.MENU_TYPE);
 		return options;
 	}
 	public static class StaticOption {
+		private StaticOption() {}
 		
 		// YES / NO
-		public static GridOption YES_NO = new GridOption() {
-			@Override
-			public List<Option> getOption(ApplicationContext context) {
-				return Arrays.asList(
-					new Option("Y", "Yes"),
-					new Option("N", "No")
-				);
-			}
-		};
+		public static final GridOption YES_NO = context ->
+			Arrays.asList(
+				new Option("Y", "Yes"),
+				new Option("N", "No")
+			);
 		
 		// GENDER
-		public static GridOption GENDER = new GridOption() {
-			@Override
-			public List<Option> getOption(ApplicationContext context) {
-				return Arrays.asList(
-					new Option("M", "Male"),
-					new Option("F", "Female")
-				);
-			}
-		};
+		public static final GridOption GENDER = context ->
+			Arrays.asList(
+				new Option("M", "Male"),
+				new Option("F", "Female")
+			);
 		
-		// CRUD CONDITION
-		public static GridOption CRUD_CONDITION = new GridOption() {
-			@Override
-			public List<Option> getOption(ApplicationContext context) {
-				List<Option> options = new ArrayList<>();
-				for (Condition condition : Condition.values()) {
-					options.add(new Option(condition.name(), condition.name()));
-				}
-				return options;
+		// CRUD ACTION
+		public static final GridOption CRUD_ACTION = context -> {
+			List<Option> options = new ArrayList<>();
+			for (CrudAction action : CrudAction.values()) {
+				options.add(new Option(action.name(), action.name()));
 			}
-		};
-		
-		// USER STATUS
-		public static GridOption USER_STATUS = new GridOption() {
-			@Override
-			public List<Option> getOption(ApplicationContext context) {
-				return Arrays.asList(
-					new Option(AppConstants.Profile.Status.REGISTER + "", "Register"),
-					new Option(AppConstants.Profile.Status.ACTIVE + "", "Active"),
-					new Option(AppConstants.Profile.Status.INACTIVE + "", "InActive"),
-					new Option(AppConstants.Profile.Status.BLOCKED + "", "Blocked")
-				);
-			}
+			Collections.sort(options, (o1, o2) -> o1.getLabel().compareTo(o2.getLabel()));
+			return options;
 		};
 		
 		// MENU TYPE
-		public static GridOption MENU_TYPE = new GridOption() {
-			@Override
-			public List<Option> getOption(ApplicationContext context) {
-				return Arrays.asList(
-					new Option("mobile", "Mobile"),
-					new Option("portal", "Portal")
-				);
-			}
-		};
+		public static final GridOption MENU_TYPE = context ->
+			Arrays.asList(
+				new Option("mobile", "Mobile"),
+				new Option("portal", "Portal")
+			);
 	}
 	
 	/*
@@ -107,24 +75,21 @@ public final class GridSupport {
 		return additionals;
 	}
 	public static class StaticAdditional {
+		private StaticAdditional() {}
 		
 		// MONTHS
-		public static GridAdditional MONTHS = new GridAdditional() {
-			@Override
-			public ArrayNode getAdditional(ApplicationContext context) {
-				String str = "[\"January\", \"February\", \"March\", \"April\", \"May\", \"June\", \"July\", \"August\", \"September\", \"October\", \"November\", \"December\", \"Jan\", \"Feb\", \"Mar\", \"Apr\", \"May\", \"Jun\", \"Jul\", \"Aug\", \"Sep\", \"Oct\", \"Nov\", \"Dec\"]";
-				return mapper.read(str, ArrayNode.class);
-			}
+		public static final GridAdditional MONTHS = context -> {
+			String str = "[\"January\", \"February\", \"March\", \"April\", \"May\", \"June\", \"July\", \"August\", \"September\", \"October\", \"November\", \"December\", \"Jan\", \"Feb\", \"Mar\", \"Apr\", \"May\", \"Jun\", \"Jul\", \"Aug\", \"Sep\", \"Oct\", \"Nov\", \"Dec\"]";
+			DataMapper mapper = context.getBean(DataMapper.class);
+			return mapper.read(str, ArrayNode.class);
 		};
 		
 		
 		// DAYS
-		public static GridAdditional DAYS = new GridAdditional() {
-			@Override
-			public ArrayNode getAdditional(ApplicationContext context) {
-				String str = "[\"Sunday\", \"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"Saturday\", \"Sun\", \"Mon\", \"Tue\", \"Wed\", \"Thu\", \"Fri\", \"Sat\"]";
-				return mapper.read(str, ArrayNode.class);
-			}
+		public static final GridAdditional DAYS = context -> {
+			String str = "[\"Sunday\", \"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"Saturday\", \"Sun\", \"Mon\", \"Tue\", \"Wed\", \"Thu\", \"Fri\", \"Sat\"]";
+			DataMapper mapper = context.getBean(DataMapper.class);
+			return mapper.read(str, ArrayNode.class);
 		};
 		
 		

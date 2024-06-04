@@ -21,7 +21,7 @@ import net.ideahut.springboot.entity.EntityInfo;
 import net.ideahut.springboot.entity.EntityTrxManager;
 import net.ideahut.springboot.entity.TrxManagerInfo;
 import net.ideahut.springboot.object.Result;
-import net.ideahut.springboot.template.entity.ManualGenStrIdSoftDel;
+import net.ideahut.springboot.template.entity.app.ManualGenStrIdSoftDel;
 import net.ideahut.springboot.template.repo.ManualGenStrIdSoftDelRepo;
 
 @ComponentScan

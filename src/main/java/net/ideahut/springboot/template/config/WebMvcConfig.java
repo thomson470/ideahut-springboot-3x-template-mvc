@@ -1,9 +1,9 @@
 package net.ideahut.springboot.template.config;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
@@ -16,7 +16,7 @@ import org.springframework.web.servlet.resource.VersionResourceResolver;
 
 import net.ideahut.springboot.admin.AdminHandler;
 import net.ideahut.springboot.admin.AdminProperties;
-import net.ideahut.springboot.config.BasicWebMvcConfig;
+import net.ideahut.springboot.config.WebMvcBasicConfig;
 import net.ideahut.springboot.mapper.DataMapper;
 import net.ideahut.springboot.template.interceptor.RequestInterceptor;
 
@@ -26,14 +26,21 @@ import net.ideahut.springboot.template.interceptor.RequestInterceptor;
  */
 @Configuration
 @EnableWebMvc
-class WebMvcConfig extends BasicWebMvcConfig {
+class WebMvcConfig extends WebMvcBasicConfig {
 	
-	@Autowired
-	private DataMapper dataMapper;
-	@Autowired
-	private RequestInterceptor requestInterceptor;
-	@Autowired
-	private AdminHandler adminHandler;
+	private final DataMapper dataMapper;
+	private final RequestInterceptor requestInterceptor;
+	private final AdminHandler adminHandler;
+	
+	WebMvcConfig(
+		DataMapper dataMapper,
+		RequestInterceptor requestInterceptor,
+		AdminHandler adminHandler
+	) {
+		this.dataMapper = dataMapper;
+		this.requestInterceptor = requestInterceptor;
+		this.adminHandler = adminHandler;
+	}
 	
 	
 	@Override
@@ -65,7 +72,7 @@ class WebMvcConfig extends BasicWebMvcConfig {
 	
 	@Override
 	protected Map<String, MediaType> mediaTypes() {
-		return null;
+		return new HashMap<>();
 	}
 	
 	
@@ -89,12 +96,14 @@ class WebMvcConfig extends BasicWebMvcConfig {
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		AdminProperties.Resource resource = adminHandler.getProperties().getResource();
-		registry
-		.addResourceHandler(resource.getRequestPath() + "/**")
-		.addResourceLocations(resource.getLocations())
-		.setCacheControl(CacheControl.maxAge(60, TimeUnit.DAYS))
-        .resourceChain(false)
-        .addResolver(new VersionResourceResolver().addContentVersionStrategy(resource.getRequestPath() + "/**"));
+		if (resource != null) {
+			registry
+			.addResourceHandler(resource.getRequestPath() + "/**")
+			.addResourceLocations(resource.getLocations())
+			.setCacheControl(CacheControl.maxAge(60, TimeUnit.DAYS))
+	        .resourceChain(false)
+	        .addResolver(new VersionResourceResolver().addContentVersionStrategy(resource.getRequestPath() + "/**"));
+		}
 		super.addResourceHandlers(registry);
 	}
 	

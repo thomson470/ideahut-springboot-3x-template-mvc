@@ -6,17 +6,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.ideahut.springboot.admin.AdminHandler;
+import net.ideahut.springboot.admin.WebMvcAdminController;
+import net.ideahut.springboot.annotation.ApiExclude;
 import net.ideahut.springboot.mapper.DataMapper;
 
+@ApiExclude
 @ComponentScan
 @RestController
 @RequestMapping("/admin")
-class AdminController extends net.ideahut.springboot.admin.AdminController {
+class AdminController extends WebMvcAdminController {
+	
+	private final DataMapper dataMapper;
+	private final AdminHandler adminHandler;
 	
 	@Autowired
-	private DataMapper dataMapper;
-	@Autowired
-	private AdminHandler adminHandler;
+	AdminController(
+		DataMapper dataMapper,
+		AdminHandler adminHandler
+	) {
+		this.dataMapper = dataMapper;
+		this.adminHandler = adminHandler;
+	}
 	
 	@Override
 	protected AdminHandler adminHandler() {

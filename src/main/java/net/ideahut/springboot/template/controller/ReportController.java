@@ -36,15 +36,22 @@ import net.sf.jasperreports.engine.util.JRLoader;
 @RequestMapping("/report")
 class ReportController implements InitializingBean {
 	
-	@Autowired
-	private AppProperties appProperties;
-	@Autowired
-	private ReportHandler reportHandler;
+	private final AppProperties appProperties;
+	private final ReportHandler reportHandler;
 	
 	private byte[] template;
 	private byte[] imageHeader;
 	private byte[] imageDetail;
 	
+	
+	@Autowired
+	ReportController(
+		AppProperties appProperties,
+		ReportHandler reportHandler
+	) {
+		this.appProperties = appProperties;
+		this.reportHandler = reportHandler;
+	}
 	
 	@Override
 	public void afterPropertiesSet() throws Exception {

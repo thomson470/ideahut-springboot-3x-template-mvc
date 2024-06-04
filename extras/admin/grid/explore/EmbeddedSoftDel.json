@@ -2,7 +2,7 @@
     "name": "EmbeddedSoftDel",
     "title": "EmbeddedSoftDel",
     "crud": {
-        "name": "net.ideahut.springboot.template.entity.EmbeddedSoftDel"
+        "name": "net.ideahut.springboot.template.entity.app.EmbeddedSoftDel"
     },
     "id": {
         "type": "EMBEDDED",

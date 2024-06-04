@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Configuration;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.ideahut.springboot.entity.DatabaseProperties;
 import net.ideahut.springboot.template.properties.AppProperties.Audit;
-import net.ideahut.springboot.template.properties.AppProperties.Database;
 
 @Configuration
 @ConfigurationProperties(prefix = "other")
@@ -24,7 +24,7 @@ public class OtherProperties {
 	
 	@Setter
 	@Getter
-	public static class TrxManagerCfg extends Database {
+	public static class TrxManagerCfg extends DatabaseProperties {
 		private Audit audit = new Audit();
 	}
 	

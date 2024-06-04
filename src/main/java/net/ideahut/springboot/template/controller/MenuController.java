@@ -2,7 +2,6 @@ package net.ideahut.springboot.template.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
@@ -11,30 +10,37 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.ideahut.springboot.grid.GridHandler;
+import net.ideahut.springboot.grid.GridParent;
 import net.ideahut.springboot.grid.GridSource;
 import net.ideahut.springboot.mapper.DataMapper;
 import net.ideahut.springboot.object.Result;
-import net.ideahut.springboot.template.entity.Menu;
-import net.ideahut.springboot.template.entity.MenuId;
+import net.ideahut.springboot.template.entity.app.Menu;
+import net.ideahut.springboot.template.entity.app.MenuId;
 
 @ComponentScan
 @RestController
 @RequestMapping("/menu")
 class MenuController {
 
+	private final DataMapper dataMapper;
+	private final GridHandler gridHandler;
+	
 	@Autowired
-	private DataMapper dataMapper;
-	@Autowired
-	private GridHandler gridHandler;
+	MenuController(
+		DataMapper dataMapper,
+		GridHandler gridHandler
+	) {
+		this.dataMapper = dataMapper;
+		this.gridHandler = gridHandler;
+	}
 	
 	@GetMapping("list")
 	protected Result list() {
 		List<Menu> menus = new ArrayList<>();
 		menus.add(cache());
-		Map<String, List<GridSource>> grids = gridHandler.getSources();
-		for (Map.Entry<String, List<GridSource>> entry : grids.entrySet()) {
-			Menu menu = grid(entry);
-			menus.add(menu);
+		Menu grid = grid();
+		if (grid != null) {
+			menus.add(grid);
 		}
 		return Result.success(menus);
 	}
@@ -48,27 +54,53 @@ class MenuController {
 		return menu;
 	}
 	
-	private Menu grid(Map.Entry<String, List<GridSource>> entry) {
-		Menu parent = new Menu();
-		String pkey = entry.getKey();
-		if (pkey.isEmpty() || "_".equals(pkey)) {
-			pkey = "default";
+	private Menu grid() {
+		List<GridParent> parents = gridHandler.getTree();
+		if (parents == null || parents.isEmpty()) {
+			return null;
 		}
-		parent.setId(new MenuId("grid_" + pkey, ""));
-		parent.setTitle(pkey.substring(0, 1).toUpperCase() + pkey.substring(1));
-		parent.setIcon("apps");
-		Menu menu = dataMapper.copy(parent, Menu.class);
-		menu.setChildren(new ArrayList<>());
-		for (GridSource source : entry.getValue()) {
-			Menu child = new Menu();
-			child.setId(new MenuId("grid_" + pkey + "_" + source.getName(), ""));
-			child.setTitle(source.getName().substring(0, 1).toUpperCase() + source.getName().substring(1));
-			child.setIcon("table_view");
-			child.setLink("/grid?name=" + source.getName() + "&parent=" + entry.getKey());
-			child.setParent(parent);
-			menu.getChildren().add(child);
+		Menu root = new Menu();
+		root.setId(new MenuId("grid", ""));
+		root.setTitle("Grid");
+		root.setIcon("apps");
+		root.setChildren(new ArrayList<>());
+		if (parents.size() == 1) {
+			GridParent parent = parents.get(0);
+			if (parent.getTitle() != null && !parent.getTitle().trim().isEmpty()) {
+				root.setTitle(parent.getTitle());
+			}
+			Menu proot = dataMapper.copy(root, Menu.class);
+			for (GridSource source : parent.getSources()) {
+				Menu menu = new Menu();
+				menu.setId(new MenuId("grid_" + source.getName(), ""));
+				menu.setTitle(source.getTitle());
+				menu.setIcon("table_view");
+				menu.setLink("/grid?name=" + source.getName() + "&parent=" + parent.getName());
+				menu.setParent(proot);
+				root.getChildren().add(menu);
+			}
+		} else {
+			Menu proot = dataMapper.copy(root, Menu.class);
+			for (GridParent parent : parents) {
+				Menu menu = new Menu();
+				menu.setId(new MenuId("grid_" + parent.getName(), ""));
+				menu.setTitle(parent.getTitle());
+				menu.setIcon("table_view");
+				menu.setParent(proot);
+				Menu pmenu = dataMapper.copy(menu, Menu.class);
+				root.getChildren().add(menu);
+				for (GridSource source : parent.getSources()) {
+					Menu child = new Menu();
+					child.setId(new MenuId("grid_" + parent.getName() + "_" + source.getName(), ""));
+					child.setTitle(source.getTitle());
+					child.setIcon("table_view");
+					child.setLink("/grid?name=" + source.getName() + "&parent=" + parent.getName());
+					child.setParent(pmenu);
+					menu.getChildren().add(child);
+				}
+			}
 		}
-		return menu;
+		return root;
 	}
 	
 }

@@ -1,9 +1,9 @@
 {
-    "order": 3,
+    "order": 4,
     "name": "JobGroup",
     "title": "JobGroup",
     "crud": {
-        "name": "net.ideahut.springboot.template.entity.JobGroup"
+        "name": "net.ideahut.springboot.template.entity.job.JobGroup"
     },
     "id": {
         "type": "STANDARD",
@@ -155,7 +155,7 @@
         {
             "name": "description",
             "label": "Description",
-            "type": "text",
+            "type": "words",
             "nullable": true,
             "insertable": true,
             "editable": true,

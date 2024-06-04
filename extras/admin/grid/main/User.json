@@ -2,7 +2,7 @@
     "name": "User",
     "title": "User",
     "crud": {
-        "name": "net.ideahut.springboot.template.entity.User"
+        "name": "net.ideahut.springboot.template.entity.app.User"
     },
     "id": {
         "type": "STANDARD",
@@ -133,7 +133,7 @@
         {
             "title": "UserDetail",
             "crud": {
-                "name": "net.ideahut.springboot.template.entity.UserDetail"
+                "name": "net.ideahut.springboot.template.entity.app.UserDetail"
             },
             "id": {
 		        "type": "STANDARD",

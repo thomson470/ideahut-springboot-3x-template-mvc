@@ -3,37 +3,37 @@
     "name": "JobTrigger",
     "title": "JobTrigger",
     "crud": {
-        "name": "net.ideahut.springboot.template.entity.JobTrigger",
+        "name": "net.ideahut.springboot.template.entity.job.JobTrigger",
         "joins": [
             {
-                "name": "net.ideahut.springboot.template.entity.JobInstance",
+                "name": "net.ideahut.springboot.template.entity.job.JobInstance",
                 "store": "instance",
                 "match": "contain",
                 "relations": [
                     {
-                        "source": "instance",
+                        "source": "instanceId",
                         "target": "instanceId"
                     }
                 ]
             },
             {
-                "name": "net.ideahut.springboot.template.entity.JobType",
+                "name": "net.ideahut.springboot.template.entity.job.JobType",
                 "store": "type",
                 "match": "contain",
                 "relations": [
                     {
-                        "source": "type",
+                        "source": "typeId",
                         "target": "typeId"
                     }
                 ]
             },
             {
-                "name": "net.ideahut.springboot.template.entity.JobGroup",
+                "name": "net.ideahut.springboot.template.entity.job.JobGroup",
                 "store": "group",
                 "match": "contain",
                 "relations": [
                     {
-                        "source": "group",
+                        "source": "groupId",
                         "target": "groupId"
                     }
                 ]
@@ -129,13 +129,13 @@
         ],
         "visibles": [
             "name",
-            "group",
+            "net.ideahut.springboot.template.entity.job.JobGroup.name",
             "cronExpression",
             "isActive",
             "isSaveResult",
             "isRunOnStartup",
-            "instance",
-            "type",
+            "net.ideahut.springboot.template.entity.job.JobInstance.name",
+            "net.ideahut.springboot.template.entity.job.JobType.name",
             "updatedOn",
             "createdOn"
         ],
@@ -148,7 +148,7 @@
                 "sortable": true
             },
             {
-                "name": "group",
+                "name": "net.ideahut.springboot.template.entity.job.JobGroup.name",
                 "label": "Group",
                 "field": "group",
                 "align": "left",
@@ -202,7 +202,7 @@
                 "sortable": true
             },
             {
-                "name": "instance",
+                "name": "net.ideahut.springboot.template.entity.job.JobInstance.name",
                 "label": "Instance",
                 "field": "instance",
                 "align": "left",
@@ -210,7 +210,7 @@
                 "format": "function(val, row) { try { if(val) { return val.name } else { return '' }; } catch(e) { return val; } }"
             },
             {
-                "name": "type",
+                "name": "net.ideahut.springboot.template.entity.job.JobType.name",
                 "label": "Type",
                 "field": "type",
                 "align": "left",
@@ -380,7 +380,7 @@
         "group": {
             "title": "JobGroup",
             "crud": {
-                "name": "net.ideahut.springboot.template.entity.JobGroup"
+                "name": "net.ideahut.springboot.template.entity.job.JobGroup"
             },
             "id": {
                 "type": "STANDARD",
@@ -468,7 +468,7 @@
         "instance": {
             "title": "JobInstance",
             "crud": {
-                "name": "net.ideahut.springboot.template.entity.JobInstance"
+                "name": "net.ideahut.springboot.template.entity.job.JobInstance"
             },
             "id": {
                 "type": "STANDARD",
@@ -550,7 +550,7 @@
         "type": {
             "title": "JobType",
             "crud": {
-                "name": "net.ideahut.springboot.template.entity.JobType"
+                "name": "net.ideahut.springboot.template.entity.job.JobType"
             },
             "id": {
                 "type": "STANDARD",
@@ -637,7 +637,7 @@
         "type_parameter": {
             "title": "JobTypeParameter",
             "crud": {
-                "name": "net.ideahut.springboot.template.entity.JobTypeParameter"
+                "name": "net.ideahut.springboot.template.entity.job.JobTypeParam"
             },
             "id": {
                 "type": "EMBEDDED",
@@ -646,7 +646,7 @@
                 ],
                 "members": [
                     "typeId",
-                    "parameterName"
+                    "name"
                 ]
             },
             "relations": [
@@ -672,12 +672,12 @@
                     "count": false
                 },
                 "order": {
-                    "field": "id.parameterName",
+                    "field": "id.name",
                     "descending": false
                 },
                 "filters": [
                     {
-                        "name": "id.parameterName",
+                        "name": "id.name",
                         "label": "Name",
                         "type": "text",
                         "condition": "ANY_LIKE"
@@ -700,7 +700,7 @@
                         "field": "id",
                         "align": "left",
                         "sortable": true,
-                        "format": "function(val, row) { try { if(val) { return val.parameterName; } else { return ''; } } catch(e) { return val; } }"
+                        "format": "function(val, row) { try { if(val) { return val.name; } else { return ''; } } catch(e) { return val; } }"
                     },
                     {
                         "name": "description",
@@ -717,7 +717,7 @@
         {
             "title": "Configuration",
             "crud": {
-                "name": "net.ideahut.springboot.template.entity.JobTriggerConfiguration"
+                "name": "net.ideahut.springboot.template.entity.job.JobTriggerConfig"
             },
             "id": {
                 "type": "EMBEDDED",
@@ -727,7 +727,7 @@
                 "members": [
                     "triggerId",
                     "typeId",
-                    "parameterName"
+                    "name"
                 ]
             },
             "relations": [
@@ -780,26 +780,26 @@
                 },
                 "filters": [
                     {
-                        "name": "id.parameterName",
-                        "label": "ParameterName",
+                        "name": "id.name",
+                        "label": "Name",
                         "type": "text",
                         "condition": "ANY_LIKE"
                     }
                 ],
                 "visibles": [
-                    "id.parameterName",
+                    "id.name",
                     "value",
                     "updatedOn",
                     "createdOn"
                 ],
                 "columns": [
                     {
-                        "name": "id.parameterName",
-                        "label": "ParameterName",
+                        "name": "id.name",
+                        "label": "Name",
                         "field": "id",
                         "align": "left",
                         "sortable": true,
-                        "format": "function(val, row) { try { if(val) { return val.parameterName } else { return '' }; } catch(e) { return val; } }"
+                        "format": "function(val, row) { try { if(val) { return val.name } else { return '' }; } catch(e) { return val; } }"
                     },
                     {
                         "name": "value",
@@ -828,8 +828,8 @@
             },
             "fields": [
                 {
-                    "name": "id.parameterName",
-                    "label": "ParameterName",
+                    "name": "id.name",
+                    "label": "Name",
                     "type": "pick",
                     "nullable": false,
                     "insertable": true,
@@ -839,8 +839,8 @@
                         "maxlength:100"
                     ],
                     "pick": "type_parameter",
-                    "format": "function(val, row) { try { return val.id.parameterName; } catch(e) { return val; } }",
-                    "toValue": "function(val) { try { return {'id.parameterName': val.id.parameterName}; } catch(e) { return null; } }"
+                    "format": "function(val, row) { try { return val.id.name; } catch(e) { return val; } }",
+                    "toValue": "function(val) { try { return {'id.name': val.id.name}; } catch(e) { return null; } }"
                 },
                 {
                     "name": "value",

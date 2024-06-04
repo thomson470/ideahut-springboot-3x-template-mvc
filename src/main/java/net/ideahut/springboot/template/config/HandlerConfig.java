@@ -1,41 +1,25 @@
 package net.ideahut.springboot.template.config;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import org.hibernate.Session;
-import org.hibernate.query.Query;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import net.ideahut.springboot.api.ApiHandler;
+import net.ideahut.springboot.api.ApiHandlerImpl;
 import net.ideahut.springboot.audit.AuditHandler;
 import net.ideahut.springboot.audit.DatabaseMultiAuditHandler;
 import net.ideahut.springboot.cache.CacheGroupHandler;
 import net.ideahut.springboot.cache.CacheHandler;
 import net.ideahut.springboot.cache.RedisCacheGroupHandler;
 import net.ideahut.springboot.cache.RedisCacheHandler;
-import net.ideahut.springboot.crud.CrudAction;
-import net.ideahut.springboot.crud.CrudHandler;
-import net.ideahut.springboot.crud.CrudHandlerImpl;
-import net.ideahut.springboot.crud.CrudPermission;
-import net.ideahut.springboot.crud.CrudProps;
-import net.ideahut.springboot.crud.CrudRequest;
-import net.ideahut.springboot.crud.CrudResource;
-import net.ideahut.springboot.entity.EntityInfo;
 import net.ideahut.springboot.entity.EntityTrxManager;
-import net.ideahut.springboot.entity.SessionCallable;
-import net.ideahut.springboot.entity.TrxManagerInfo;
 import net.ideahut.springboot.grid.GridHandler;
 import net.ideahut.springboot.grid.GridHandlerImpl;
 import net.ideahut.springboot.init.InitHandler;
 import net.ideahut.springboot.init.InitHandlerImpl;
-import net.ideahut.springboot.job.JobService;
+import net.ideahut.springboot.job.JobEntityClass;
 import net.ideahut.springboot.job.SchedulerHandler;
 import net.ideahut.springboot.job.SchedulerHandlerImpl;
 import net.ideahut.springboot.mail.MailHandler;
@@ -43,20 +27,33 @@ import net.ideahut.springboot.mail.MailHandlerImpl;
 import net.ideahut.springboot.mapper.DataMapper;
 import net.ideahut.springboot.report.ReportHandler;
 import net.ideahut.springboot.report.ReportHandlerImpl;
-import net.ideahut.springboot.sysparam.SysParamDto;
 import net.ideahut.springboot.sysparam.SysParamHandler;
 import net.ideahut.springboot.sysparam.SysParamHandlerImpl;
-import net.ideahut.springboot.sysparam.SysParamReloader;
 import net.ideahut.springboot.task.TaskHandler;
 import net.ideahut.springboot.template.AppConstants;
-import net.ideahut.springboot.template.entity.EntityFill;
-import net.ideahut.springboot.template.entity.SysParam;
+import net.ideahut.springboot.template.entity.api.ApiCrud;
+import net.ideahut.springboot.template.entity.api.ApiCrudAction;
+import net.ideahut.springboot.template.entity.api.ApiCrudField;
+import net.ideahut.springboot.template.entity.api.ApiCrudFilter;
+import net.ideahut.springboot.template.entity.api.ApiCrudItem;
+import net.ideahut.springboot.template.entity.api.ApiCrudRole;
+import net.ideahut.springboot.template.entity.api.ApiRequestItem;
+import net.ideahut.springboot.template.entity.api.ApiRequestRole;
+import net.ideahut.springboot.template.entity.api.ApiRole;
+import net.ideahut.springboot.template.entity.job.JobGroup;
+import net.ideahut.springboot.template.entity.job.JobInstance;
+import net.ideahut.springboot.template.entity.job.JobTrigger;
+import net.ideahut.springboot.template.entity.job.JobTriggerConfig;
+import net.ideahut.springboot.template.entity.job.JobType;
+import net.ideahut.springboot.template.entity.job.JobTypeParam;
+import net.ideahut.springboot.template.entity.system.SysParam;
 import net.ideahut.springboot.template.properties.AppProperties;
 import net.ideahut.springboot.template.support.GridSupport;
 import net.ideahut.springboot.util.FrameworkUtil;
 
 /*
  * Konfigurasi handler:
+ * - ApiHandler
  * - AuditHandler
  * - CacheGroupHandler
  * - CacheHandler
@@ -69,25 +66,56 @@ import net.ideahut.springboot.util.FrameworkUtil;
 @Configuration
 class HandlerConfig {
 	
-	@Autowired
-	private ApplicationContext applicationContext;
-	@Autowired
-	private AppProperties appProperties;
-	
+	/*
+	 * INIT
+	 */
 	@Bean
-	protected InitHandler initHandler() {
-		InitHandler.Endpoint endpoint = new InitHandler.Endpoint() {
-			@Override
-			public String getUrl() {
-				return "http://localhost:" + FrameworkUtil.getPort(applicationContext) + "/warmup";
-			}
-		};
+	protected InitHandler initHandler(
+		ApplicationContext applicationContext		
+	) {
 		return new InitHandlerImpl()
-		.setEndpoint(endpoint);
+		.setEndpoint(() -> "http://localhost:" + FrameworkUtil.getPort(applicationContext) + "/warmup");
+	}
+	
+	/*
+	 * API
+	 */
+	@Bean
+	protected ApiHandler apiHandler(
+		DataMapper dataMapper,
+		EntityTrxManager entityTrxManager,
+		@Qualifier(AppConstants.Bean.Redis.COMMON) RedisTemplate<String, byte[]> redisTemplate,
+		@Qualifier(AppConstants.Bean.Task.COMMON) TaskHandler taskHandler
+		
+	) {
+		return new ApiHandlerImpl()
+		.setEnableSync(Boolean.TRUE)
+		.setEnableCrud(Boolean.TRUE)
+		.setDataMapper(dataMapper)
+		.setEntityClass(
+			new ApiHandlerImpl.EntityClass()
+			.setCrud(ApiCrud.class)
+			.setCrudAction(ApiCrudAction.class)
+			.setCrudField(ApiCrudField.class)
+			.setCrudFilter(ApiCrudFilter.class)
+			.setCrudItem(ApiCrudItem.class)
+			.setCrudRole(ApiCrudRole.class)
+			.setRequestItem(ApiRequestItem.class)
+			.setRequestRole(ApiRequestRole.class)
+			.setRole(ApiRole.class)
+		)
+		.setEntityTrxManager(entityTrxManager)
+		.setPrefix("API-HANDLER")
+		.setRedisTemplate(redisTemplate)
+		.setTaskHandler(taskHandler);
 	}
 
+	/*
+	 * AUDIT
+	 */
 	@Bean
 	protected AuditHandler auditHandler(
+		AppProperties appProperties,
 		EntityTrxManager entityTrxManager,
 		@Qualifier(AppConstants.Bean.Task.AUDIT) TaskHandler taskHandler
 	) {
@@ -104,8 +132,12 @@ class HandlerConfig {
 		*/
 	}
 	
+	/*
+	 * CACHE GROUP
+	 */
 	@Bean
 	protected CacheGroupHandler cacheGroupHandler(
+		AppProperties appProperties,
 		DataMapper dataMapper,
 		RedisTemplate<String, byte[]> redisTemplate,
 		@Qualifier(AppConstants.Bean.Task.COMMON) TaskHandler taskHandler
@@ -117,6 +149,9 @@ class HandlerConfig {
 		.setTaskHandler(taskHandler);
 	}
 	
+	/*
+	 * CACHE
+	 */
 	@Bean
 	protected CacheHandler cacheHandler(
 		DataMapper dataMapper,
@@ -132,13 +167,20 @@ class HandlerConfig {
 		.setPrefix("_test");
 	}
 	
+	/*
+	 * REPORT
+	 */
 	@Bean
 	protected ReportHandler reportHandler() {
 		return new ReportHandlerImpl();
 	}
 	
+	/*
+	 * MAIL
+	 */
 	@Bean
 	protected MailHandler mailHandler(
+		AppProperties appProperties,
     	@Qualifier(AppConstants.Bean.Task.COMMON) TaskHandler taskHandler
     ) {
 		return new MailHandlerImpl()
@@ -146,20 +188,28 @@ class HandlerConfig {
 		.setMailProperties(appProperties.getMail());
 	}
 	
+	/*
+	 * GRID
+	 */
 	@Bean
 	protected GridHandler gridHandler(
+		AppProperties appProperties,
 		DataMapper dataMapper,
 		RedisTemplate<String, byte[]> redisTemplate
 	) {
+		AppProperties.Grid grid = appProperties.getGrid();
 		return new GridHandlerImpl()
-		.setApplicationContext(applicationContext)
 		.setDataMapper(dataMapper)
-		.setLocation(appProperties.getGridLocation())
+		.setLocation(grid.getLocation())
+		.setDefinition(grid.getDefinition())
 		.setRedisTemplate(redisTemplate)
 		.setAdditionals(GridSupport.getAdditionals())
 		.setOptions(GridSupport.getOptions());
 	}
 	
+	/*
+	 * SYSPARAM
+	 */
 	@Bean
 	protected SysParamHandler sysParamHandler(
 		DataMapper dataMapper,
@@ -168,104 +218,38 @@ class HandlerConfig {
 	) {
 		return new SysParamHandlerImpl()
 		.setDataMapper(dataMapper)
-		.setRedisTemplate(redisTemplate)
-		.setReloader(new SysParamReloader() {
-			@Override
-			public List<SysParamDto> reload(Collection<String> sysCodes) {
-				TrxManagerInfo trxManagerInfo = entityTrxManager.getDefaultTrxManagerInfo();
-				return trxManagerInfo.transaction(new SessionCallable<List<SysParamDto>>() {
-					@Override
-					public List<SysParamDto> call(Session session) throws Exception {
-						boolean notEmpty = sysCodes != null && !sysCodes.isEmpty();
-						Query<SysParam> query = session.createQuery(
-							"from SysParam " + (notEmpty ? "where id.sysCode in (?1)": ""), 
-							SysParam.class
-						);
-						if (notEmpty) {
-							query.setParameter(1, sysCodes);
-						}
-						List<SysParamDto> dtos = new ArrayList<SysParamDto>();
-						List<SysParam> entities = query.getResultList();
-						while (!entities.isEmpty()) {
-							SysParam entity = entities.remove(0);
-							SysParamDto dto = new SysParamDto(entity.getId().getSysCode(), entity.getId().getParamCode());
-							BeanUtils.copyProperties(entity, dto, "id");
-							dtos.add(dto);
-						}
-						return dtos;
-					}
-				});
-			}
-		});
+		.setEntityTrxManager(entityTrxManager)
+		.setEntityClass(new SysParamHandlerImpl.EntityClass()
+			.setSysParam(SysParam.class)	
+		)
+		.setRedisTemplate(redisTemplate);
 	}
 	
+	/*
+	 * SCHEDULER
+	 */
 	@Bean
 	protected SchedulerHandler schedulerHandler(
+		ApplicationContext applicationContext,
 		DataMapper dataMapper,
-		JobService jobService
+		EntityTrxManager entityTrxManager,
+		@Qualifier(AppConstants.Bean.Task.COMMON) TaskHandler taskHandler
 	) {
 		return new SchedulerHandlerImpl()
 		.setApplicationContext(applicationContext)
-		.setInstanceId(appProperties.getInstanceId())
-		.setJobPackages(AppConstants.PACKAGE + ".job")
-		.setJobService(jobService);
-	}
-	
-	@Bean
-	protected CrudHandler crudHandler(
-		EntityTrxManager entityTrxManager,
-		DataMapper dataMapper,
-		CrudResource resource,
-		CrudPermission permission
-	) {
-		return new CrudHandlerImpl()
+		.setEntityClass(new JobEntityClass()
+			.setTrxManagerName("")
+			.setGroup(JobGroup.class)
+			.setInstance(JobInstance.class)
+			.setTrigger(JobTrigger.class)
+			.setTriggerConfig(JobTriggerConfig.class)
+			.setType(JobType.class)
+			.setTypeParam(JobTypeParam.class)
+		)
 		.setEntityTrxManager(entityTrxManager)
-		.setResource(resource);
-		//.setPermission(permission);
-	}
-	
-	// Contoh ambil Crud Resource
-	// Bisa disimpan di database untuk Entity yang boleh di-crud
-	// Ditambah dengan Permission untuk membatasi akses
-	@Bean
-	protected CrudResource crudResource(
-		EntityTrxManager entityTrxManager
-	) {
-		return new CrudResource() {
-			@Override
-			public CrudProps getCrudProps(String manager, String name) {
-				try {
-					Class<?> clazz = FrameworkUtil.classOf(EntityFill.class.getPackageName() + "." + name);
-					TrxManagerInfo trxManagerInfo = entityTrxManager.getDefaultTrxManagerInfo();
-					if (manager != null && !manager.isEmpty()) {
-						trxManagerInfo = entityTrxManager.getTrxManagerInfo(manager);
-					}
-					EntityInfo entityInfo = trxManagerInfo.getEntityInfo(clazz);
-					CrudProps resource = new CrudProps();
-					resource.setEntityInfo(entityInfo);
-					resource.setMaxLimit(200);
-					resource.setUseNative(false);
-					return resource;
-				} catch (Exception e) {
-					throw FrameworkUtil.exception(e);
-				}
-			}
-		};
-	}
-	
-	// Contoh cek akses crud
-	// Bisa disimpan di database dengan memasangkan Resource & Role
-	// Termasuk bisa diset Specific Filter di bagian ini
-	@Bean
-	protected CrudPermission crudPermission() {
-		return new CrudPermission() {
-			
-			@Override
-			public boolean isCrudAllowed(CrudAction action, CrudRequest request) {
-				//request.setSpesifics(null);
-				return true;
-			}
-		};
+		.setInstanceId(applicationContext.getId())
+		.setJobPackages(AppConstants.PACKAGE + ".job")
+		.setTaskHandler(taskHandler);
 	}
 	
 }

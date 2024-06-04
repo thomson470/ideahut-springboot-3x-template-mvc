@@ -11,13 +11,7 @@ public final class AppConstants {
 	public static class Default {
 		private Default() {}
 		public static final String TIMEZONE = "Asia/Jakarta";
-	}
-	
-	// Boolean
-	public static class Boolean {
-		private Boolean() {}
-		public static final Character YES 	= 'Y';
-		public static final Character NO 	= 'N';
+		public static final String API_ROLE = "PUBLIC";
 	}
 	
 	// Regex
@@ -49,7 +43,8 @@ public final class AppConstants {
 		private Bean() {}
 		public static final class Redis {
 			private Redis() {}
-			public static final String COMMON	= "commonRedis";	
+			public static final String COMMON	= "commonRedis";
+			public static final String ACCESS	= "accessRedis";
 		}
 		
 		public static final class Task {

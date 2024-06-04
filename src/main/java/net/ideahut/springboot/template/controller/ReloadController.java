@@ -23,12 +23,17 @@ import net.ideahut.springboot.object.Result;
 @RequestMapping("/reload")
 public class ReloadController {
 	
+	private final DataMapper dataMapper;
+	private final AdminHandler adminHandler;
+	
 	@Autowired
-	private DataMapper dataMapper;
-	@Autowired(required = false)
-	private AdminHandler adminHandler;
-	
-	
+	ReloadController(
+		DataMapper dataMapper,
+		AdminHandler adminHandler
+	) {
+		this.dataMapper = dataMapper;
+		this.adminHandler = adminHandler;
+	}
 	
 	@GetMapping("/options")
 	public Result options() {

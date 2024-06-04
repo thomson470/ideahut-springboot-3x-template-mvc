@@ -2,7 +2,7 @@
     "name": "IntegerIdWithBytes",
     "title": "IntegerIdWithBytes",
     "crud": {
-        "name": "net.ideahut.springboot.template.entity.IntegerIdWithBytes"
+        "name": "net.ideahut.springboot.template.entity.app.IntegerIdWithBytes"
     },
     "id": {
         "type": "STANDARD",

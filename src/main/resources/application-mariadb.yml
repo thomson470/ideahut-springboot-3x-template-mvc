@@ -2,8 +2,8 @@ spring:
    datasource:
       driver-class-name: "org.mariadb.jdbc.Driver"
       jdbc-url: "jdbc:mariadb://localhost:3307/springboot_sample?createDatabaseIfNotExist=true&autoReconnect=true"
-      username: "<username>"
-      password: "<password>"
+      username: "root"
+      password: "a3213c419771fbd1a05cdde7127e6393ef852db97328b21a45de700e9bbe85db"
    #jpa:
       #properties:
          #hibernate:
@@ -14,8 +14,8 @@ app:
       datasource:
          driver-class-name: "org.mariadb.jdbc.Driver"
          jdbc-url: "jdbc:mariadb://localhost:3307/__audit_springboot_sample?createDatabaseIfNotExist=true&autoReconnect=true"
-         username: "<username>"
-         password: "<password>"   
+         username: "root"
+         password: "a3213c419771fbd1a05cdde7127e6393ef852db97328b21a45de700e9bbe85db"   
       #jpa:
          #properties:
             #hibernate:

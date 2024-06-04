@@ -2,7 +2,7 @@
     "name": "Role",
     "title": "Role",
     "crud": {
-        "name": "net.ideahut.springboot.template.entity.Role"
+        "name": "net.ideahut.springboot.template.entity.app.Role"
     },
     "id": {
         "type": "STANDARD",

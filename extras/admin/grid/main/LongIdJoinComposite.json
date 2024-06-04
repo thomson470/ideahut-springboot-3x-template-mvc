@@ -2,10 +2,10 @@
     "name": "LongIdJoinComposite",
     "title": "LongIdJoinComposite",
     "crud": {
-        "name": "net.ideahut.springboot.template.entity.LongIdJoinComposite",
+        "name": "net.ideahut.springboot.template.entity.app.LongIdJoinComposite",
         "joins": [
             {
-                "name": "net.ideahut.springboot.template.entity.CompositeHardDel",
+                "name": "net.ideahut.springboot.template.entity.app.CompositeHardDel",
                 "store": "composite",
                 "match": "contain",
                 "relations": [
@@ -182,7 +182,7 @@
         "composite": {
             "title": "CompositeHardDel",
             "crud": {
-                "name": "net.ideahut.springboot.template.entity.CompositeHardDel"
+                "name": "net.ideahut.springboot.template.entity.app.CompositeHardDel"
             },
             "id": {
                 "type": "COMPOSITE",

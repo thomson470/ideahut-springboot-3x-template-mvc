@@ -6,7 +6,7 @@
         2
     ],
     "crud": {
-        "name": "net.ideahut.springboot.template.entity.Information"
+        "name": "net.ideahut.springboot.template.entity.app.Information"
     },
     "id": {
         "type": "STANDARD",
@@ -226,7 +226,7 @@
         {
             "title": "Link",
             "crud": {
-                "name": "net.ideahut.springboot.template.entity.InformationLink"
+                "name": "net.ideahut.springboot.template.entity.app.InformationLink"
             },
             "id": {
                 "type": "STANDARD",

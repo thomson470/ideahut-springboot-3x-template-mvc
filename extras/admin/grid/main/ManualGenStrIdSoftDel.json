@@ -2,7 +2,7 @@
     "name": "ManualGenStrIdSoftDel",
     "title": "ManualGenStrIdSoftDel",
     "crud": {
-        "name": "net.ideahut.springboot.template.entity.ManualGenStrIdSoftDel"
+        "name": "net.ideahut.springboot.template.entity.app.ManualGenStrIdSoftDel"
     },
     "id": {
         "type": "STANDARD",

@@ -33,8 +33,8 @@ import net.ideahut.springboot.object.Message;
 import net.ideahut.springboot.object.Option;
 import net.ideahut.springboot.template.properties.AppProperties;
 import net.ideahut.springboot.util.FrameworkUtil;
-import net.ideahut.springboot.util.RequestUtil;
 import net.ideahut.springboot.util.StringUtil;
+import net.ideahut.springboot.util.WebMvcUtil;
 
 @Service
 public class MessageServiceImpl implements MessageService, BeanReload, BeanConfigure<MessageService> {
@@ -182,7 +182,7 @@ public class MessageServiceImpl implements MessageService, BeanReload, BeanConfi
 		if (language != null) {
 			return language;
 		}
-		language = RequestUtil.getHeader(HttpHeaders.ACCEPT_LANGUAGE, "");
+		language = WebMvcUtil.getHeader(HttpHeaders.ACCEPT_LANGUAGE, "");
 		String flang = language;
 		Option option = activeLanguages.stream()
 		  .filter(o -> flang.equals(o.getValue()))

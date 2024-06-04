@@ -5,8 +5,8 @@ spring:
    datasource:
       driver-class-name: "org.h2.Driver"
       jdbc-url: "jdbc:h2:file:/opt/macdev/project/zamples/ideahut-springboot-3x/h2/springboot_sample;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE"
-      username: "<username>"
-      password: "<password>"
+      username: "sa"
+      password: "a3213c419771fbd1a05cdde7127e6393ef852db97328b21a45de700e9bbe85db"
    #jpa:
       #properties:
          #hibernate:
@@ -17,8 +17,8 @@ app:
       datasource:
          driver-class-name: "org.h2.Driver"
          jdbc-url: "jdbc:h2:file:/opt/macdev/project/zamples/ideahut-springboot-3x/h2/audit_springboot_sample;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE"
-         username: "<username>"
-         password: "<password>"   
+         username: "sa"
+         password: "a3213c419771fbd1a05cdde7127e6393ef852db97328b21a45de700e9bbe85db"   
       #jpa:
          #properties:
             #hibernate:

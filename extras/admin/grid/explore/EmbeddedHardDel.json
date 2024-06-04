@@ -2,7 +2,7 @@
     "name": "EmbeddedHardDel",
     "title": "EmbeddedHardDel",
     "crud": {
-        "name": "net.ideahut.springboot.template.entity.EmbeddedHardDel"
+        "name": "net.ideahut.springboot.template.entity.app.EmbeddedHardDel"
     },
     "id": {
         "type": "EMBEDDED",

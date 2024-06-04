@@ -2,8 +2,8 @@ spring:
    datasource:
       driver-class-name: "com.microsoft.sqlserver.jdbc.SQLServerDriver"
       jdbc-url: "jdbc:sqlserver://localhost:1433;encrypt=true;trustServerCertificate=true;databaseName=springboot_sample"
-      username: "<username>"
-      password: "<password>" 
+      username: "sa"
+      password: "@a3213c419771fbd1a05cdde7127e6393ef852db97328b21a45de700e9bbe85db" 
    #jpa:
       #properties:
          #hibernate:
@@ -16,8 +16,8 @@ app:
       datasource:
          driver-class-name: "com.microsoft.sqlserver.jdbc.SQLServerDriver"
          jdbc-url: "jdbc:sqlserver://localhost:1433;encrypt=true;trustServerCertificate=true;databaseName=__audit_springboot_sample"
-         username: "<username>"
-         password: "<password>"    
+         username: "sa"
+         password: "@a3213c419771fbd1a05cdde7127e6393ef852db97328b21a45de700e9bbe85db"    
       #jpa:
          #properties:
             #hibernate:

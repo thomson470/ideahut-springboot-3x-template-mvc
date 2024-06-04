@@ -2,10 +2,10 @@
     "name": "Menu",
     "title": "Menu",
     "crud": {
-        "name": "net.ideahut.springboot.template.entity.Menu",
+        "name": "net.ideahut.springboot.template.entity.app.Menu",
         "joins": [
             {
-                "name": "net.ideahut.springboot.template.entity.Menu",
+                "name": "net.ideahut.springboot.template.entity.app.Menu",
                 "store": "parent",
                 "match": "contain",
                 "relations": [
@@ -270,10 +270,10 @@
         {
             "title": "Role",
             "crud": {
-                "name": "net.ideahut.springboot.template.entity.MenuRole",
+                "name": "net.ideahut.springboot.template.entity.app.MenuRole",
                 "joins": [
 		            {
-		                "name": "net.ideahut.springboot.template.entity.Role",
+		                "name": "net.ideahut.springboot.template.entity.app.Role",
 		                "store": "role",
 		                "match": "contain",
 		                "relations": [
@@ -284,7 +284,7 @@
 		                ]
 		            },
 		            {
-		                "name": "net.ideahut.springboot.template.entity.Menu",
+		                "name": "net.ideahut.springboot.template.entity.app.Menu",
 		                "store": "menu",
 		                "match": "contain",
 		                "relations": [
@@ -423,7 +423,7 @@
 		"parent": {
 			"title": "Parent",
 		    "crud": {
-		        "name": "net.ideahut.springboot.template.entity.Menu",
+		        "name": "net.ideahut.springboot.template.entity.app.Menu",
 		        "filters": [
 					{
 						"field": "parent",
@@ -531,7 +531,7 @@
 		"role": {
 			"title": "Role",
 		    "crud": {
-		        "name": "net.ideahut.springboot.template.entity.Role"
+		        "name": "net.ideahut.springboot.template.entity.app.Role"
 		    },
 		    "id": {
 		        "type": "STANDARD",

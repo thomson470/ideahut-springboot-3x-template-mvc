@@ -7,10 +7,10 @@
         2
     ],
     "crud": {
-        "name": "net.ideahut.springboot.template.entity.InformationLink",
+        "name": "net.ideahut.springboot.template.entity.app.InformationLink",
         "joins": [
             {
-                "name": "net.ideahut.springboot.template.entity.Information",
+                "name": "net.ideahut.springboot.template.entity.app.Information",
                 "store": "information",
                 "match": "contain",
                 "relations": [
@@ -199,7 +199,7 @@
         "information": {
             "title": "Information",
             "crud": {
-                "name": "net.ideahut.springboot.template.entity.Information"
+                "name": "net.ideahut.springboot.template.entity.app.Information"
             },
             "id": {
                 "type": "STANDARD",

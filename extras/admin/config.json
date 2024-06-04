@@ -3,6 +3,7 @@
 		"requestPath": "/admin"
 	},
 	"resource": {
+		"title": " ",
 		"requestPath": "/_",
 		"locations": "file:{user.dir}/extras/admin/resource/",
 		"indexFile": "index.html",
@@ -10,10 +11,16 @@
 		"allowedPaths": ["css", "fonts", "icons", "img", "js"]
 	},
 	"grid": {
-		"location": "file:{user.dir}/extras/admin/grid/**/*.json"
+		"location": "file:{user.dir}/extras/admin/grid/**/*.json",
+		"definition": "file:{user.dir}/extras/admin/grid/grid.def"
 	},
 	"crud": {
 		"maxLimit": 200,
 		"useNative": false
+	},
+	"central": {
+		"resourceEndpoint": "http://localhost:6401/sync/resource",
+		"tokenEndpoint": "http://localhost:6401/sync/token",
+		"resourceDirectory": "{user.dir}/extras/admin/resource"
 	}
 }

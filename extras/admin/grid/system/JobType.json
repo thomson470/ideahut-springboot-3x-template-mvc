@@ -1,9 +1,9 @@
 {
-	"order": 4,
+	"order": 3,
     "name": "JobType",
     "title": "JobType",
     "crud": {
-        "name": "net.ideahut.springboot.template.entity.JobType"
+        "name": "net.ideahut.springboot.template.entity.job.JobType"
     },
     "id": {
         "type": "STANDARD",
@@ -246,7 +246,7 @@
         {
             "name": "description",
             "label": "Description",
-            "type": "text",
+            "type": "words",
             "nullable": true,
             "insertable": true,
             "editable": true,
@@ -259,7 +259,7 @@
         {
             "title": "Parameter",
             "crud": {
-                "name": "net.ideahut.springboot.template.entity.JobTypeParameter"
+                "name": "net.ideahut.springboot.template.entity.job.JobTypeParam"
             },
             "id": {
                 "type": "EMBEDDED",
@@ -268,7 +268,7 @@
                 ],
                 "members": [
                     "typeId",
-                    "parameterName"
+                    "name"
                 ]
             },
              "relations": [
@@ -313,8 +313,8 @@
                 },
                 "filters": [
                     {
-                        "name": "id.parameterName",
-                        "label": "ParameterName",
+                        "name": "id.name",
+                        "label": "Name",
                         "type": "text",
                         "condition": "ANY_LIKE"
                     },
@@ -326,19 +326,19 @@
                     }
                 ],
                 "visibles": [
-                    "id.parameterName",
+                    "id.name",
                     "description",
                     "updatedOn",
                     "createdOn"
                 ],
                 "columns": [
                     {
-                        "name": "id.parameterName",
-                        "label": "ParameterName",
+                        "name": "id.name",
+                        "label": "Name",
                         "field": "id",
                         "align": "left",
                         "sortable": true,
-                        "format": "function(val, row) { try { if(val) { return val.parameterName } else { return '' }; } catch(e) { return val; } }"
+                        "format": "function(val, row) { try { if(val) { return val.name } else { return '' }; } catch(e) { return val; } }"
                     },
                     {
                         "name": "description",
@@ -367,8 +367,8 @@
             },
             "fields": [
                 {
-                    "name": "id.parameterName",
-                    "label": "ParameterName",
+                    "name": "id.name",
+                    "label": "Name",
                     "type": "text",
                     "nullable": false,
                     "insertable": true,

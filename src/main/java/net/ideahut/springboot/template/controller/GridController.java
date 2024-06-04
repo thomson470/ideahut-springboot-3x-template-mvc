@@ -19,8 +19,14 @@ import net.ideahut.springboot.object.Result;
 @RequestMapping("/grid")
 class GridController {
 	
+	private final GridHandler gridHandler;
+	
 	@Autowired
-	private GridHandler gridHandler;
+	GridController(
+		GridHandler gridHandler	
+	) {
+		this.gridHandler = gridHandler;
+	}
 
 	@Public
 	@GetMapping

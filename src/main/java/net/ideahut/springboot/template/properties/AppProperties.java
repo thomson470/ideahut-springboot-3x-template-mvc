@@ -13,6 +13,7 @@ import lombok.Setter;
 import net.ideahut.springboot.admin.AdminProperties;
 import net.ideahut.springboot.audit.DatabaseAuditProperties;
 import net.ideahut.springboot.cache.CacheGroupProperties;
+import net.ideahut.springboot.entity.DatabaseProperties;
 import net.ideahut.springboot.mail.MailProperties;
 import net.ideahut.springboot.redis.RedisProperties;
 import net.ideahut.springboot.task.TaskProperties;
@@ -26,9 +27,7 @@ import net.ideahut.springboot.task.TaskProperties;
 @Getter
 public class AppProperties {
 	
-	private String instanceId;
 	private Boolean loggingError;
-	private String gridLocation;
 	private String messagePath;
 	private String reportPath;
 	
@@ -40,6 +39,7 @@ public class AppProperties {
 	private Task task = new Task();
 	private Redis redis = new Redis();
 	private Cache cache = new Cache();
+	private Grid grid = new Grid();
 	//private TrxManager trxManager = new TrxManager();
 	private Admin admin = new Admin();
 	
@@ -52,32 +52,8 @@ public class AppProperties {
 	
 	@Setter
 	@Getter
-	public static class Audit extends Database {
+	public static class Audit extends DatabaseProperties {
 		private DatabaseAuditProperties properties = new DatabaseAuditProperties();
-	}
-	
-	@Setter
-	@Getter
-	public static class Database {
-		private Datasource datasource = new Datasource();
-		private Jpa jpa = new Jpa();
-	}
-	
-	@Setter
-	@Getter
-	public static class Datasource {
-		private String jndiName;
-		private String driverClassName;
-		private String jdbcUrl;
-		private String username;
-		private String password;
-	}
-	
-	@Setter
-	@Getter
-	public static class Jpa {
-		private String database;
-		private Map<String, String> properties = new HashMap<>();
 	}
 	
 	@Setter
@@ -98,6 +74,13 @@ public class AppProperties {
 	public static class Admin extends AdminProperties {
 		private String configFile;
 		private String credentialFile;
+	}
+	
+	@Setter
+	@Getter
+	public static class Grid {
+		private String location;
+		private String definition;
 	}
 	
 }

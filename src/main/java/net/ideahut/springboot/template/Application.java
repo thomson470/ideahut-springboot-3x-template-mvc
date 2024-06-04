@@ -55,7 +55,7 @@ public class Application extends SpringBootServletInitializer implements Applica
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		ready = false;
 		ApplicationContext applicationContext = event.getApplicationContext();
-		FrameworkUtil.checkRequirement(applicationContext);
+		FrameworkUtil.checkDependecies(applicationContext);
 		
 		log.info("**** Initializing application '" + applicationContext.getId() + "'");
 		
@@ -72,29 +72,23 @@ public class Application extends SpringBootServletInitializer implements Applica
 				throw FrameworkUtil.exception(e);
 			}
 			InitHandler initHandler = applicationContext.getBean(InitHandler.class);
-			taskHandler.execute(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						initHandler.initClass();
-						initHandler.initMapper(applicationContext);
-						initHandler.initValidation();
-					} catch (Exception e) {
-						throw FrameworkUtil.exception(e);
-					}
+			taskHandler.execute(() -> {
+				try {
+					initHandler.initClass();
+					initHandler.initMapper(applicationContext);
+					initHandler.initValidation();
+				} catch (Exception e) {
+					throw FrameworkUtil.exception(e);
 				}
 			});
 			
 			/*
 			SchedulerHandler schedulerHandler = applicationContext.getBean(SchedulerHandler.class);
-			taskHandler.execute(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						schedulerHandler.start();
-					} catch (Exception e) {
-						log.error("SchedulerHandler", e);
-					}
+			taskHandler.execute(() -> {
+				try {
+					schedulerHandler.start();
+				} catch (Exception e) {
+					log.error("SchedulerHandler", e);
 				}
 			});
 			*/

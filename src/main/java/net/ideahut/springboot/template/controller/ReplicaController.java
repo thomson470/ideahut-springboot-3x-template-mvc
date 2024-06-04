@@ -2,7 +2,6 @@ package net.ideahut.springboot.template.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,16 +13,21 @@ import net.ideahut.springboot.entity.EntityReplica;
 import net.ideahut.springboot.entity.EntityTrxManager;
 import net.ideahut.springboot.entity.TrxManagerInfo;
 import net.ideahut.springboot.object.Result;
-import net.ideahut.springboot.template.entity.Information;
-import net.ideahut.springboot.template.entity.InformationLink;
+import net.ideahut.springboot.template.entity.app.Information;
+import net.ideahut.springboot.template.entity.app.InformationLink;
 
 @ComponentScan
 @RestController
 @RequestMapping("/replica")
 class ReplicaController {
 	
-	@Autowired
-	private EntityTrxManager entityTrxManager;
+	private final EntityTrxManager entityTrxManager;
+	
+	ReplicaController(
+		EntityTrxManager entityTrxManager	
+	) {
+		this.entityTrxManager = entityTrxManager;
+	}
 
 	@PostMapping(value = "/create/information")
 	protected Result createInformationReplica() {

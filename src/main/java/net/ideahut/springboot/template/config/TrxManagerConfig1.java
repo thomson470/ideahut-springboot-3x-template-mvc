@@ -6,7 +6,6 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -47,16 +46,12 @@ import net.ideahut.springboot.util.FrameworkUtil;
 )
 class TrxManagerConfig1 {
 	
-	@Autowired
-	private Environment environment;	
-	@Autowired
-	private AppProperties appProperties;
-	
-
 	@Primary
 	@Bean(name = "dataSource_1")
 	@ConfigurationProperties(prefix = "spring.datasource")
-	protected DataSource dataSource() {
+	protected DataSource dataSource(
+		Environment environment		
+	) {
 		String jndi = environment.getProperty("spring.datasource.jndi-name", "").trim();
 		if (!jndi.isEmpty()) {
 			JndiDataSourceLookup lookup = new JndiDataSourceLookup();
@@ -81,6 +76,7 @@ class TrxManagerConfig1 {
 	@Primary
 	@Bean(name = "entityManagerFactory_1")
 	protected LocalContainerEntityManagerFactoryBean entityManagerFactory(
+		Environment environment,
 		EntityManagerFactoryBuilder builder,
 		@Qualifier("persistenceManagedTypes_1") PersistenceManagedTypes persistenceManagedTypes,
 		@Qualifier("dataSource_1") DataSource dataSource,
@@ -112,7 +108,9 @@ class TrxManagerConfig1 {
 	}
 	
 	@Bean(name = "auditDatasource_1")
-	protected DataSource auditDatasource() {
+	protected DataSource auditDatasource(
+		AppProperties appProperties		
+	) {
 		Audit audit = appProperties.getAudit();
 		String jndi = audit.getDatasource().getJndiName();
 		jndi = jndi != null ? jndi.trim() : "";
@@ -131,6 +129,7 @@ class TrxManagerConfig1 {
 	
 	@Bean(name = "auditSessionFactory_1")
 	protected LocalSessionFactoryBean auditSessionFactory(
+		AppProperties appProperties,
 		@Qualifier("auditDatasource_1") DataSource datasource
 	) {
 		Audit audit = appProperties.getAudit();
@@ -138,7 +137,6 @@ class TrxManagerConfig1 {
 		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(datasource);
         sessionFactory.setHibernateProperties(properties);
-        sessionFactory.setEntityInterceptor(null);
         return sessionFactory;
 	}
 	
