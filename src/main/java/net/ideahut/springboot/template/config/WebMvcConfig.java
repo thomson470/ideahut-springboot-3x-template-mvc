@@ -67,7 +67,7 @@ class WebMvcConfig extends WebMvcBasicConfig {
 
 	@Override
 	protected boolean enableExtension() {
-		return true;
+		return false;
 	}
 	
 	@Override

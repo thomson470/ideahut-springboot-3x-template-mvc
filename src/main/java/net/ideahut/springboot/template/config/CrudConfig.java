@@ -1,24 +1,21 @@
 package net.ideahut.springboot.template.config;
 
-import java.util.Set;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.Assert;
 
-import net.ideahut.springboot.api.ApiAccess;
-import net.ideahut.springboot.api.ApiHandler;
-import net.ideahut.springboot.context.RequestContext;
-import net.ideahut.springboot.crud.CrudAction;
 import net.ideahut.springboot.crud.CrudHandler;
 import net.ideahut.springboot.crud.CrudHandlerImpl;
 import net.ideahut.springboot.crud.CrudPermission;
 import net.ideahut.springboot.crud.CrudProperties;
 import net.ideahut.springboot.crud.CrudResource;
+import net.ideahut.springboot.entity.EntityInfo;
 import net.ideahut.springboot.entity.EntityTrxManager;
+import net.ideahut.springboot.entity.TrxManagerInfo;
 import net.ideahut.springboot.mapper.DataMapper;
+import net.ideahut.springboot.template.AppConstants;
 import net.ideahut.springboot.template.support.CrudSupport;
+import net.ideahut.springboot.util.FrameworkUtil;
 
 @Configuration
 class CrudConfig {
@@ -44,7 +41,6 @@ class CrudConfig {
 	/*
 	 * Contoh CrudResource berdasarkan nama class yang didefinisikan di CrudRequest
 	 */
-	/*
 	@Bean
 	protected CrudResource crudResource(
 		EntityTrxManager entityTrxManager
@@ -67,13 +63,13 @@ class CrudConfig {
 			}
 		};
 	}
-	*/
 	
 	/*
 	 * Contoh CrudResource yang diambil menggunakan ApiHandler
 	 * - Parameter manager yang didefinisikan di CrudRequest tidak akan digunakan, karena sudah ada di table
 	 * - Parameter name = crudCode
 	 */
+	/*
 	@Bean
 	protected CrudResource crudResource(
 		ApiHandler apiHandler
@@ -85,23 +81,23 @@ class CrudConfig {
 			return properties;
 		};
 	}
+	*/
 	
 	
 	
 	/*
 	 * Contoh CrudPermission mengijinkan semua CrudRequest
 	 */
-	/*
 	@Bean
 	protected CrudPermission crudPermission() {
 		return (action, request) -> true;
 	}
-	*/
 	
 	
 	/*
 	 * Contoh CrudPermission yang mengecek apakah action didefinisikan di table
 	 */
+	/*
 	@Bean
 	protected CrudPermission crudPermission() {
 		return (action, request) -> {
@@ -110,5 +106,6 @@ class CrudConfig {
 			return actions != null && actions.contains(action);
 		};
 	}
+	*/
 	
 }

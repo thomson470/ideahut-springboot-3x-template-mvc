@@ -2,8 +2,8 @@ spring:
    datasource:
       driver-class-name: "com.ibm.db2.jcc.DB2Driver"
       jdbc-url: "jdbc:db2://localhost:50000/sample"
-      username: "db2inst1"
-      password: "a3213c419771fbd1a05cdde7127e6393ef852db97328b21a45de700e9bbe85db"
+      username: "<username>"
+      password: "<password>"
    #jpa:
       #properties:
          #hibernate:
@@ -14,8 +14,8 @@ app:
       datasource:
          driver-class-name: "com.ibm.db2.jcc.DB2Driver"
          jdbc-url: "jdbc:db2://localhost:50001/audit"
-         username: "db2inst1"
-         password: "a3213c419771fbd1a05cdde7127e6393ef852db97328b21a45de700e9bbe85db"   
+         username: "<username>"
+         password: "<password>"   
       #jpa:
          #properties:
             #hibernate:

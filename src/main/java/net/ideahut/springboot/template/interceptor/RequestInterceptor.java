@@ -50,6 +50,9 @@ public class RequestInterceptor implements HandlerInterceptor {
 	@Autowired
 	private WebMvcApiValidator apiValidator;
 	
+	// set true jika ingin mengecek berdasarkan RequestPermission
+	private boolean isCheckRequestEnabled = false;
+	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)	throws Exception {
 		if (!Application.isReady()) {
@@ -77,13 +80,13 @@ public class RequestInterceptor implements HandlerInterceptor {
 					access = new ApiAccess();
 					access.setRole(AppConstants.Default.API_ROLE);
 				}
-				RequestContext.currentContext().setAttribute(ApiAccess.CONTEXT, access);
-				if (!isPublic) {
+				if (!isPublic && isCheckRequestEnabled) {
 					boolean allowed = apiHandler.isRequestAllowed(access.getRole(), hm);
 					if (!allowed) {
 						throw FrameworkUtil.exception(Result.error("REQ-00", "Request is not allowed"));
 					}
 				}
+				RequestContext.currentContext().setAttribute(ApiAccess.CONTEXT, access);
 			}
 		}
 		else if (handler instanceof ResourceHttpRequestHandler) {

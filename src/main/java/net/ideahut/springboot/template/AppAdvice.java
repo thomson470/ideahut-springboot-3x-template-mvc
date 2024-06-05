@@ -15,11 +15,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import lombok.extern.slf4j.Slf4j;
 import net.ideahut.springboot.context.RequestContext;
-import net.ideahut.springboot.exception.ResultException;
-import net.ideahut.springboot.exception.ResultRuntimeException;
 import net.ideahut.springboot.object.Result;
 import net.ideahut.springboot.template.properties.AppProperties;
-import net.ideahut.springboot.util.ErrorUtil;
+import net.ideahut.springboot.util.FrameworkUtil;
 
 /*
  * 1. Untuk menghandle semua error yang terjadi di aplikasi
@@ -44,16 +42,7 @@ public class AppAdvice implements ResponseBodyAdvice<Object> {
 		if (Boolean.TRUE.equals(appProperties.getLoggingError())) {
     		log.error(AppAdvice.class.getSimpleName(), throwable);
     	}
-    	Throwable ex = ErrorUtil.getCause(throwable);
-    	Result result = null;
-    	if (ex instanceof ResultException) {
-    		result = ((ResultException)ex).getResult();
-    	} else if (ex instanceof ResultRuntimeException) {
-    		result = ((ResultRuntimeException)ex).getResult();
-    	} else {
-    		result = Result.error(ErrorUtil.getErrors(ex, true));
-    	}
-    	return result;
+		return FrameworkUtil.getErrorAsResult(throwable);
     }
 
 	@Override

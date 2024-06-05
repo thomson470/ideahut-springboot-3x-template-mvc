@@ -110,7 +110,7 @@ app:
          standalone:
             host: 127.0.0.1
             port: 6379
-            password: "a3213c419771fbd1a05cdde7127e6393ef852db97328b21a45de700e9bbe85db"
+            password: "<password>"
             database: 0
             
    cache:
@@ -127,8 +127,8 @@ app:
    mail:
       host: smtp.gmail.com
       port: 587
-      username: "socrates.apps.team@gmail.com"
-      password: "csbyvmyazduwlamw"
+      username: "<username>"
+      password: "<password>"
       properties:
          "mail.smtp.host": "smtp.gmail.com"
          "mail.smtp.ssl.trust": "smtp.gmail.com"
@@ -154,8 +154,8 @@ other:
          datasource:
             driver-class-name: com.mysql.cj.jdbc.Driver
             jdbc-url: jdbc:mysql://localhost:3306/springboot_sample_2?createDatabaseIfNotExist=true&autoReconnect=true
-            username: root
-            password: a3213c419771fbd1a05cdde7127e6393ef852db97328b21a45de700e9bbe85db  
+            username: "<username>"
+            password: "<password>"
          jpa:
             properties:
                hibernate:
@@ -169,8 +169,8 @@ other:
             datasource:
                driver-class-name: com.mysql.cj.jdbc.Driver
                jdbc-url: jdbc:mysql://localhost:3306/__audit_springboot_sample_2?createDatabaseIfNotExist=true&autoReconnect=true
-               username: root
-               password: a3213c419771fbd1a05cdde7127e6393ef852db97328b21a45de700e9bbe85db  
+               username: "<username>"
+               password: "<password>"  
             jpa:
                properties:
                   hibernate:
