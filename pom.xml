@@ -216,14 +216,6 @@
 		</dependency>
 		
 		
-		<!-- HTMLUNIT -->
-		<dependency>
-			<groupId>net.sourceforge.htmlunit</groupId>
-			<artifactId>htmlunit</artifactId>
-			<optional>true</optional>
-		</dependency>
-		
-		
 		<!-- OKHTTP -->
 		<dependency>
 			<groupId>com.squareup.okhttp3</groupId>
