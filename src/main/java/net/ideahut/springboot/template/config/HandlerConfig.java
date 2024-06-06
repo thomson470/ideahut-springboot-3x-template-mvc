@@ -168,20 +168,12 @@ class HandlerConfig {
 	}
 	
 	/*
-	 * REPORT
-	 */
-	@Bean
-	protected ReportHandler reportHandler() {
-		return new ReportHandlerImpl();
-	}
-	
-	/*
 	 * MAIL
 	 */
 	@Bean
 	protected MailHandler mailHandler(
 		AppProperties appProperties,
-    	@Qualifier(AppConstants.Bean.Task.COMMON) TaskHandler taskHandler
+		@Qualifier(AppConstants.Bean.Task.COMMON) TaskHandler taskHandler
     ) {
 		return new MailHandlerImpl()
 		.setTaskHandler(taskHandler)
@@ -250,6 +242,15 @@ class HandlerConfig {
 		.setInstanceId(applicationContext.getId())
 		.setJobPackages(AppConstants.PACKAGE + ".job")
 		.setTaskHandler(taskHandler);
+	}
+	
+	
+	/*
+	 * REPORT
+	 */
+	@Bean
+	protected ReportHandler reportHandler() {
+		return new ReportHandlerImpl();
 	}
 	
 }
