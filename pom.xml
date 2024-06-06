@@ -8,7 +8,7 @@
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
-	<name>ideahut-springboot-3x-sample-mvc</name>
+	<name>ideahut-springboot-3x-template-mvc</name>
 	<description>Ideahut Springboot 3x Template MVC</description>
 
 	<!--
