@@ -3,7 +3,7 @@ package net.ideahut.springboot.template.job;
 import org.quartz.JobExecutionContext;
 
 import net.ideahut.springboot.job.JobBase;
-import net.ideahut.springboot.job.entity.EntTrigger;
+import net.ideahut.springboot.job.dto.JobTriggerDto;
 
 public class PrintSystemNanoJob extends JobBase {
 
@@ -11,7 +11,7 @@ public class PrintSystemNanoJob extends JobBase {
 	protected void run(JobExecutionContext context) throws Exception {
 		String prefix = getConfigValue(context, String.class, "PREFIX", "---");
 	
-		EntTrigger trigger = getTrigger(context);
+		JobTriggerDto trigger = getTrigger(context);
 		String lastRunData = trigger.getLastRunData();
 		Long lasRunTime = trigger.getLastRunTime();
 		logger().info("++ lastRunData: {}", lastRunData);

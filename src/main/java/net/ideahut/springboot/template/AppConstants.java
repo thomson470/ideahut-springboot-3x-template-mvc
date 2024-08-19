@@ -5,8 +5,6 @@ import java.util.regex.Pattern;
 public final class AppConstants {
 	private AppConstants() {}
 	
-	public static final String PACKAGE = "net.ideahut.springboot.template";
-	
 	// Default
 	public static class Default {
 		private Default() {}

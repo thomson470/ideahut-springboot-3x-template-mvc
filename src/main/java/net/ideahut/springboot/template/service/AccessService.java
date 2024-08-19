@@ -7,10 +7,10 @@ import net.ideahut.springboot.api.ApiParameter;
 
 public interface AccessService {
 
-	ApiAuth login(HttpServletRequest httpRequest, String username, String password);
+	ApiAuth login(HttpServletRequest httpRequest, String username, String password) throws Exception;
 	
-	void logout();
+	ApiAccess logout();
 	
-	ApiAccess getApiAccess(ApiParameter apiParameter);
+	ApiAccess info(ApiParameter apiParameter);
 	
 }

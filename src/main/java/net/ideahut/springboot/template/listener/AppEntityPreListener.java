@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,7 @@ class AppEntityPreListener implements EntityPreListener, InitializingBean {
 	
 	private Map<Class<?>, EntityPreListener> entities = new HashMap<>();
 	
+	@Autowired
 	AppEntityPreListener(
 		TaskHandler taskHandler
 	) {

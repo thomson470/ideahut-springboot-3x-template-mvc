@@ -108,8 +108,8 @@ app:
          type: 1
          testOnStartup: true
          standalone:
-            host: 127.0.0.1
-            port: 6379
+            host: "<host>"
+            port: "<port>"
             password: "<password>"
             database: 0
             
@@ -125,8 +125,8 @@ app:
            nullable: true
 
    mail:
-      host: smtp.gmail.com
-      port: 587
+      host: "<host>"
+      port: "<port>"
       username: "<username>"
       password: "<password>"
       properties:
@@ -147,6 +147,29 @@ app:
       configFile: "file:{user.dir}/extras/admin/config.json"
       credentialFile: "file:{user.dir}/extras/admin/credential-bcrypt.json"
       #credentialFile: "file:{user.dir}/extras/admin/credential-sha256.json"
+      
+   api:
+      enable:
+         consumer: true
+         crud: true
+         sync: true
+      consumer:
+         secret: "df7c7d71-ec05-4ad4-9b36-1580b1a6590f"
+         digest: "SHA-256"
+         expiry: 86400 # 1 hari
+      jwtProcessor:
+         secret: "77ea06ac-808b-4399-895c-a546b033d533"
+         digest: "SHA-256"
+         expiry: 3600 # 1jam
+      redisExpiry:
+         ## semua dalam detik
+         accessNull: 120
+         accessItem: 300
+         consumerNull: 120
+         consumerItem: 600
+      ## toleransi waktu atas/bawah timestamp
+      signatureTimeSpan: 60
+      defaultDigest: "SHA-256"
 
 other:   
    trxManager:
@@ -155,7 +178,7 @@ other:
             driver-class-name: com.mysql.cj.jdbc.Driver
             jdbc-url: jdbc:mysql://localhost:3306/springboot_sample_2?createDatabaseIfNotExist=true&autoReconnect=true
             username: "<username>"
-            password: "<password>"
+            password: "<password>"  
          jpa:
             properties:
                hibernate:
@@ -169,7 +192,7 @@ other:
             datasource:
                driver-class-name: com.mysql.cj.jdbc.Driver
                jdbc-url: jdbc:mysql://localhost:3306/__audit_springboot_sample_2?createDatabaseIfNotExist=true&autoReconnect=true
-               username: "<username>"
+               username: "<host>"
                password: "<password>"  
             jpa:
                properties:

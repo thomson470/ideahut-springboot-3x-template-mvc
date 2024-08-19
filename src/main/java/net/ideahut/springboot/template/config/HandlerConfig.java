@@ -6,8 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import net.ideahut.springboot.api.ApiHandler;
-import net.ideahut.springboot.api.ApiHandlerImpl;
 import net.ideahut.springboot.audit.AuditHandler;
 import net.ideahut.springboot.audit.DatabaseMultiAuditHandler;
 import net.ideahut.springboot.cache.CacheGroupHandler;
@@ -22,6 +20,12 @@ import net.ideahut.springboot.init.InitHandlerImpl;
 import net.ideahut.springboot.job.JobEntityClass;
 import net.ideahut.springboot.job.SchedulerHandler;
 import net.ideahut.springboot.job.SchedulerHandlerImpl;
+import net.ideahut.springboot.job.entity.JobGroup;
+import net.ideahut.springboot.job.entity.JobInstance;
+import net.ideahut.springboot.job.entity.JobTrigger;
+import net.ideahut.springboot.job.entity.JobTriggerConfig;
+import net.ideahut.springboot.job.entity.JobType;
+import net.ideahut.springboot.job.entity.JobTypeParam;
 import net.ideahut.springboot.mail.MailHandler;
 import net.ideahut.springboot.mail.MailHandlerImpl;
 import net.ideahut.springboot.mapper.DataMapper;
@@ -29,24 +33,10 @@ import net.ideahut.springboot.report.ReportHandler;
 import net.ideahut.springboot.report.ReportHandlerImpl;
 import net.ideahut.springboot.sysparam.SysParamHandler;
 import net.ideahut.springboot.sysparam.SysParamHandlerImpl;
+import net.ideahut.springboot.sysparam.entity.SysParam;
 import net.ideahut.springboot.task.TaskHandler;
 import net.ideahut.springboot.template.AppConstants;
-import net.ideahut.springboot.template.entity.api.ApiCrud;
-import net.ideahut.springboot.template.entity.api.ApiCrudAction;
-import net.ideahut.springboot.template.entity.api.ApiCrudField;
-import net.ideahut.springboot.template.entity.api.ApiCrudFilter;
-import net.ideahut.springboot.template.entity.api.ApiCrudItem;
-import net.ideahut.springboot.template.entity.api.ApiCrudRole;
-import net.ideahut.springboot.template.entity.api.ApiRequestItem;
-import net.ideahut.springboot.template.entity.api.ApiRequestRole;
-import net.ideahut.springboot.template.entity.api.ApiRole;
-import net.ideahut.springboot.template.entity.job.JobGroup;
-import net.ideahut.springboot.template.entity.job.JobInstance;
-import net.ideahut.springboot.template.entity.job.JobTrigger;
-import net.ideahut.springboot.template.entity.job.JobTriggerConfig;
-import net.ideahut.springboot.template.entity.job.JobType;
-import net.ideahut.springboot.template.entity.job.JobTypeParam;
-import net.ideahut.springboot.template.entity.system.SysParam;
+import net.ideahut.springboot.template.Application;
 import net.ideahut.springboot.template.properties.AppProperties;
 import net.ideahut.springboot.template.support.GridSupport;
 import net.ideahut.springboot.util.FrameworkUtil;
@@ -75,39 +65,6 @@ class HandlerConfig {
 	) {
 		return new InitHandlerImpl()
 		.setEndpoint(() -> "http://localhost:" + FrameworkUtil.getPort(applicationContext) + "/warmup");
-	}
-	
-	/*
-	 * API
-	 */
-	@Bean
-	protected ApiHandler apiHandler(
-		DataMapper dataMapper,
-		EntityTrxManager entityTrxManager,
-		@Qualifier(AppConstants.Bean.Redis.COMMON) RedisTemplate<String, byte[]> redisTemplate,
-		@Qualifier(AppConstants.Bean.Task.COMMON) TaskHandler taskHandler
-		
-	) {
-		return new ApiHandlerImpl()
-		.setEnableSync(Boolean.TRUE)
-		.setEnableCrud(Boolean.TRUE)
-		.setDataMapper(dataMapper)
-		.setEntityClass(
-			new ApiHandlerImpl.EntityClass()
-			.setCrud(ApiCrud.class)
-			.setCrudAction(ApiCrudAction.class)
-			.setCrudField(ApiCrudField.class)
-			.setCrudFilter(ApiCrudFilter.class)
-			.setCrudItem(ApiCrudItem.class)
-			.setCrudRole(ApiCrudRole.class)
-			.setRequestItem(ApiRequestItem.class)
-			.setRequestRole(ApiRequestRole.class)
-			.setRole(ApiRole.class)
-		)
-		.setEntityTrxManager(entityTrxManager)
-		.setPrefix("API-HANDLER")
-		.setRedisTemplate(redisTemplate)
-		.setTaskHandler(taskHandler);
 	}
 
 	/*
@@ -217,20 +174,19 @@ class HandlerConfig {
 		.setRedisTemplate(redisTemplate);
 	}
 	
+	
 	/*
 	 * SCHEDULER
 	 */
 	@Bean
-	protected SchedulerHandler schedulerHandler(
-		ApplicationContext applicationContext,
+	SchedulerHandler schedulerHandler(
 		DataMapper dataMapper,
 		EntityTrxManager entityTrxManager,
 		@Qualifier(AppConstants.Bean.Task.COMMON) TaskHandler taskHandler
 	) {
 		return new SchedulerHandlerImpl()
-		.setApplicationContext(applicationContext)
 		.setEntityClass(new JobEntityClass()
-			.setTrxManagerName("")
+			.setTrxManagerName(null)
 			.setGroup(JobGroup.class)
 			.setInstance(JobInstance.class)
 			.setTrigger(JobTrigger.class)
@@ -238,9 +194,10 @@ class HandlerConfig {
 			.setType(JobType.class)
 			.setTypeParam(JobTypeParam.class)
 		)
+		.setDataMapper(dataMapper)
 		.setEntityTrxManager(entityTrxManager)
-		.setInstanceId(applicationContext.getId())
-		.setJobPackages(AppConstants.PACKAGE + ".job")
+		.setInstanceId(null)
+		.setJobPackages(Application.Package.APPLICATION + ".job")
 		.setTaskHandler(taskHandler);
 	}
 	

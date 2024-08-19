@@ -42,6 +42,7 @@ public class AppProperties {
 	private Grid grid = new Grid();
 	//private TrxManager trxManager = new TrxManager();
 	private Admin admin = new Admin();
+	private Api api = new Api();
 	
 	
 	@Setter
@@ -81,6 +82,55 @@ public class AppProperties {
 	public static class Grid {
 		private String location;
 		private String definition;
+	}
+	
+	@Setter
+	@Getter
+	public static class Api {
+		private String name;
+		private Enable enable = new Enable();
+		private Consumer consumer = new Consumer();
+		private JwtProcessor jwtProcessor = new JwtProcessor();
+		private RedisExpiry redisExpiry = new RedisExpiry();
+		private Integer signatureTimeSpan;
+		private String defaultDigest;
+		
+		@Setter
+		@Getter
+		public static class Enable {
+			private Boolean consumer;
+			private Boolean crud;
+			private Boolean sync;
+		}
+		
+		// Service akan di-consume oleh service lain
+		@Setter
+		@Getter
+		public static class Consumer {
+			private String secret;
+			private String digest;
+			private Long expiry;
+		}
+		
+		// Parameter untuk membuat Jwt Token
+		@Setter
+		@Getter
+		public static class JwtProcessor {
+			private String secret;
+			private String digest;
+			private Long expiry;
+			private Boolean check;
+		}
+		
+		// Berapa lama object disimpan di redis dalam detik
+		@Setter
+		@Getter
+		public static class RedisExpiry {
+			private Integer accessNull;
+			private Integer accessItem;
+			private Integer consumerNull;
+			private Integer consumerItem;
+		}
 	}
 	
 }

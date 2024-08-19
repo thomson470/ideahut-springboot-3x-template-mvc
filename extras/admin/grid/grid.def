@@ -8,11 +8,16 @@
 		{
 			"name": "explore",
 			"title": "Explore",
-			"order": 4
+			"order": 5
 		},
 		{
 			"name": "main",
 			"title": "Main",
+			"order": 4
+		},
+		{
+			"name": "job",
+			"title": "Job",
 			"order": 3
 		},
 		{

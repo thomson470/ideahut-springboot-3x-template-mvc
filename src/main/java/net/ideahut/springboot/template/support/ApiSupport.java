@@ -3,98 +3,127 @@ package net.ideahut.springboot.template.support;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.util.Assert;
+
 import net.ideahut.springboot.api.ApiHandler;
-import net.ideahut.springboot.api.ApiRemover;
-import net.ideahut.springboot.api.entity.EntCrudActionId;
-import net.ideahut.springboot.api.entity.EntCrudRoleId;
+import net.ideahut.springboot.api.ApiHandlerImpl;
+import net.ideahut.springboot.api.dto.ApiProviderConfigDto;
+import net.ideahut.springboot.api.dto.ApiProviderCrudActionDto;
+import net.ideahut.springboot.api.dto.ApiProviderCrudDto;
+import net.ideahut.springboot.api.dto.ApiProviderDto;
+import net.ideahut.springboot.api.dto.ApiProviderHostDto;
+import net.ideahut.springboot.api.dto.ApiProviderRequestDto;
+import net.ideahut.springboot.api.dto.ApiProviderRoleDto;
+import net.ideahut.springboot.api.dto.ApiRoleCrudActionDto;
+import net.ideahut.springboot.api.dto.ApiRoleCrudDto;
+import net.ideahut.springboot.api.dto.ApiRoleCrudFilterDto;
+import net.ideahut.springboot.api.dto.ApiRoleRequestDto;
 import net.ideahut.springboot.entity.EntityPostListener;
-import net.ideahut.springboot.template.entity.api.ApiCrudAction;
-import net.ideahut.springboot.template.entity.api.ApiCrudFilter;
-import net.ideahut.springboot.template.entity.api.ApiCrudRole;
-import net.ideahut.springboot.template.entity.api.ApiRequestRole;
+import net.ideahut.springboot.entity.EntityTrxManager;
+import net.ideahut.springboot.entity.TrxManagerInfo;
+import net.ideahut.springboot.mapper.DataMapper;
+import net.ideahut.springboot.support.EntityPostListenerForAllAction;
+import net.ideahut.springboot.util.FrameworkUtil;
 
 public class ApiSupport {
 	
 	private ApiSupport() {}
-
-	public static Map<Class<?>, EntityPostListener> getEntityPostListeners(ApiHandler apiHandler) {
+	
+	public static Map<Class<?>, EntityPostListener> getEntityPostListeners(
+		DataMapper dataMapper,
+		ApiHandler apiHandler,
+		EntityTrxManager entityTrxManager
+	) {
 		Map<Class<?>, EntityPostListener> listeners = new HashMap<>();
 		
-		// ApiRequestRole
-		listeners.put(ApiRequestRole.class, new EntityPostListener() {
-			@Override
-			public void onPostDelete(Object entity) {
-				if (apiHandler instanceof ApiRemover remover) {
-					remover.removeRequest(((ApiRequestRole) entity).getId());
-				}
-			}
-			@Override
-			public void onPostUpdate(Object entity) {
-				onPostDelete(entity);
-			}
-			@Override
-			public void onPostInsert(Object entity) {
-				onPostDelete(entity);
-			}
-		});
+		ApiHandlerImpl apiHandlerImpl = (ApiHandlerImpl) apiHandler;
+		ApiHandlerImpl.EntityClass classOfEntity = apiHandlerImpl.getEntityClass();
+		TrxManagerInfo trxManagerInfo = FrameworkUtil.getTrxManagerInfo(entityTrxManager, classOfEntity.getTrxManagerName());
+		Assert.notNull(trxManagerInfo, "TrxManager is not found, for: " + classOfEntity.getTrxManagerName());
 		
-		// ApiCrudRole
-		listeners.put(ApiCrudRole.class, new EntityPostListener() {
-			@Override
-			public void onPostDelete(Object entity) {
-				if (apiHandler instanceof ApiRemover remover) {
-					remover.removeCrud(((ApiCrudRole) entity).getId());
-				}
-			}
-			@Override
-			public void onPostUpdate(Object entity) {
-				onPostDelete(entity);
-			}
-			@Override
-			public void onPostInsert(Object entity) {
-				onPostDelete(entity);
-			}
-		});
 		
-		// ApiCrudAction
-		listeners.put(ApiCrudAction.class, new EntityPostListener() {
-			@Override
-			public void onPostDelete(Object entity) {
-				if (apiHandler instanceof ApiRemover remover) {
-					EntCrudActionId id = ((ApiCrudAction) entity).getId();
-					remover.removeCrud(new EntCrudRoleId(id.getRoleCode(), id.getCrudCode()));
-				}
-			}
-			@Override
-			public void onPostUpdate(Object entity) {
-				onPostDelete(entity);
-			}
-			@Override
-			public void onPostInsert(Object entity) {
-				onPostDelete(entity);
-			}
-		});
+		/**
+		 * NOTE
+		 * - Untuk perubahan ApiCrud & ApiCrudField, sebaiknya update redis dilakukan dari menu Reload di aplikasi admin
+		 */
+		// ApiCrud
+		// ApiCrudField
 		
-		// ApiCrudFilter
-		listeners.put(ApiCrudFilter.class, new EntityPostListener() {
-			@Override
-			public void onPostDelete(Object entity) {
-				if (apiHandler instanceof ApiRemover remover) {
-					ApiCrudRole permission = ((ApiCrudFilter) entity).getPermission();
-					if (permission != null && permission.getId() != null) {
-						remover.removeCrud(permission.getId());
-					}
-				}
+		
+		// ApiProvider
+		listeners.put(classOfEntity.getApiProvider(), new EntityPostListenerForAllAction(entity -> {
+			ApiProviderDto dto = dataMapper.copy(entity, ApiProviderDto.class);
+			apiHandlerImpl.removeApiProvider(dto.getApiName());
+		}));
+		
+		// ApiProviderConfig
+		listeners.put(classOfEntity.getApiProviderConfig(), new EntityPostListenerForAllAction(entity -> {
+			ApiProviderConfigDto dto = dataMapper.copy(entity, ApiProviderConfigDto.class);
+			apiHandlerImpl.removeApiProvider(dto.getApiName());
+		}));
+		
+		// ApiProviderCrud
+		listeners.put(classOfEntity.getApiProviderCrud(), new EntityPostListenerForAllAction(entity -> {
+			ApiProviderCrudDto dto = dataMapper.copy(entity, ApiProviderCrudDto.class);
+			apiHandlerImpl.removeApiCrud(dto);
+		}));
+		
+		// ApiProviderCrudAction
+		listeners.put(classOfEntity.getApiProviderCrudAction(), new EntityPostListenerForAllAction(entity -> {
+			ApiProviderCrudActionDto dto = dataMapper.copy(entity, ApiProviderCrudActionDto.class);
+			apiHandlerImpl.removeApiCrud(ApiProviderCrudDto.create().setApiName(dto.getApiName()).setApiCrudCode(dto.getApiCrudCode()));
+		}));
+		
+		// ApiProviderHost
+		listeners.put(classOfEntity.getApiProviderHost(), new EntityPostListenerForAllAction(entity -> {
+			ApiProviderHostDto dto = dataMapper.copy(entity, ApiProviderHostDto.class);
+			apiHandlerImpl.removeApiProvider(dto.getApiName());
+		}));
+		
+		// ApiProviderRequest
+		listeners.put(classOfEntity.getApiProviderRequest(), new EntityPostListenerForAllAction(entity -> {
+			ApiProviderRequestDto dto = dataMapper.copy(entity, ApiProviderRequestDto.class);
+			apiHandlerImpl.removeApiRequest(dto);
+		}));
+		
+		// ApiProviderRole
+		listeners.put(classOfEntity.getApiProviderRole(), new EntityPostListenerForAllAction(entity -> {
+			ApiProviderRoleDto dto = dataMapper.copy(entity, ApiProviderRoleDto.class);
+			apiHandlerImpl.removeApiProvider(dto.getApiName());
+		}));
+		
+		
+		// ApiRole
+		listeners.put(classOfEntity.getApiRole(), new EntityPostListenerForAllAction(entity -> {
+			apiHandlerImpl.clearCache();
+		}));
+		
+		// ApiRoleCrud
+		listeners.put(classOfEntity.getApiRoleCrud(), new EntityPostListenerForAllAction(entity -> {
+			ApiRoleCrudDto dto = dataMapper.copy(entity, ApiRoleCrudDto.class);
+			apiHandlerImpl.removeApiCrud(dto);
+		}));
+		
+		// ApiRoleCrudAction
+		listeners.put(classOfEntity.getApiRoleCrudAction(), new EntityPostListenerForAllAction(entity -> {
+			ApiRoleCrudActionDto dto = dataMapper.copy(entity, ApiRoleCrudActionDto.class);
+			apiHandlerImpl.removeApiCrud(ApiRoleCrudDto.create().setApiRoleCode(dto.getApiRoleCode()).setApiCrudCode(dto.getApiCrudCode()));
+		}));
+		
+		// ApiRoleCrudFilter
+		listeners.put(classOfEntity.getApiRoleCrudFilter(), new EntityPostListenerForAllAction(entity -> {
+			ApiRoleCrudFilterDto dto = dataMapper.copy(entity, ApiRoleCrudFilterDto.class);
+			ApiRoleCrudDto apiRoleCrud = dto.getApiRoleCrud();
+			if (apiRoleCrud != null) {
+				apiHandlerImpl.removeApiCrud(apiRoleCrud);
 			}
-			@Override
-			public void onPostUpdate(Object entity) {
-				onPostDelete(entity);
-			}
-			@Override
-			public void onPostInsert(Object entity) {
-				onPostDelete(entity);
-			}
-		});
+		}));
+		
+		// ApiRoleRequest
+		listeners.put(classOfEntity.getApiRoleRequest(), new EntityPostListenerForAllAction(entity -> {
+			ApiRoleRequestDto dto = dataMapper.copy(entity, ApiRoleRequestDto.class);
+			apiHandlerImpl.removeApiRequest(dto);
+		}));
 		
 		return listeners;
 	}

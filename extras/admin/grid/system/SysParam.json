@@ -3,15 +3,12 @@
     "name": "SysParam",
     "title": "SysParam",
     "crud": {
-        "name": "net.ideahut.springboot.template.entity.system.SysParam"
+        "name": "net.ideahut.springboot.sysparam.entity.SysParam"
     },
     "id": {
-        "type": "EMBEDDED",
+        "type": "COMPOSITE",
         "fields": [
-            "id"
-        ],
-        "members": [
-            "sysCode",
+        	"sysCode",
             "paramCode"
         ]
     },
@@ -37,13 +34,13 @@
         },
         "filters": [
             {
-                "name": "id.sysCode",
+                "name": "sysCode",
                 "label": "SysCode",
                 "type": "text",
                 "condition": "ANY_LIKE"
             },
             {
-                "name": "id.paramCode",
+                "name": "paramCode",
                 "label": "ParamCode",
                 "type": "text",
                 "condition": "ANY_LIKE"
@@ -56,8 +53,8 @@
             }
         ],
         "visibles": [
-            "id.sysCode",
-            "id.paramCode",
+            "sysCode",
+            "paramCode",
             "value",
             "description",
             "updatedOn",
@@ -65,20 +62,18 @@
         ],
         "columns": [
             {
-                "name": "id.sysCode",
+                "name": "sysCode",
                 "label": "SysCode",
-                "field": "id",
+                "field": "sysCode",
                 "align": "left",
-                "sortable": true,
-                "format": "function(val, row) { try { return val.sysCode; } catch(e) { return val; } }"
+                "sortable": true
             },
             {
-                "name": "id.paramCode",
+                "name": "paramCode",
                 "label": "ParamCode",
-                "field": "id",
+                "field": "paramCode",
                 "align": "left",
-                "sortable": true,
-                "format": "function(val, row) { try { return val.paramCode; } catch(e) { return val; } }"
+                "sortable": true
             },
             {
                 "name": "value",
@@ -114,7 +109,7 @@
     },
     "fields": [
         {
-            "name": "id.sysCode",
+            "name": "sysCode",
             "label": "SysCode",
             "type": "text",
             "nullable": false,
@@ -126,7 +121,7 @@
             ]
         },
         {
-            "name": "id.paramCode",
+            "name": "paramCode",
             "label": "ParamCode",
             "type": "text",
             "nullable": false,

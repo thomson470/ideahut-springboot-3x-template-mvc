@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -24,6 +25,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import jakarta.servlet.http.HttpServletRequest;
 import net.ideahut.springboot.bean.BeanConfigure;
 import net.ideahut.springboot.bean.BeanReload;
 import net.ideahut.springboot.context.RequestContext;
@@ -63,12 +65,12 @@ public class MessageServiceImpl implements MessageService, BeanReload, BeanConfi
 	private AppProperties appProperties;
 	
 	@Override
-	public Callable<MessageService> configureBean(ApplicationContext applicationContext) {
+	public Callable<MessageService> onConfigureBean(ApplicationContext applicationContext) {
 		MessageServiceImpl self = this;
 		return new Callable<MessageService>() {
 			@Override
 			public MessageService call() throws Exception {
-				reloadBean();
+				onReloadBean();
 				return self;
 			}
 		};
@@ -80,7 +82,7 @@ public class MessageServiceImpl implements MessageService, BeanReload, BeanConfi
 	}
 	
 	@Override
-	public boolean reloadBean() throws Exception {
+	public boolean onReloadBean() throws Exception {
 		if (!lock(true)) {
 			return false;
 		}
@@ -159,7 +161,7 @@ public class MessageServiceImpl implements MessageService, BeanReload, BeanConfi
 		Resource[] resources = resolver.getResources(path + "/" + type + "/*.json");
 		for (Resource resource : resources) {
 			String language = resource.getFilename().replace(".json", "");
-			byte[] bytes = resource.getContentAsByteArray();
+			byte[] bytes = IOUtils.toByteArray(resource.getInputStream());
 			String ckey = Keys.PREFIX + "-" + type + "-" + language;
 			// menvalidasi json
 			JsonNode node = dataMapper.read(bytes, JsonNode.class);
@@ -182,7 +184,8 @@ public class MessageServiceImpl implements MessageService, BeanReload, BeanConfi
 		if (language != null) {
 			return language;
 		}
-		language = WebMvcUtil.getHeader(HttpHeaders.ACCEPT_LANGUAGE, "");
+		HttpServletRequest request = WebMvcUtil.getRequest();
+		language = WebMvcUtil.getHeader(request, HttpHeaders.ACCEPT_LANGUAGE, "");
 		String flang = language;
 		Option option = activeLanguages.stream()
 		  .filter(o -> flang.equals(o.getValue()))

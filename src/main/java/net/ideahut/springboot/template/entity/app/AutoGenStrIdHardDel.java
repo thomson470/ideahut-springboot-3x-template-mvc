@@ -30,7 +30,7 @@ public class AutoGenStrIdHardDel extends EntityAudit {
 	
 	@Id
 	@GeneratedValue(generator = OdtIdGenerator.NAME)
-	@GenericGenerator(name = OdtIdGenerator.NAME, strategy = OdtIdGenerator.STRATEGY)
+	@GenericGenerator(name = OdtIdGenerator.NAME, type = OdtIdGenerator.class)
 	@Column(name = "id", unique = true, nullable = false, length = 64)
 	private String id;
 	

@@ -32,8 +32,12 @@ import net.ideahut.springboot.util.FrameworkUtil;
 @ControllerAdvice
 public class AppAdvice implements ResponseBodyAdvice<Object> {
 	
+	private final AppProperties appProperties;
+	
 	@Autowired
-	private AppProperties appProperties;
+	AppAdvice(AppProperties appProperties) {
+		this.appProperties = appProperties;
+	}
 	
 	@ExceptionHandler
     @ResponseStatus(code = HttpStatus.OK)
@@ -64,11 +68,11 @@ public class AppAdvice implements ResponseBodyAdvice<Object> {
 			return body;
 		}
 		Result result = null;
-		if (!(body instanceof Result)) {
-			result = Result.success(body);
-		} else {
-			result = (Result) body;
+		if (body instanceof Result bres) {
+			result = bres;
 			result.updateTime();
+		} else {
+			result = Result.success(body);
 		}
 		RequestContext.destroy();
 		return result;

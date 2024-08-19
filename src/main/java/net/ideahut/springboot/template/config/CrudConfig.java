@@ -13,7 +13,7 @@ import net.ideahut.springboot.entity.EntityInfo;
 import net.ideahut.springboot.entity.EntityTrxManager;
 import net.ideahut.springboot.entity.TrxManagerInfo;
 import net.ideahut.springboot.mapper.DataMapper;
-import net.ideahut.springboot.template.AppConstants;
+import net.ideahut.springboot.template.Application;
 import net.ideahut.springboot.template.support.CrudSupport;
 import net.ideahut.springboot.util.FrameworkUtil;
 
@@ -47,7 +47,7 @@ class CrudConfig {
 	) {
 		return (manager, name) -> {
 			try {
-				Class<?> clazz = FrameworkUtil.classOf(AppConstants.PACKAGE + ".entity." + name);
+				Class<?> clazz = FrameworkUtil.classOf(Application.Package.APPLICATION + ".entity." + name);
 				TrxManagerInfo trxManagerInfo = entityTrxManager.getDefaultTrxManagerInfo();
 				if (manager != null && !manager.isEmpty()) {
 					trxManagerInfo = entityTrxManager.getTrxManagerInfo(manager);

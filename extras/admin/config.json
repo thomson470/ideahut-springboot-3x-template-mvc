@@ -8,7 +8,7 @@
 		"locations": "file:{user.dir}/extras/admin/resource/",
 		"indexFile": "index.html",
 		"alwaysToIndex": true,
-		"allowedPaths": ["css", "fonts", "icons", "img", "js"]
+		"allowedPaths": ["assets", "icons"]
 	},
 	"grid": {
 		"location": "file:{user.dir}/extras/admin/grid/**/*.json",

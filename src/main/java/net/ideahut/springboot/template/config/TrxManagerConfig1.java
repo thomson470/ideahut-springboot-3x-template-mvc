@@ -14,19 +14,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.persistenceunit.PersistenceManagedTypes;
-import org.springframework.orm.jpa.persistenceunit.PersistenceManagedTypesScanner;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import jakarta.persistence.EntityManagerFactory;
-import net.ideahut.springboot.template.AppConstants;
+import net.ideahut.springboot.template.Application;
 import net.ideahut.springboot.template.properties.AppProperties;
 import net.ideahut.springboot.template.properties.AppProperties.Audit;
 import net.ideahut.springboot.util.FrameworkUtil;
@@ -41,7 +38,7 @@ import net.ideahut.springboot.util.FrameworkUtil;
 	entityManagerFactoryRef = "entityManagerFactory_1",
 	transactionManagerRef = "transactionManager_1",
 	basePackages = {
-		AppConstants.PACKAGE + ".repo"
+		Application.Package.APPLICATION + ".repo"
 	}
 )
 class TrxManagerConfig1 {
@@ -61,24 +58,11 @@ class TrxManagerConfig1 {
 		}
     }
 	
-	// https://docs.spring.io/spring-framework/reference/core/aot.html#aot.bestpractices.jpa
-	@Bean(name = "persistenceManagedTypes_1")
-	protected PersistenceManagedTypes persistenceManagedTypes(
-		ResourceLoader resourceLoader
-	) {
-		return 
-		new PersistenceManagedTypesScanner(resourceLoader)
-		.scan(
-			AppConstants.PACKAGE + ".entity"
-		);
-	}
-	
 	@Primary
 	@Bean(name = "entityManagerFactory_1")
 	protected LocalContainerEntityManagerFactoryBean entityManagerFactory(
 		Environment environment,
 		EntityManagerFactoryBuilder builder,
-		@Qualifier("persistenceManagedTypes_1") PersistenceManagedTypes persistenceManagedTypes,
 		@Qualifier("dataSource_1") DataSource dataSource,
 		@Qualifier("auditSessionFactory_1") SessionFactory auditSessionFactory
 	) {
@@ -94,7 +78,12 @@ class TrxManagerConfig1 {
 		return builder
 			.dataSource(dataSource)		
 			.persistenceUnit("default")
-			.managedTypes(persistenceManagedTypes)
+			.packages(
+				Application.Package.LIBRARY + ".api.entity",
+				Application.Package.LIBRARY + ".job.entity",
+				Application.Package.LIBRARY + ".sysparam.entity",
+				Application.Package.APPLICATION + ".entity"
+			)
 			.properties(properties)			
 			.build();
 	}

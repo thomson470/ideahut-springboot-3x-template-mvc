@@ -31,11 +31,12 @@ import net.ideahut.springboot.template.support.GridSupport;
 class AdminConfig {
 	
 	@Bean()
-	protected AdminHandler adminHandler(
+	AdminHandler adminHandler(
 		ApplicationContext applicationContext,
 		AppProperties appProperties,
 		DataMapper dataMapper,
-		@Qualifier(AppConstants.Bean.Redis.COMMON) RedisTemplate<String, byte[]> redisTemplate
+		@Qualifier(AppConstants.Bean.Redis.COMMON) 
+		RedisTemplate<String, byte[]> redisTemplate
 	) {
 		AppProperties.Admin admin = appProperties.getAdmin();
 		return new AdminHandlerImpl()
@@ -54,34 +55,87 @@ class AdminConfig {
 				}
 				File resourceDirectory = new File(resDir);
 				if (resourceDirectory.isDirectory()) {
+					// WEBPACK
+					/*
 					File jsDir = new File(resourceDirectory, "js");
-					File jsFile = null;
 					if (jsDir.isDirectory()) {
+						File jsFile = null;
 						for (File file : jsDir.listFiles()) {
 							if (file.getName().startsWith("app.") && file.getName().endsWith(".js") ){
 								jsFile = file;
 								break;
 							}
 						}
-					}
-					if (jsFile != null) {
-						String ltxt = FileUtils.readFileToString(jsFile, StandardCharsets.UTF_8);
-						int idx = ltxt.indexOf("app:{title:\"");
-						if (idx != -1) {
-							String title = properties.getResource().getTitle();
-							title = title != null ? title : "";
-							if (title.isEmpty()) {
-								title = applicationContext.getId();
-							}
-							String rtxt = ltxt.substring(idx + 12);
-							ltxt = ltxt.substring(0, idx + 12);
-							idx = rtxt.indexOf("\"");
+						if (jsFile != null) {
+							String ltxt = FileUtils.readFileToString(jsFile, StandardCharsets.UTF_8);
+							int idx = ltxt.indexOf("app:{title:\"");
 							if (idx != -1) {
-								rtxt = rtxt.substring(idx);
+								String title = properties.getResource().getTitle();
+								title = title != null ? title : "";
+								if (title.isEmpty()) {
+									title = applicationContext.getId();
+								}
+								String rtxt = ltxt.substring(idx + 12);
+								ltxt = ltxt.substring(0, idx + 12);
+								idx = rtxt.indexOf("\"");
+								if (idx != -1) {
+									rtxt = rtxt.substring(idx);
+								}
+								ltxt += title + rtxt;
 							}
-							ltxt += title + rtxt;
+							FileUtils.write(jsFile, ltxt, StandardCharsets.UTF_8);
 						}
-						FileUtils.write(jsFile, ltxt, StandardCharsets.UTF_8);
+					}
+					
+					*/
+					
+					// VITE
+					File assetsDir = new File(resourceDirectory, "assets");
+					if (assetsDir.isDirectory()) {
+						File i18nFile = null;
+						File storageFile = null;
+						for (File file : assetsDir.listFiles()) {
+							if (file.getName().startsWith("i18n.") && file.getName().endsWith(".js") ){
+								i18nFile = file;
+							}
+							else if (file.getName().startsWith("index.") && file.getName().endsWith(".js") ){
+								storageFile = file;
+							}
+							if (i18nFile != null && storageFile != null) {
+								break;
+							}
+						}
+						if (i18nFile != null && i18nFile.isFile()) {
+							String ltxt = FileUtils.readFileToString(i18nFile, StandardCharsets.UTF_8);
+							int idx = ltxt.indexOf("app:{title:");
+							if (idx != -1) {
+								String rtxt = ltxt.substring(idx + 11);
+								ltxt = ltxt.substring(0, idx + 11) + "\"";
+								rtxt = rtxt.substring(rtxt.indexOf("\"") + 1);
+								String title = properties.getResource().getTitle();
+								title = title != null ? title : "";
+								if (title.isEmpty()) {
+									title = applicationContext.getId();
+								}
+								idx = rtxt.indexOf("\"");
+								if (idx != -1) {
+									rtxt = rtxt.substring(idx);
+								}
+								ltxt += title + rtxt;
+							}
+							FileUtils.write(i18nFile, ltxt, StandardCharsets.UTF_8);
+						}
+						if (storageFile != null && storageFile.isFile()) {
+							String ltxt = FileUtils.readFileToString(storageFile, StandardCharsets.UTF_8);
+							int idx = ltxt.indexOf("__app_id__:");
+							if (idx != -1) {
+								String rtxt = ltxt.substring(idx + 11);
+								ltxt = ltxt.substring(0, idx + 11) + "\"";
+								rtxt = rtxt.substring(rtxt.indexOf("\"") + 1);
+								ltxt += applicationContext.getId() + rtxt;
+							}
+							FileUtils.write(storageFile, ltxt, StandardCharsets.UTF_8);
+						}
 					}
 				}
 			}
@@ -89,10 +143,11 @@ class AdminConfig {
 	}
 	
 	@Bean(name = AppConstants.Bean.Credential.ADMIN)
-	protected RedisMemoryCredential adminCredential(
+	RedisMemoryCredential adminCredential(
 		AppProperties appProperties,
 		DataMapper dataMapper,
-		@Qualifier(AppConstants.Bean.Redis.COMMON) RedisTemplate<String, byte[]> redisTemplate
+		@Qualifier(AppConstants.Bean.Redis.COMMON) 
+		RedisTemplate<String, byte[]> redisTemplate
 	) {
 		AppProperties.Admin admin = appProperties.getAdmin();
 		return new RedisMemoryCredential()
@@ -104,10 +159,11 @@ class AdminConfig {
 	
 	
 	@Bean(name = AppConstants.Bean.Security.ADMIN)
-	protected WebMvcAdminSecurity adminSecurity(
+	WebMvcAdminSecurity adminSecurity(
 		DataMapper dataMapper,
 		AdminHandler adminHandler,
-		@Qualifier(AppConstants.Bean.Credential.ADMIN) SecurityCredential credential
+		@Qualifier(AppConstants.Bean.Credential.ADMIN) 
+		SecurityCredential credential
 	) {
 		return new WebMvcAdminSecurity()
 		.setCredential(credential)
@@ -119,7 +175,7 @@ class AdminConfig {
 	
 	/*
 	@Bean(name = AppConstants.Bean.Security.ADMIN)
-	protected BasicAuthSecurity adminSecurity(
+	BasicAuthSecurity adminSecurity(
 		@Qualifier(AppConstants.Bean.Credential.ADMIN) SecurityCredential credential
 	) {
 		return new BasicAuthSecurity()

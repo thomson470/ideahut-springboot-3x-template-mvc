@@ -1,9 +1,5 @@
 package net.ideahut.springboot.template.config;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -19,15 +15,15 @@ import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.persistenceunit.PersistenceManagedTypes;
+import org.springframework.orm.jpa.persistenceunit.MutablePersistenceUnitInfo;
+import org.springframework.orm.jpa.persistenceunit.PersistenceUnitPostProcessor;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import jakarta.persistence.EntityManagerFactory;
 import net.ideahut.springboot.entity.DatasourceProperties;
 import net.ideahut.springboot.entity.JpaProperties;
-import net.ideahut.springboot.template.entity.app.CompositeHardDel;
-import net.ideahut.springboot.template.entity.app.Information;
+import net.ideahut.springboot.template.Application;
 import net.ideahut.springboot.template.properties.AppProperties.Audit;
 import net.ideahut.springboot.template.properties.OtherProperties;
 import net.ideahut.springboot.util.FrameworkUtil;
@@ -79,23 +75,11 @@ class TrxManagerConfig2 {
 			.persistenceUnit("default")
 			.properties(properties)			
 			.build();
-		bean.setManagedTypes(new PersistenceManagedTypes() {
+		bean.setPersistenceUnitPostProcessors(new PersistenceUnitPostProcessor() {
 			@Override
-			public URL getPersistenceUnitRootUrl() {
-				return null;
-			}
-			
-			@Override
-			public List<String> getManagedPackages() {
-				return new ArrayList<>();
-			}
-			
-			@Override
-			public List<String> getManagedClassNames() {
-				return Arrays.asList(
-					Information.class.getName(),
-					CompositeHardDel.class.getName()
-				);
+			public void postProcessPersistenceUnitInfo(MutablePersistenceUnitInfo pui) {
+				pui.addManagedClassName(Application.Package.APPLICATION + ".entity.app.Information");
+				pui.addManagedClassName(Application.Package.APPLICATION + ".entity.app.CompositeHardDel");
 			}
 		});
 		return bean;

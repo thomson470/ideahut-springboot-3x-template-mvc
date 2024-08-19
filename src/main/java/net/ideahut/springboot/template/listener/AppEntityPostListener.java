@@ -2,27 +2,31 @@ package net.ideahut.springboot.template.listener;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
 import net.ideahut.springboot.annotation.Audit;
 import net.ideahut.springboot.api.ApiHandler;
 import net.ideahut.springboot.audit.AuditHandler;
+import net.ideahut.springboot.bean.BeanConfigure;
 import net.ideahut.springboot.entity.EntityPostListener;
+import net.ideahut.springboot.entity.EntityTrxManager;
+import net.ideahut.springboot.mapper.DataMapper;
 import net.ideahut.springboot.sysparam.SysParamHandler;
-import net.ideahut.springboot.sysparam.SysParamReloader;
-import net.ideahut.springboot.sysparam.SysParamRemover;
 import net.ideahut.springboot.task.TaskHandler;
-import net.ideahut.springboot.template.entity.system.SysParam;
 import net.ideahut.springboot.template.support.ApiSupport;
+import net.ideahut.springboot.template.support.SystemSupport;
 
 @Component
 @ComponentScan
-class AppEntityPostListener implements EntityPostListener, InitializingBean {
+class AppEntityPostListener implements EntityPostListener, BeanConfigure<EntityPostListener> {
 	
+	private final DataMapper dataMapper;
+	private final EntityTrxManager entityTrxManager;
 	private final AuditHandler auditHandler;
 	private final TaskHandler taskHandler;
 	private final ApiHandler apiHandler;
@@ -32,46 +36,44 @@ class AppEntityPostListener implements EntityPostListener, InitializingBean {
 	
 	@Autowired
 	AppEntityPostListener(
-		TaskHandler taskHandler,
+		DataMapper dataMapper,
+		EntityTrxManager entityTrxManager,
 		AuditHandler auditHandler,
+		TaskHandler taskHandler,
 		ApiHandler apiHandler,
 		SysParamHandler sysParamHandler
 	) {
-		this.taskHandler = taskHandler;
+		this.dataMapper = dataMapper;
+		this.entityTrxManager = entityTrxManager;
 		this.auditHandler = auditHandler;
+		this.taskHandler = taskHandler;
 		this.apiHandler = apiHandler;
 		this.sysParamHandler = sysParamHandler;
 	}
 	
 	@Override
-	public void afterPropertiesSet() throws Exception {
-		entities.clear();
-		
-		// SysParm
-		entities.put(SysParam.class, new EntityPostListener() {
+	public Callable<EntityPostListener> onConfigureBean(ApplicationContext applicationContext) {
+		AppEntityPostListener self = this;
+		return new Callable<EntityPostListener>() {
 			@Override
-			public void onPostUpdate(Object entity) {
-				if (sysParamHandler instanceof SysParamReloader reloader) {
-					SysParam sysParam = (SysParam) entity;
-					reloader.reloadSysParam(sysParam.getId().getSysCode(), sysParam.getId().getParamCode());
-				}
+			public EntityPostListener call() throws Exception {
+				
+				entities.clear();
+				
+				// System
+				entities.putAll(SystemSupport.getEntityPostListeners(sysParamHandler));
+				
+				// Api
+				entities.putAll(ApiSupport.getEntityPostListeners(dataMapper, apiHandler, entityTrxManager));
+				
+				return self;
 			}
-			@Override
-			public void onPostInsert(Object entity) {
-				onPostUpdate(entity);
-			}
-			@Override
-			public void onPostDelete(Object entity) {
-				if (sysParamHandler instanceof SysParamRemover remover) {
-					SysParam sysParam = (SysParam) entity;
-					remover.removeSysParam(sysParam.getId().getSysCode(), sysParam.getId().getParamCode());
-				}
-			}
-		});
-		
-		// Api
-		entities.putAll(ApiSupport.getEntityPostListeners(apiHandler));
-		
+		};
+	}
+
+	@Override
+	public boolean isBeanConfigured() {
+		return true;
 	}
 
 	@Override

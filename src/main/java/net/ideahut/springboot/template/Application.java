@@ -15,8 +15,10 @@ import lombok.extern.slf4j.Slf4j;
 import net.ideahut.springboot.IdeahutVersion;
 import net.ideahut.springboot.audit.AuditHandler;
 import net.ideahut.springboot.bean.BeanConfigure;
+import net.ideahut.springboot.bean.BeanShutdown;
 import net.ideahut.springboot.entity.EntityTrxManager;
 import net.ideahut.springboot.init.InitHandler;
+import net.ideahut.springboot.sysparam.SysParamHandler;
 import net.ideahut.springboot.task.TaskHandler;
 import net.ideahut.springboot.util.FrameworkUtil;
 
@@ -32,6 +34,12 @@ import net.ideahut.springboot.util.FrameworkUtil;
 @Slf4j
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer implements ApplicationListener<ContextRefreshedEvent> {
+	
+	public static class Package {
+		private Package() {}
+		public static final String LIBRARY		= "net.ideahut.springboot";
+		public static final String APPLICATION	= "net.ideahut.springboot.template";
+	}
 	
 	private static boolean ready = false;
 	
@@ -56,6 +64,7 @@ public class Application extends SpringBootServletInitializer implements Applica
 		ready = false;
 		ApplicationContext applicationContext = event.getApplicationContext();
 		FrameworkUtil.checkDependecies(applicationContext);
+		BeanShutdown.RuntimeHook.register(applicationContext);
 		
 		log.info("**** Initializing application '" + applicationContext.getId() + "'");
 		
@@ -65,7 +74,8 @@ public class Application extends SpringBootServletInitializer implements Applica
 				BeanConfigure.runBeanConfigure(
 					taskHandler, 
 					applicationContext, 
-					EntityTrxManager.class, 
+					EntityTrxManager.class,
+					SysParamHandler.class,
 					AuditHandler.class
 				);
 			} catch (Exception e) {
