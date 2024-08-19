@@ -5141,7 +5141,13 @@
 					"name": "Send-Async",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "ZTU2NGJlYmJlZGIyNGFhOGJkYjRhZjcyNjFhMTY5MmEyOTliYjllODo6QTE6OkFQUDAw::e1ef8f25-e31f-421f-bd37-84c1e2fd77be",
+								"disabled": true
+							}
+						],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -5167,7 +5173,7 @@
 								},
 								{
 									"key": "subject",
-									"value": "Tes email *** (async)",
+									"value": "Tes email *** (sync)",
 									"type": "text"
 								},
 								{
@@ -5178,7 +5184,7 @@
 								{
 									"key": "attachment",
 									"type": "file",
-									"src": "/opt/macdev/project/zamples/ideahut-springboot-3x/src/main/resources/report/tree1.png"
+									"src": "/opt/macdev/project/zamples/ideahut-springboot-3x/src/main/resources/report/tree2.png"
 								}
 							]
 						},
@@ -5942,6 +5948,48 @@
 							"response": []
 						},
 						{
+							"name": "Triggers",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{ADMIN_AUTH}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "{{url}}/admin/scheduler/triggers?handler=schedulerHandler&groupId=ff8080818e5b1cd6018e5b1e334c0000",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"scheduler",
+										"triggers"
+									],
+									"query": [
+										{
+											"key": "handler",
+											"value": "schedulerHandler"
+										},
+										{
+											"key": "groupId",
+											"value": "ff8080818e5b1cd6018e5b1e334c0000"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Start",
 							"request": {
 								"method": "POST",
@@ -6187,7 +6235,7 @@
 										},
 										{
 											"key": "triggerId",
-											"value": "ff8080818e5ba97a018e5bab1bf80000",
+											"value": "ff8080818e5b2907018e5b2ed9f50002",
 											"type": "text"
 										}
 									]
@@ -6433,36 +6481,121 @@
 			]
 		},
 		{
-			"name": "Login",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": []
-				},
-				"url": {
-					"raw": "{{url}}/access/login?username=admin&password=pass123",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"access",
-						"login"
-					],
-					"query": [
-						{
-							"key": "username",
-							"value": "admin"
+			"name": "Access",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Access-Type",
+								"value": "A11",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
 						},
-						{
-							"key": "password",
-							"value": "pass123"
+						"url": {
+							"raw": "{{url}}/access/login?username=username&password=password",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"access",
+								"login"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "username"
+								},
+								{
+									"key": "password",
+									"value": "password"
+								}
+							]
 						}
-					]
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer NzFlZTQ0MjJhMDY2YjUwZTg0NjNhYWRlOGIyY2IzNTE3ZmNlNzMxZDE0ODZiYzFkY2IzYWZhNzMyZTZjNzk2Zjo6QTExOjppZGVhaHV0LXNwcmluZ2Jvb3QtM3gtdGVtcGxhdGU=::eyJhbGciOiJIUzI1NiJ9.eyJhdHRyaWJ1dGVzIjp7Imhvc3QiOiIwOjA6MDowOjA6MDowOjEiLCJhZ2VudCI6IlBvc3RtYW5SdW50aW1lLzcuNDAuMCJ9LCJhcGlLZXkiOiI3MWVlNDQyMmEwNjZiNTBlODQ2M2FhZGU4YjJjYjM1MTdmY2U3MzFkMTQ4NmJjMWRjYjNhZmE3MzJlNmM3OTZmIiwiYXBpVXNlciI6eyJpZCI6IjEyMzQ1Njc4OTAiLCJ1c2VybmFtZSI6InVzZXJuYW1lIn0sInZhbGlkVW50aWwiOjE3MjQwODI2NTAwNDYsInNlcnZpY2VSb2xlIjp7ImlkZWFodXQtc3ByaW5nYm9vdC0zeC10ZW1wbGF0ZSI6IlBVQkxJQyJ9fQ.0EhVKEKQkh3lqi8oSGkzyyNgQ8kVz9V3vQF361hFR1w",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{url}}/access/logout",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"access",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Info",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer MmIyNTc4YzYxMDk4MTAzZjU1Zjg3NTM4NDU0ZTZiZDI5ZjVlNjQ4ODVjMTc2OGJiM2NkOGM0ZDI5OGE1OWZiYjo6QTExOjppZGVhaHV0LXNwcmluZ2Jvb3QtMngtdGVtcGxhdGU=::eyJhbGciOiJIUzI1NiJ9.eyJhdHRyaWJ1dGVzIjp7Imhvc3QiOiIwOjA6MDowOjA6MDowOjEiLCJhZ2VudCI6IlBvc3RtYW5SdW50aW1lLzcuNDAuMCJ9LCJhcGlLZXkiOiIyYjI1NzhjNjEwOTgxMDNmNTVmODc1Mzg0NTRlNmJkMjlmNWU2NDg4NWMxNzY4YmIzY2Q4YzRkMjk4YTU5ZmJiIiwiYXBpVXNlciI6eyJpZCI6IjEyMzQ1Njc4OTAiLCJ1c2VybmFtZSI6InVzZXJuYW1lIn0sInZhbGlkVW50aWwiOjE3MjQxMzI1MTEzNDEsInNlcnZpY2VSb2xlIjp7ImlkZWFodXQtc3ByaW5nYm9vdC0yeC10ZW1wbGF0ZSI6IlBVQkxJQyJ9fQ.hqQUJ5b8Bl4WmP0HQrojPJhuZvn6QPPIZ3xHhJUGQVU",
+								"type": "text"
+							},
+							{
+								"key": "Access-Token",
+								"value": "Bearer MmMyNjZlY2ZhYzhlYmU2YTE4YjgyZWQzNGExNWUyN2VjMTEyYTQyNzo6QTExOjptb2JpbGUtYmFja2VuZA==::eyJhbGciOiJIUzI1NiJ9.eyJhdHRyaWJ1dGVzIjp7ImNoZWNrIjoidHJ1ZSIsImhvc3QiOiIwOjA6MDowOjA6MDowOjEiLCJhZ2VudCI6IlBvc3RtYW5SdW50aW1lLzcuNDAuMCJ9LCJhcGlLZXkiOiIyYzI2NmVjZmFjOGViZTZhMThiODJlZDM0YTE1ZTI3ZWMxMTJhNDI3IiwiYXBpVXNlciI6eyJhdHRyaWJ1dGVzIjp7ImZ1bGxuYW1lIjoiQWRtaW4ifSwiaWQiOiJVU1IwMDAwLTAwMDAwLTAwMDAtMDAwMDAtMC0wMDAwIiwidXNlcm5hbWUiOiJhZG1pbiJ9LCJ2YWxpZFVudGlsIjoxNzIzMDM4NzMyMjE3LCJzZXJ2aWNlUm9sZSI6eyJpZGVhaHV0LXNwcmluZ2Jvb3QtM3gtdGVtcGxhdGUiOiJURVNUIiwibW9iaWxlLWJhY2tlbmQiOiJBRE1JTiJ9fQ.4xPs6gR49FUTkAN-7AOWZWffWka7j_4Qwl6I5Nrjwvg",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "User-Agent",
+								"value": "xxxx",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "X-Forwarded-For",
+								"value": "0:0:0:0:0:0:0:2",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{url}}/access/info",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"access",
+								"info"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		}
 	]
 }
