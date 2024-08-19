@@ -27,15 +27,22 @@ import net.ideahut.springboot.template.repo.AutoGenStrIdHardDelRepo;
 @ComponentScan
 @RestController
 @RequestMapping("/repo/AutoGenStrIdHardDel")
-public class AutoGenStrIdHardDelController {
+class AutoGenStrIdHardDelController {
+	
+	private final EntityTrxManager entityTrxManager;
+	private final AutoGenStrIdHardDelRepo repo;
 	
 	@Autowired
-	private EntityTrxManager entityTrxManager;
-	@Autowired
-	private AutoGenStrIdHardDelRepo repo;
+	AutoGenStrIdHardDelController(
+		EntityTrxManager entityTrxManager,
+		AutoGenStrIdHardDelRepo repo
+	) {
+		this.entityTrxManager = entityTrxManager;
+		this.repo = repo;
+	}
 	
 	@GetMapping(value = "/{index}/{size}")
-	public Result page(
+	Result page(
 		@PathVariable("index") Integer index, 
 		@PathVariable("size") Integer size,
 		@RequestParam(value = "orders", required = false) String orders 
@@ -47,7 +54,7 @@ public class AutoGenStrIdHardDelController {
 	}
 	
 	@GetMapping(value = "/{id}")
-	public Result byId(
+	Result byId(
 		@PathVariable("id") String id
 	) {
 		AutoGenStrIdHardDel entity = repo.findById(id).orElse(null);
@@ -55,7 +62,7 @@ public class AutoGenStrIdHardDelController {
 	}
 	
 	@PostMapping
-	public Result create(
+	Result create(
 		@RequestBody AutoGenStrIdHardDel data
 	) {
 		AutoGenStrIdHardDel entity = repo.save(data);
@@ -63,7 +70,7 @@ public class AutoGenStrIdHardDelController {
 	}
 	
 	@PutMapping(value = "/{id}")
-	public Result update(
+	Result update(
 		@PathVariable("id") String id,
 		@RequestBody AutoGenStrIdHardDel data
 	) {
@@ -78,7 +85,7 @@ public class AutoGenStrIdHardDelController {
 	}
 	
 	@DeleteMapping(value = "/{id}")
-	public Result delete(
+	Result delete(
 		@PathVariable("id") String id
 	) {
 		repo.deleteById(id);

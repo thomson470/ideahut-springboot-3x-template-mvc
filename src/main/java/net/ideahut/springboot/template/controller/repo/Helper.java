@@ -14,7 +14,7 @@ class Helper {
 		string = string != null ? string.trim() : "";
 		if (!string.isEmpty()) {
 			String[] split = string.split(",");
-			List<Order> orders = new ArrayList<Sort.Order>();
+			List<Order> orders = new ArrayList<>();
 			for (String s : split) {
 				s = s.trim();
 				if (!s.isEmpty()) {

@@ -29,15 +29,22 @@ import net.ideahut.springboot.template.repo.EmbeddedHardDelRepo;
 @ComponentScan
 @RestController
 @RequestMapping("/repo/EmbeddedHardDel")
-public class EmbeddedHardDelController {
+class EmbeddedHardDelController {
+	
+	private final EntityTrxManager entityTrxManager;
+	private final EmbeddedHardDelRepo repo;
 	
 	@Autowired
-	private EntityTrxManager entityTrxManager;
-	@Autowired
-	private EmbeddedHardDelRepo repo;
+	EmbeddedHardDelController(
+		EntityTrxManager entityTrxManager,
+		EmbeddedHardDelRepo repo
+	) {
+		this.entityTrxManager = entityTrxManager;
+		this.repo = repo;
+	}
 	
 	@GetMapping(value = "/{index}/{size}")
-	public Result page(
+	Result page(
 		@PathVariable("index") Integer index, 
 		@PathVariable("size") Integer size,
 		@RequestParam(value = "orders", required = false) String orders 
@@ -49,7 +56,7 @@ public class EmbeddedHardDelController {
 	}
 	
 	@GetMapping(value = "/id")
-	public Result byId(
+	Result byId(
 		@ModelAttribute EmbededId id
 	) {
 		EmbeddedHardDel entity = repo.findById(id).orElse(null);
@@ -57,7 +64,7 @@ public class EmbeddedHardDelController {
 	}
 	
 	@PostMapping
-	public Result create(
+	Result create(
 		@RequestBody EmbeddedHardDel data
 	) {
 		EmbeddedHardDel entity = repo.save(data);
@@ -65,7 +72,7 @@ public class EmbeddedHardDelController {
 	}
 	
 	@PutMapping(value = "")
-	public Result update(
+	Result update(
 		@ModelAttribute EmbededId id,
 		@RequestBody EmbeddedHardDel data
 	) {
@@ -80,7 +87,7 @@ public class EmbeddedHardDelController {
 	}
 	
 	@DeleteMapping(value = "")
-	public Result delete(
+	Result delete(
 		@ModelAttribute EmbededId id
 	) {
 		repo.deleteById(id);

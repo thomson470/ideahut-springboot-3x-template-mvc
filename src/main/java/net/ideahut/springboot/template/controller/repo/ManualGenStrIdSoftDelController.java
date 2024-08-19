@@ -27,15 +27,22 @@ import net.ideahut.springboot.template.repo.ManualGenStrIdSoftDelRepo;
 @ComponentScan
 @RestController
 @RequestMapping("/repo/ManualGenStrIdSoftDel")
-public class ManualGenStrIdSoftDelController {
+class ManualGenStrIdSoftDelController {
+	
+	private final EntityTrxManager entityTrxManager;
+	private final ManualGenStrIdSoftDelRepo repo;
 	
 	@Autowired
-	private EntityTrxManager entityTrxManager;
-	@Autowired
-	private ManualGenStrIdSoftDelRepo repo;
+	ManualGenStrIdSoftDelController(
+		EntityTrxManager entityTrxManager,
+		ManualGenStrIdSoftDelRepo repo
+	) {
+		this.entityTrxManager = entityTrxManager;
+		this.repo = repo;
+	}
 	
 	@GetMapping(value = "/{index}/{size}")
-	public Result page(
+	Result page(
 		@PathVariable("index") Integer index, 
 		@PathVariable("size") Integer size,
 		@RequestParam(value = "orders", required = false) String orders 
@@ -47,7 +54,7 @@ public class ManualGenStrIdSoftDelController {
 	}
 	
 	@GetMapping(value = "/{id}")
-	public Result byId(
+	Result byId(
 		@PathVariable("id") String id
 	) {
 		ManualGenStrIdSoftDel entity = repo.findById(id).orElse(null);
@@ -55,7 +62,7 @@ public class ManualGenStrIdSoftDelController {
 	}
 	
 	@PostMapping
-	public Result create(
+	Result create(
 		@RequestBody ManualGenStrIdSoftDel data
 	) {
 		ManualGenStrIdSoftDel entity = repo.save(data);
@@ -63,7 +70,7 @@ public class ManualGenStrIdSoftDelController {
 	}
 	
 	@PutMapping(value = "/{id}")
-	public Result update(
+	Result update(
 		@PathVariable("id") String id,
 		@RequestBody ManualGenStrIdSoftDel data
 	) {
@@ -78,7 +85,7 @@ public class ManualGenStrIdSoftDelController {
 	}
 	
 	@DeleteMapping(value = "/{id}")
-	public Result delete(
+	Result delete(
 		@PathVariable("id") String id
 	) {
 		repo.deleteById(id);
