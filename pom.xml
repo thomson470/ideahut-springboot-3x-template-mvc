@@ -75,11 +75,11 @@
 		<dependency>
 			<groupId>net.ideahut</groupId>
 			<artifactId>ideahut-springboot-3x</artifactId>
-			<version>3.0.0</version>
+			<version>3.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>net.ideahut</groupId>
-			<version>3.0.0</version>
+			<version>3.1.0</version>
 			<!--<artifactId>ideahut-springboot-3.1.6</artifactId>-->
 			<!--<artifactId>ideahut-springboot-3.2.1</artifactId>-->
 			<!--<artifactId>ideahut-springboot-3.2.2</artifactId>-->

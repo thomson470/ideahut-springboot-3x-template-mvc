@@ -7,39 +7,49 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import net.ideahut.springboot.api.ApiAccessService;
+import net.ideahut.springboot.api.ApiAccessInternalService;
+import net.ideahut.springboot.api.ApiConsumerService;
+import net.ideahut.springboot.api.ApiConsumerServiceImpl;
 import net.ideahut.springboot.api.ApiHandler;
 import net.ideahut.springboot.api.ApiHandlerImpl;
 import net.ideahut.springboot.api.ApiTokenService;
 import net.ideahut.springboot.api.ApiTokenServiceImpl;
 import net.ideahut.springboot.api.WebMvcApiService;
 import net.ideahut.springboot.api.WebMvcApiServiceImpl;
+import net.ideahut.springboot.api.processor.AgentAuthApiProcessor;
+import net.ideahut.springboot.api.processor.AgentHeaderApiProcessor;
+import net.ideahut.springboot.api.processor.AgentHostAuthApiProcessor;
+import net.ideahut.springboot.api.processor.AgentHostHeaderApiProcessor;
 import net.ideahut.springboot.api.processor.AgentHostJwtApiProcessor;
 import net.ideahut.springboot.api.processor.AgentJwtApiProcessor;
+import net.ideahut.springboot.api.processor.HostAuthApiProcessor;
+import net.ideahut.springboot.api.processor.HostHeaderApiProcessor;
 import net.ideahut.springboot.api.processor.HostJwtApiProcessor;
+import net.ideahut.springboot.api.processor.StandardAuthApiProcessor;
+import net.ideahut.springboot.api.processor.StandardHeaderApiProcessor;
 import net.ideahut.springboot.api.processor.StandardJwtApiProcessor;
 import net.ideahut.springboot.entity.EntityTrxManager;
 import net.ideahut.springboot.mapper.DataMapper;
 import net.ideahut.springboot.task.TaskHandler;
 import net.ideahut.springboot.template.AppConstants;
 import net.ideahut.springboot.template.properties.AppProperties;
-import net.ideahut.springboot.template.service.AccessService;
 
 @Configuration
 class ApiConfig {
 	
 	/*
-	 * API
+	 * HANDLER (CRUD & REQUEST)
 	 */
 	@Bean
 	ApiHandler apiHandler(
 		AppProperties appProperties,
 		DataMapper dataMapper,
 		EntityTrxManager entityTrxManager,
-		@Qualifier(AppConstants.Bean.Redis.COMMON) 
+		@Qualifier(AppConstants.Bean.Redis.ACCESS)
 		RedisTemplate<String, byte[]> redisTemplate,
-		@Qualifier(AppConstants.Bean.Task.COMMON) 
+		@Qualifier(AppConstants.Bean.Task.COMMON)
 		TaskHandler taskHandler
+		
 	) {
 		AppProperties.Api.Enable enable = appProperties.getApi().getEnable();
 		return new ApiHandlerImpl()
@@ -62,32 +72,35 @@ class ApiConfig {
 		ApiHandler apiHandler,
 		@Qualifier(AppConstants.Bean.Task.COMMON)
 		TaskHandler taskHandler,
-		ApiAccessService apiAccessService,
-		ApiTokenService apiTokenService
+		ApiTokenService apiTokenService,
+		ApiAccessInternalService apiAccessInternalService
 		
 	) {
 		AppProperties.Api.RedisExpiry redisExpiry = appProperties.getApi().getRedisExpiry();
 		return new WebMvcApiServiceImpl()
-		.setApiAccessService(apiAccessService)
-		.setApiTokenService(apiTokenService)
+		.setApiAccessInternalService(apiAccessInternalService)
+		//.setApiAccessRemoteService(null)
 		.setApiHandler(apiHandler)
-		.setApiName(appProperties.getApi().getName())
+		//.setApiName(null)
 		.setApiProcessors(Arrays.asList(
-			//StandardAuthApiProcessor.class,
-			//StandardHeaderApiProcessor.class,
+			StandardAuthApiProcessor.class,
+			StandardHeaderApiProcessor.class,
 			StandardJwtApiProcessor.class,
-			//AgentAuthApiProcessor.class,
-			//AgentHeaderApiProcessor.class,
+			AgentAuthApiProcessor.class,
+			AgentHeaderApiProcessor.class,
 			AgentJwtApiProcessor.class,
-			//HostAuthApiProcessor.class,
-			//HostHeaderApiProcessor.class,
+			HostAuthApiProcessor.class,
+			HostHeaderApiProcessor.class,
 			HostJwtApiProcessor.class,
-			//AgentHostAuthApiProcessor.class,
-			//AgentHostHeaderApiProcessor.class,
+			AgentHostAuthApiProcessor.class,
+			AgentHostHeaderApiProcessor.class,
 			AgentHostJwtApiProcessor.class
 		))
+		//.setApiSourceService(null)
+		.setApiTokenService(apiTokenService)
 		.setDataMapper(dataMapper)
-		.setDefaultDigest(appProperties.getApi().getDefaultDigest())
+		.setDefaultDigest("SHA-256")
+		//.setHeader(null)
 		.setRedisExpiry(new WebMvcApiServiceImpl.RedisExpiry()
 			.setAccessItem(redisExpiry.getAccessItem())
 			.setAccessNull(redisExpiry.getAccessNull())
@@ -122,14 +135,26 @@ class ApiConfig {
 	}
 	
 	@Bean
-	ApiAccessService apiAccessService(
+	ApiAccessInternalService apiAccessInternalService(
 		DataMapper dataMapper,
 		EntityTrxManager entityTrxManager,
-		@Qualifier(AppConstants.Bean.Redis.ACCESS) 
-		RedisTemplate<String, byte[]> redisTemplate,
-		AccessService accessService
+		@Qualifier(AppConstants.Bean.Redis.ACCESS) RedisTemplate<String, byte[]> redisTemplate
 	) {
-		return accessService::info;
+		return parameter -> {
+			return null;
+		};
+	}
+	
+	// contoh consume ke native
+	@Bean
+	ApiConsumerService apiConsumerService(
+		DataMapper dataMapper,
+		WebMvcApiService apiService
+	) {
+		return new ApiConsumerServiceImpl()
+		.setApiService(apiService)
+		.setDataMapper(dataMapper);
 	}
 	
 }
+
