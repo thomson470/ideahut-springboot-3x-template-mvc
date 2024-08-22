@@ -16,6 +16,7 @@ import org.springframework.util.Assert;
 import jakarta.servlet.http.HttpServletRequest;
 import net.ideahut.springboot.api.ApiAccess;
 import net.ideahut.springboot.api.ApiAuth;
+import net.ideahut.springboot.api.ApiHeader;
 import net.ideahut.springboot.api.ApiParameter;
 import net.ideahut.springboot.api.ApiProcessor;
 import net.ideahut.springboot.api.ApiRequest;
@@ -38,12 +39,12 @@ class AccessServiceImpl implements AccessService, BeanConfigure<AccessService> {
 	
 	//private static final Long TIME_SPAN = 120_000L; // 2 menit ke bawah dan ke atas
 	private static final Long API_ACCESS_EXPIRY = 86_400_000L; // 1 hari
-	private static final List<String> JWT_PROCESSORS = Arrays.asList(new String[] {
+	private static final List<String> JWT_PROCESSORS = Arrays.asList(
 		StandardJwtApiProcessor.API_TYPE,
 		AgentJwtApiProcessor.API_TYPE,
 		HostJwtApiProcessor.API_TYPE,
 		AgentHostJwtApiProcessor.API_TYPE
-	});
+	);
 	
 	private static final String USERID = "1234567890";
 	private static final String USERNAME = "username";
@@ -137,6 +138,17 @@ class AccessServiceImpl implements AccessService, BeanConfigure<AccessService> {
 		ValueOperations<String, byte[]> valops = redisTemplate.opsForValue();
 		byte[] values = valops.get(REDIS_PREFIX + apiKey);
 		return values != null ? dataMapper.read(values, ApiAccess.class) : null;
-	}	
+	}
+	
+	@Override
+	public String token(HttpServletRequest httpRequest) {
+		ApiHeader apiHeader = apiService.getApiHeader();
+		ApiRequest apiRequest = apiService.getApiRequest(httpRequest, false);
+		String from = apiRequest.getHeader(apiHeader.getFromHeader());
+		Assert.hasLength(from, "Header " + apiHeader.getFromHeader() + " is required");
+		ApiSource apiSource = apiService.getApiSource(from);
+		Assert.notNull(apiSource, "ApiSource is not found");
+		return apiService.getApiTokenService().createConsumerToken(apiHeader, apiSource, apiRequest);
+	}
 
 }

@@ -65,24 +65,23 @@ class CrudConfig {
 	}
 	
 	/*
-	 * Contoh CrudResource yang diambil menggunakan ApiHandler
+	 * Contoh CrudResource yang diambil menggunakan ApiService
 	 * - Parameter manager yang didefinisikan di CrudRequest tidak akan digunakan, karena sudah ada di table
 	 * - Parameter name = crudCode
 	 */
 	/*
 	@Bean
-	protected CrudResource crudResource(
-		ApiHandler apiHandler
+	CrudResource crudResource(
+		WebMvcApiService apiService
 	) {
 		return (manager, name) -> {
-			ApiAccess access = RequestContext.currentContext().getAttribute(ApiAccess.CONTEXT);
-			CrudProperties properties = apiHandler.getCrudProperties(access.getRole(), name);
-			Assert.notNull(properties, "CrudProperties is not available (" + access.getRole() + "::" + name + ")");
+			ApiAccess apiAccess = RequestContext.currentContext().getAttribute(ApiAccess.CONTEXT);
+			CrudProperties properties = apiService.getApiCrudProperties(apiAccess, name);
+			Assert.notNull(properties, "CrudProperties is not found: " + name);
 			return properties;
 		};
 	}
 	*/
-	
 	
 	
 	/*

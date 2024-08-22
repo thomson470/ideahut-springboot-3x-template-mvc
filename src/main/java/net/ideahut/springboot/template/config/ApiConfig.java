@@ -145,7 +145,6 @@ class ApiConfig {
 		};
 	}
 	
-	// contoh consume ke native
 	@Bean
 	ApiConsumerService apiConsumerService(
 		DataMapper dataMapper,

@@ -3,7 +3,7 @@
 		"requestPath": "/admin"
 	},
 	"resource": {
-		"title": " ",
+		"title": "",
 		"requestPath": "/_",
 		"locations": "file:{user.dir}/extras/admin/resource/",
 		"indexFile": "index.html",

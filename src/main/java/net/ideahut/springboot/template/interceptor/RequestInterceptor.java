@@ -44,8 +44,9 @@ public class RequestInterceptor implements HandlerInterceptor {
 	
 	// set false, agar ApiService tidak melakukan pengecekan (development)
 	// default ApiAccess Role = PUBLIC
-	private static final boolean isApiSerciveCheck = false;
-	private static final boolean isAllowAllRequest = true;
+	private final boolean isApiSerciveCheck = false;
+	// set true, jika tidak ingin mengecek ApiRoleRequest / ApiPropvider request (development)
+	private final boolean isAllowAllRequest = true;
 	
 	@Autowired
 	RequestInterceptor(

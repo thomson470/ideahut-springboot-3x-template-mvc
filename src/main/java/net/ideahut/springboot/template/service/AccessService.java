@@ -13,4 +13,7 @@ public interface AccessService {
 	
 	ApiAccess info(ApiParameter apiParameter);
 	
+	// consumer token
+	String token(HttpServletRequest httpRequest);
+	
 }
