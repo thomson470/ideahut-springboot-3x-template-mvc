@@ -30,6 +30,7 @@ import net.ideahut.springboot.api.processor.StandardJwtApiProcessor;
 import net.ideahut.springboot.bean.BeanConfigure;
 import net.ideahut.springboot.context.RequestContext;
 import net.ideahut.springboot.mapper.DataMapper;
+import net.ideahut.springboot.object.TimeValue;
 import net.ideahut.springboot.template.AppConstants;
 import net.ideahut.springboot.util.TimeUtil;
 import net.ideahut.springboot.util.WebMvcUtil;
@@ -97,7 +98,7 @@ class AccessServiceImpl implements AccessService, BeanConfigure<AccessService> {
 		Assert.isTrue(USERNAME.equals(username) && PASSWORD.equals(password), "Invalid user");
 		ApiRequest apiRequest = apiService.getApiRequest(httpRequest, true);
 		ApiAccess apiAccess = new ApiAccess()
-		.setValidUntil(TimeUtil.currentEpochMillis() + API_ACCESS_EXPIRY)
+		.setValidUntil(TimeValue.of(TimeUnit.MILLISECONDS, TimeUtil.currentEpochMillis() + API_ACCESS_EXPIRY))
 		.setApiUser(new ApiUser()
 			.setId(USERID)
 			.setUsername(USERNAME)

@@ -18,7 +18,7 @@ import net.ideahut.springboot.exception.ResultRuntimeException;
 import net.ideahut.springboot.object.Page;
 import net.ideahut.springboot.object.Result;
 import net.ideahut.springboot.template.Application;
-import net.ideahut.springboot.util.FrameworkUtil;
+import net.ideahut.springboot.util.ObjectUtil;
 import net.ideahut.springboot.util.WebMvcUtil;
 
 /*
@@ -60,11 +60,11 @@ class AuditController {
 		String entity = auditRequest.getEntity();
 		if (entity != null && !entity.isEmpty() && auditRequest.getClassOfEntity() == null) {
 			try {
-				Class<?> classOfEntity = FrameworkUtil.classOf(entity);
+				Class<?> classOfEntity = ObjectUtil.classOf(entity);
 				auditRequest.setClassOfEntity(classOfEntity);
 			} catch(Exception e1) {
 				try {
-					Class<?> type = FrameworkUtil.classOf(Application.Package.APPLICATION + ".entity." + entity);
+					Class<?> type = ObjectUtil.classOf(Application.Package.APPLICATION + ".entity." + entity);
 					auditRequest.setClassOfEntity(type);	
 				} catch (Exception e2) {
 					throw new ResultRuntimeException(Result.error("AUDIT-02", "Entity is not found, for: " + entity));

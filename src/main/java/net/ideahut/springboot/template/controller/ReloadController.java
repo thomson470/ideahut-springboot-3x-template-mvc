@@ -1,6 +1,6 @@
 package net.ideahut.springboot.template.controller;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +15,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import net.ideahut.springboot.admin.AdminHandler;
+import net.ideahut.springboot.exception.ResultRuntimeException;
 import net.ideahut.springboot.mapper.DataMapper;
 import net.ideahut.springboot.object.Result;
 
 @ComponentScan
 @RestController
 @RequestMapping("/reload")
-public class ReloadController {
+class ReloadController {
 	
 	private final DataMapper dataMapper;
 	private final AdminHandler adminHandler;
@@ -35,9 +36,9 @@ public class ReloadController {
 		this.adminHandler = adminHandler;
 	}
 	
-	@GetMapping("/options")
-	public Result options() {
-		Set<JsonNode> reloads = new HashSet<>();
+	@GetMapping("/list")
+	Set<JsonNode> list() {
+		Set<JsonNode> list = new LinkedHashSet<>();
 		if (adminHandler != null) {
 			Set<String> names = adminHandler.reload();
 			if (names != null) {
@@ -46,22 +47,22 @@ public class ReloadController {
 					reload.put("icon", "memory");
 					reload.put("path", "/" + name);
 					reload.put("title", name.substring(0, 1).toUpperCase() + name.substring(1));
-					reloads.add(reload);
+					list.add(reload);
 				}
 			}
 		}
-		return Result.success(reloads);
+		return list;
 	}
 	
 	@PostMapping("/{name}")
-	public Result reload(
+	boolean reload(
 		@PathVariable("name") String name
 	) throws Exception {
 		if (adminHandler != null) {
 			boolean loaded = adminHandler.reload(name);
-			return Result.success(loaded);
+			return loaded;
 		}
-		return Result.error("ERR.NULL_HANDLER", "AdminHandler is null");
+		throw ResultRuntimeException.of(Result.error("ERR.NULL_HANDLER", "AdminHandler is null"));
 	}
 
 }

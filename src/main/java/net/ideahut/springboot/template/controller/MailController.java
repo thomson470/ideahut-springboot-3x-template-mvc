@@ -18,6 +18,7 @@ import net.ideahut.springboot.mail.MailHandler;
 import net.ideahut.springboot.mail.MailObject;
 import net.ideahut.springboot.mail.MailObject.Attachment;
 import net.ideahut.springboot.object.Result;
+import net.ideahut.springboot.util.ObjectUtil;
 
 /*
  * Contoh penggunaan MailHandler
@@ -38,7 +39,7 @@ class MailController {
 	
 	@Setter
 	@Getter
-	protected static class Form {
+	static class Form {
 		private String from;
 		private List<String> to;
 		private List<String> cc;
@@ -49,13 +50,13 @@ class MailController {
 	}
 	
 	@PostMapping("/send/sync")
-	protected Result sendSync(@ModelAttribute Form form) throws Exception {
+	Result sendSync(@ModelAttribute Form form) throws Exception {
 		sendMail(form, false);
 		return Result.success();
 	}
 	
 	@PostMapping("/send/async")
-	protected Result sendAsync(@ModelAttribute Form form) throws Exception {
+	Result sendAsync(@ModelAttribute Form form) throws Exception {
 		sendMail(form, true);
 		return Result.success();
 	}
@@ -63,22 +64,15 @@ class MailController {
 	private void sendMail(Form form, boolean async) throws Exception {
 		MailObject mail = new MailObject();
 		
-		String subject = form.getSubject();
-		subject = subject != null ? subject.trim() : "";
-		if (subject.isEmpty()) {
-			subject = "Test-Mail";
-		}
+		String subject = ObjectUtil.useOrDefault(form.getSubject(), "");
+		subject = ObjectUtil.useOrElse(!subject.trim().isEmpty(), subject, "Test-Mail");
 		mail.setSubject(subject);
 		
-		String content = form.getContent();
-		content = content != null ? content.trim() : "";
-		if (content.isEmpty()) {
-			content = "Ini adalah contoh email";
-		}
+		String content = ObjectUtil.useOrDefault(form.getContent(), "");
+		content = ObjectUtil.useOrElse(!content.trim().isEmpty(), content, "Ini adalah contoh email");
 		mail.setHtmlText(content);
 		
-		String sender = form.getFrom();
-		sender = sender != null ? sender.trim() : "";
+		String sender = ObjectUtil.useOrDefault(form.getFrom(), "").trim();
 		if (!sender.isEmpty()) {
 			mail.setFrom(new InternetAddress(sender, sender));
 		}

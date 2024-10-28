@@ -4,22 +4,45 @@ spring:
       console.enabled: true  
    datasource:
       driver-class-name: "org.h2.Driver"
-      jdbc-url: "jdbc:h2:file:/opt/macdev/project/zamples/ideahut-springboot-3x/h2/springboot_sample;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE"
-      username: "<username>"
-      password: "<password>"
+      jdbc-url: "jdbc:h2:file:"
+      username: ""
+      password: ""
    #jpa:
-      #properties:
-         #hibernate:
-            #dialect: "org.hibernate.dialect.H2Dialect"
+   #   properties:
+   #      hibernate:
+   #         dialect: "org.hibernate.dialect.H2Dialect"
             
 app:
    audit:
       datasource:
          driver-class-name: "org.h2.Driver"
-         jdbc-url: "jdbc:h2:file:/opt/macdev/project/zamples/ideahut-springboot-3x/h2/audit_springboot_sample;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE"
-         username: "<username>"
-         password: "<password>"   
+         jdbc-url: "jdbc:h2:file:"
+         username: ""
+         password: ""   
       #jpa:
-         #properties:
-            #hibernate:
-               #dialect: "org.hibernate.dialect.H2Dialect"
+      #   properties:
+      #      hibernate:
+      #         dialect: "org.hibernate.dialect.H2Dialect"
+               
+other:   
+   trxManager:
+      second:
+         datasource:
+            driver-class-name: "org.h2.Driver"
+            jdbc-url: "jdbc:h2:file:"
+            username: ""
+            password: ""   
+         #jpa:
+         #   properties:
+         #      hibernate:
+         #         dialect: "org.hibernate.dialect.H2Dialect"
+         audit:
+            datasource:
+               driver-class-name: "org.h2.Driver"
+               jdbc-url: "jdbc:h2:file:"
+               username: ""
+               password: ""   
+            #jpa:
+            #   properties:
+            #      hibernate:
+            #         dialect: "org.hibernate.dialect.H2Dialect"

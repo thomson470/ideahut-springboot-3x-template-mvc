@@ -24,7 +24,7 @@ import net.ideahut.springboot.init.InitRequest;
 class WarmUpController {
 
     @PostMapping
-    protected ResponseEntity<String> post(@RequestBody @Valid InitRequest initRequest) {
+    ResponseEntity<String> post(@RequestBody @Valid InitRequest initRequest) {
         return ResponseEntity.ok(UUID.randomUUID().toString() + initRequest);
     }
 }

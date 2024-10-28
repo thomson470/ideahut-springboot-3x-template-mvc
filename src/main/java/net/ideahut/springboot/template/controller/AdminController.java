@@ -13,7 +13,7 @@ import net.ideahut.springboot.mapper.DataMapper;
 @ApiExclude
 @ComponentScan
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/_/api")
 class AdminController extends WebMvcAdminController {
 	
 	private final DataMapper dataMapper;

@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import net.ideahut.springboot.annotation.Public;
+import net.ideahut.springboot.crud.CrudAction;
 import net.ideahut.springboot.grid.GridHandler;
 import net.ideahut.springboot.object.Result;
 
@@ -34,13 +35,11 @@ class GridController {
 		@RequestParam("name") String name,
 		@RequestParam("parent") String parent
 	) {
-		ObjectNode grid = gridHandler.getGrid(parent, name);
+		ObjectNode grid = (ObjectNode) gridHandler.getGrid(parent, name);
 		ArrayNode actions = grid.putArray("actions");
-		actions.add("PAGE");
-		actions.add("CREATE");
-		actions.add("UPDATE");
-		actions.add("DELETE");
-		actions.add("DELETES");
+		for (CrudAction crudAction : CrudAction.values()) {
+			actions.add(crudAction.name());
+		}
 		return Result.success(grid);
 	}
 	

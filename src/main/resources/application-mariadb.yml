@@ -1,22 +1,46 @@
 spring:
    datasource:
       driver-class-name: "org.mariadb.jdbc.Driver"
-      jdbc-url: "jdbc:mariadb://localhost:3307/springboot_sample?createDatabaseIfNotExist=true&autoReconnect=true"
-      username: "<username>"
-      password: "<password>"
+      jdbc-url: "jdbc:mariadb://"
+      username: ""
+      password: ""
    #jpa:
-      #properties:
-         #hibernate:
-            #dialect: "org.hibernate.dialect.MariaDBDialect"
+   #   properties:
+   #      hibernate:
+   #         dialect: "org.hibernate.dialect.MariaDBDialect"
             
 app:
    audit:
       datasource:
          driver-class-name: "org.mariadb.jdbc.Driver"
-         jdbc-url: "jdbc:mariadb://localhost:3307/__audit_springboot_sample?createDatabaseIfNotExist=true&autoReconnect=true"
-         username: "<username>"
-         password: "<password>"   
+         jdbc-url: "jdbc:mariadb://"
+         username: ""
+         password: ""   
       #jpa:
-         #properties:
-            #hibernate:
-               #dialect: "org.hibernate.dialect.MariaDBDialect"
+      #   properties:
+      #      hibernate:
+      #         dialect: "org.hibernate.dialect.MariaDBDialect"
+
+other:   
+   trxManager:
+      second:
+         datasource:
+            driver-class-name: "org.mariadb.jdbc.Driver"
+            jdbc-url: "jdbc:mariadb://"
+            username: ""
+            password: ""
+         #jpa:
+         #   properties:
+         #      hibernate:
+         #         dialect: "org.hibernate.dialect.MariaDBDialect"
+         audit:
+            datasource:
+               driver-class-name: "org.mariadb.jdbc.Driver"
+               jdbc-url: "jdbc:mariadb://"
+               username: ""
+               password: ""   
+            #jpa:
+            #   properties:
+            #      hibernate:
+            #         dialect: "org.hibernate.dialect.MariaDBDialect"
+ 

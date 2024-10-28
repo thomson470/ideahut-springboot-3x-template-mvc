@@ -20,7 +20,7 @@ class RedisConfig {
 	
 	@Primary
 	@Bean(name = AppConstants.Bean.Redis.COMMON)
-	protected RedisTemplate<String, byte[]> commonRedis(
+	RedisTemplate<String, byte[]> commonRedis(
 		AppProperties appProperties		
 	) throws Exception {
 		RedisProperties properties = appProperties.getRedis().getCommon();
@@ -29,7 +29,7 @@ class RedisConfig {
 	}
 	
 	@Bean(name = AppConstants.Bean.Redis.ACCESS)
-	protected RedisTemplate<String, byte[]> accessRedis(
+	RedisTemplate<String, byte[]> accessRedis(
 		DataMapper dataMapper,
 		AppProperties appProperties		
 	) throws Exception {

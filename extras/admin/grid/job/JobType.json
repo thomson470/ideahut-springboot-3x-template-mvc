@@ -1,9 +1,9 @@
 {
-	"order": 3,
-    "name": "JobType",
-    "title": "JobType",
+	"order": 2,
+	"name": "JobType",
+    "title": "Type",
     "crud": {
-        "name": "net.ideahut.springboot.job.entity.JobType"
+		"name": "net.ideahut.springboot.job.entity.JobType"
     },
     "id": {
         "type": "STANDARD",
@@ -259,7 +259,7 @@
         {
             "title": "Parameter",
             "crud": {
-                "name": "net.ideahut.springboot.job.entity.JobTypeParam"
+				"name": "net.ideahut.springboot.job.entity.JobTypeParam"
             },
             "id": {
                 "type": "COMPOSITE",

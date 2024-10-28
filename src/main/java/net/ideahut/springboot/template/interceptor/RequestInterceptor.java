@@ -21,6 +21,7 @@ import net.ideahut.springboot.api.ApiUser;
 import net.ideahut.springboot.api.WebMvcApiService;
 import net.ideahut.springboot.audit.AuditInfo;
 import net.ideahut.springboot.context.RequestContext;
+import net.ideahut.springboot.exception.ResultRuntimeException;
 import net.ideahut.springboot.message.MessageHandler;
 import net.ideahut.springboot.object.MapStringObject;
 import net.ideahut.springboot.object.Result;
@@ -44,9 +45,9 @@ public class RequestInterceptor implements HandlerInterceptor {
 	
 	// set false, agar ApiService tidak melakukan pengecekan (development)
 	// default ApiAccess Role = PUBLIC
-	private final boolean isApiSerciveCheck = false;
+	private static final boolean CHECK_BY_API_SERVICE = false;
 	// set true, jika tidak ingin mengecek ApiRoleRequest / ApiPropvider request (development)
-	private final boolean isAllowAllRequest = true;
+	private static final boolean ALLOW_ALL_REQUEST = true;
 	
 	@Autowired
 	RequestInterceptor(
@@ -105,18 +106,16 @@ public class RequestInterceptor implements HandlerInterceptor {
 	private void handleApi(HttpServletRequest request, HandlerMethod hm) {
 		boolean isPublic = FrameworkUtil.isPublic(hm);
 		ApiAccess apiAccess = null;
-		if (isApiSerciveCheck) {
+		if (CHECK_BY_API_SERVICE) {
 			apiAccess = apiService.getApiAccess(request, isPublic);
 			if (apiAccess == null) {
 				apiAccess = new ApiAccess();
 				apiAccess.setApiRole(AppConstants.Default.API_ROLE);
 			}
-			if (!isAllowAllRequest) {
-				if (!isPublic) {
-					boolean allowed = apiService.isApiRequestAllowed(apiAccess, hm);
-					if (!allowed) {
-						throw FrameworkUtil.exception(Result.error("REQ-00", "Request is not allowed"));
-					}
+			if (!ALLOW_ALL_REQUEST && !isPublic) {
+				boolean allowed = apiService.isApiRequestAllowed(apiAccess, hm);
+				if (!allowed) {
+					throw ResultRuntimeException.of(Result.error("REQ-00", "Request is not allowed"));
 				}
 			}
 		} else {
@@ -144,8 +143,6 @@ public class RequestInterceptor implements HandlerInterceptor {
 				response.sendRedirect(redirect);
 				return false;
 			}
-		} else {
-			// do noting
 		}
 		return true;
 	}	

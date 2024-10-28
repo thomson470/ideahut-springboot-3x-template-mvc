@@ -2,6 +2,7 @@ package net.ideahut.springboot.template.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,7 @@ class ReplicaController {
 	
 	private final EntityTrxManager entityTrxManager;
 	
+	@Autowired
 	ReplicaController(
 		EntityTrxManager entityTrxManager	
 	) {
@@ -30,7 +32,7 @@ class ReplicaController {
 	}
 
 	@PostMapping(value = "/create/information")
-	protected Result createInformationReplica() {
+	Result createInformationReplica() {
 		TrxManagerInfo trxManagerInfo = entityTrxManager.getDefaultTrxManagerInfo();
 		EntityInfo entityInfo = trxManagerInfo.getEntityInfo(Information.class);
 		List<EntityReplica.Creation> creations = EntityReplica.create(entityInfo, 2);
@@ -38,7 +40,7 @@ class ReplicaController {
 	}
 	
 	@GetMapping(value = "/sql/information")
-	protected Result sqlInformationReplica() {
+	Result sqlInformationReplica() {
 		TrxManagerInfo trxManagerInfo = entityTrxManager.getDefaultTrxManagerInfo();
 		EntityInfo entityInfo = trxManagerInfo.getEntityInfo(Information.class);
 		List<String> sqls = EntityReplica.getSQL(entityInfo, 2);
@@ -46,7 +48,7 @@ class ReplicaController {
 	}
 	
 	@PostMapping(value = "/create/information/link")
-	protected Result createInformationLinkReplica() {
+	Result createInformationLinkReplica() {
 		TrxManagerInfo trxManagerInfo = entityTrxManager.getDefaultTrxManagerInfo();
 		EntityInfo entityInfo = trxManagerInfo.getEntityInfo(InformationLink.class);
 		EntityInfo refEntityInfo = trxManagerInfo.getEntityInfo(Information.class);
@@ -55,7 +57,7 @@ class ReplicaController {
 	}
 	
 	@GetMapping(value = "/sql/information/link")
-	protected Result sqlInformationLinkReplica() {
+	Result sqlInformationLinkReplica() {
 		TrxManagerInfo trxManagerInfo = entityTrxManager.getDefaultTrxManagerInfo();
 		EntityInfo entityInfo = trxManagerInfo.getEntityInfo(InformationLink.class);
 		EntityInfo refEntityInfo = trxManagerInfo.getEntityInfo(Information.class);

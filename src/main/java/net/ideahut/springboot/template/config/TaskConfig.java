@@ -17,16 +17,16 @@ import net.ideahut.springboot.template.properties.AppProperties;
 class TaskConfig {
 	
 	@Primary
-	@Bean(name = AppConstants.Bean.Task.COMMON, destroyMethod = "shutdown")
-    protected TaskHandler commonTask(
+	@Bean(name = AppConstants.Bean.Task.COMMON, destroyMethod = "onShutdownBean")
+    TaskHandler commonTask(
     	AppProperties appProperties		
     ) {
 		return new TaskHandlerImpl()
 		.setTaskProperties(appProperties.getTask().getCommon());
     }
 	
-	@Bean(name = AppConstants.Bean.Task.AUDIT, destroyMethod = "shutdown")
-	protected TaskHandler auditTask(
+	@Bean(name = AppConstants.Bean.Task.AUDIT, destroyMethod = "onShutdownBean")
+	TaskHandler auditTask(
 		AppProperties appProperties		
 	) {
 		return new TaskHandlerImpl()

@@ -13,7 +13,6 @@ import net.ideahut.springboot.grid.GridHandler;
 import net.ideahut.springboot.grid.GridParent;
 import net.ideahut.springboot.grid.GridSource;
 import net.ideahut.springboot.mapper.DataMapper;
-import net.ideahut.springboot.object.Result;
 import net.ideahut.springboot.template.entity.app.Menu;
 import net.ideahut.springboot.template.entity.app.MenuId;
 
@@ -35,14 +34,14 @@ class MenuController {
 	}
 	
 	@GetMapping("list")
-	protected Result list() {
+	List<Menu> list() {
 		List<Menu> menus = new ArrayList<>();
 		menus.add(cache());
 		Menu grid = grid();
 		if (grid != null) {
 			menus.add(grid);
 		}
-		return Result.success(menus);
+		return menus;
 	}
 	
 	private Menu cache() {

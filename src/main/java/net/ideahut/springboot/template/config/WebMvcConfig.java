@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
@@ -18,7 +19,10 @@ import net.ideahut.springboot.admin.AdminHandler;
 import net.ideahut.springboot.admin.AdminProperties;
 import net.ideahut.springboot.config.WebMvcBasicConfig;
 import net.ideahut.springboot.mapper.DataMapper;
+import net.ideahut.springboot.task.TaskProperties;
 import net.ideahut.springboot.template.interceptor.RequestInterceptor;
+import net.ideahut.springboot.template.properties.AppProperties;
+import net.ideahut.springboot.util.ObjectUtil;
 
 /*
  * Konfigurasi Web MVC
@@ -28,15 +32,19 @@ import net.ideahut.springboot.template.interceptor.RequestInterceptor;
 @EnableWebMvc
 class WebMvcConfig extends WebMvcBasicConfig {
 	
+	private final AppProperties appProperties;
 	private final DataMapper dataMapper;
 	private final RequestInterceptor requestInterceptor;
 	private final AdminHandler adminHandler;
 	
+	@Autowired
 	WebMvcConfig(
+		AppProperties appProperties,
 		DataMapper dataMapper,
 		RequestInterceptor requestInterceptor,
 		AdminHandler adminHandler
 	) {
+		this.appProperties = appProperties;
 		this.dataMapper = dataMapper;
 		this.requestInterceptor = requestInterceptor;
 		this.adminHandler = adminHandler;
@@ -77,14 +85,30 @@ class WebMvcConfig extends WebMvcBasicConfig {
 	
 	
 	/*
-	 * Stream download
+	 * AsyncSupport -> Stream download
 	 */
 	@Override
 	public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
+		TaskProperties properties = appProperties.getWebAsync();
 		ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-	    taskExecutor.setCorePoolSize(10);
-	    taskExecutor.setMaxPoolSize(10);
-	    taskExecutor.afterPropertiesSet();
+		taskExecutor.setAllowCoreThreadTimeOut(ObjectUtil.useOrDefault(properties.getAllowCoreThreadTimeOut(), Boolean.FALSE));
+		Integer awaitTerminationSeconds = properties.getAwaitTerminationSeconds();
+		taskExecutor.setAwaitTerminationSeconds(awaitTerminationSeconds != null && awaitTerminationSeconds > 0 ? awaitTerminationSeconds : 0);
+		Integer corePoolSize = properties.getCorePoolSize();
+		taskExecutor.setCorePoolSize(corePoolSize != null && corePoolSize > 1 ? corePoolSize : 1);
+		taskExecutor.setDaemon(ObjectUtil.useOrDefault(properties.getDaemon(), Boolean.FALSE));
+		Integer keepAliveSeconds = properties.getKeepAliveSeconds();
+		taskExecutor.setKeepAliveSeconds(keepAliveSeconds != null && keepAliveSeconds > 0 ? keepAliveSeconds : 30);
+		Integer maxPoolSize = properties.getMaxPoolSize();
+		taskExecutor.setMaxPoolSize(maxPoolSize != null && maxPoolSize > 0 ? maxPoolSize : taskExecutor.getCorePoolSize());
+		Integer queueCapacity = properties.getQueueCapacity();
+		taskExecutor.setQueueCapacity(queueCapacity != null && queueCapacity > 0 ? queueCapacity : Integer.MAX_VALUE);
+		String threadNamePrefix = properties.getThreadNamePrefix();
+		taskExecutor.setThreadNamePrefix(threadNamePrefix != null && !threadNamePrefix.trim().isEmpty() ? threadNamePrefix : ("WebAsync-" + System.nanoTime() + "-"));
+		Integer threadPriority = properties.getThreadPriority();
+		taskExecutor.setThreadPriority(threadPriority != null && threadPriority > 0 ? threadPriority : Thread.NORM_PRIORITY);
+		taskExecutor.setWaitForTasksToCompleteOnShutdown(ObjectUtil.useOrDefault(properties.getWaitForJobsToCompleteOnShutdown(), Boolean.FALSE));
+		taskExecutor.afterPropertiesSet();
 	    configurer.setTaskExecutor(taskExecutor);
 		super.configureAsyncSupport(configurer);
 	}

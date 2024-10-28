@@ -34,15 +34,23 @@ class CacheController {
 	
 	private static final String GROUP = "TEST1";
 
+	private final AppProperties appProperties;
+	private final DataMapper dataMapper;
+	private final CacheGroupHandler cacheGroupHandler;
+	
 	@Autowired
-	private AppProperties appProperties;
-	@Autowired
-	private DataMapper dataMapper;
-	@Autowired
-	private CacheGroupHandler cacheGroupHandler;
+	CacheController(
+		AppProperties appProperties,
+		DataMapper dataMapper,
+		CacheGroupHandler cacheGroupHandler	
+	) {
+		this.appProperties = appProperties;
+		this.dataMapper = dataMapper;
+		this.cacheGroupHandler = cacheGroupHandler;
+	}
 	
 	@GetMapping("/groups")
-	public Result groups() {
+	ArrayNode groups() {
 		ArrayNode items = dataMapper.createArrayNode();
 		List<CacheGroupProperties> groups = appProperties.getCache().getGroups();
 		for (CacheGroupProperties group : groups) {
@@ -54,11 +62,11 @@ class CacheController {
 				item.put("size", size);
 			}
 		}
-		return Result.success(items);
+		return items;
 	}
 	
 	@GetMapping("/get")
-	protected Result get(
+	Result get(
 		@RequestParam(value = "group", required = false) String group,
 		@RequestParam("key") String key
 	) {
@@ -80,36 +88,32 @@ class CacheController {
 	}
 	
 	@GetMapping("/size")
-	protected Result size(
+	Long size(
 		@RequestParam(value = "group", required = false) String group
 	) {
-		Long size = cacheGroupHandler.size(group(group));
-		return Result.success(size);
+		return cacheGroupHandler.size(group(group));
 	}
 	
 	@GetMapping("/keys")
-	protected Result keys(
+	List<String> keys(
 		@RequestParam(value = "group", required = false) String group
 	) {
-		List<String> keys = cacheGroupHandler.keys(group(group));
-		return Result.success(keys);
+		return cacheGroupHandler.keys(group(group));
 	}
 	
 	@DeleteMapping("/delete")
-	protected Result delete(
+	void delete(
 		@RequestParam(value = "group", required = false) String group,
 		@RequestParam("key") String key
 	) {
 		cacheGroupHandler.delete(group(group), key);
-		return Result.success();
 	}
 	
 	@DeleteMapping("/clear")
-	protected Result clear(
+	void clear(
 		@RequestParam(value = "group", required = false) String group
 	) {
 		cacheGroupHandler.clear(group(group));
-		return Result.success();
 	}
 	
 	private String group(String input) {

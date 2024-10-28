@@ -17,7 +17,7 @@ import net.ideahut.springboot.filter.WebMvcRequestFilter;
 import net.ideahut.springboot.security.SecurityAuthorization;
 import net.ideahut.springboot.template.AppConstants;
 import net.ideahut.springboot.template.properties.AppProperties;
-import net.ideahut.springboot.util.FrameworkUtil;
+import net.ideahut.springboot.util.WebMvcUtil;
 
 /*
  * Konfigurasi Filter
@@ -26,16 +26,16 @@ import net.ideahut.springboot.util.FrameworkUtil;
 class FilterConfig {
 	
 	@Bean
-	protected FilterRegistrationBean<WebMvcRequestFilter> defaultRequestFilter(
+	FilterRegistrationBean<WebMvcRequestFilter> defaultRequestFilter(
 		Environment environment,
 		AppProperties appProperties,
 		RequestMappingHandlerMapping handlerMapping
 	) {		
-		return FrameworkUtil.createFilterBean(
+		return WebMvcUtil.createFilterBean(
 			environment,
 			new WebMvcRequestFilter()
 				.setHandlerMapping(handlerMapping)
-				.setCorsHeaders(appProperties.getCors())
+				.setCORSHeaders(appProperties.getCors())
 				.setTraceEnable(true)
 				.setEnableTimeResult(true)
 				.initialize(), 
@@ -45,7 +45,7 @@ class FilterConfig {
 	}
 	
 	@Bean
-	protected FilterRegistrationBean<SecurityAuthorizationFilter> adminFilter(
+	FilterRegistrationBean<SecurityAuthorizationFilter> adminFilter(
 		Environment environment,
 		AdminHandler adminHandler,
 		@Qualifier(AppConstants.Bean.Security.ADMIN) SecurityAuthorization adminSecurity
@@ -56,7 +56,7 @@ class FilterConfig {
 		if (properties.getResource() != null && properties.getResource().getRequestPath() != null) {
 			paths.add(properties.getResource().getRequestPath() + "/*");
 		}
-		return FrameworkUtil.createFilterBean(
+		return WebMvcUtil.createFilterBean(
 			environment,
 			new SecurityAuthorizationFilter()
 				.setSecurityAuthorization(adminSecurity),

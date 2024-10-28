@@ -11,7 +11,7 @@ management:
 
 spring:
    application:
-      name: ideahut-springboot-template
+      name: ideahut-springboot-3x-template-mvc
    quartz:
       auto-startup: false
    servlet:
@@ -23,18 +23,18 @@ spring:
    
       
    #
-   # Ganti profile sesuai dengan database yang mau dicoba
+   # Ganti profile sesuai dengan database yang digunakan
    #
    profiles:
       #active: "db2"
+      #active: "derby"
       #active: "h2"
+      #active: "hsql"
       #active: "mariadb"
       active: "mysql"
       #active: "oracle"
       #active: "postgresql"
       #active: "sqlserver"
-      #active: "hsql"
-      #active: "derby"
 
    datasource:
       hikari:
@@ -54,14 +54,19 @@ spring:
                #auto: none
             show_sql: true
             #generate_statistics: true
-            audit_identifier: spring_sample
-            audit_bean_name: auditSessionFactory_1
+            audit_identifier: spring_sample_main
+            audit_bean_name: mainAuditSessionFactory
 
 app:
+   waitAllBeanConfigured: true
    loggingError: true
+   autoStartScheduler: false
    messagePath: "file:{user.dir}/extras/message/"
    reportPath: "file:{user.dir}/extras/report/"
    
+   #
+   # CORS Http Header
+   #
    cors:
       "Access-Control-Allow-Credentials": "true"
       "Access-Control-Allow-Origin": "*"
@@ -72,13 +77,21 @@ app:
                      
    ignored-handler-classes:
       - org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController
+      - org.springframework.web.servlet.NoHandlerFoundException
+   
+   #
+   # Model / Entity yang punya annotation @ForeignKeyEntity akan dieksekusi
+   # Beberapa database tidak support "... on update (CASCADE/SET_NULL)"
+   #
+   foreignKey:
+      enableExecution: true
+      dropBeforeCreate: true
+      onUpdateAction: true 
       
    audit:
       jpa:
          properties:
             hibernate:
-               hbm2ddl:
-                  auto: update
                show_sql: true
                #generate_statistics: true
       properties:
@@ -108,27 +121,31 @@ app:
          type: 1
          testOnStartup: true
          standalone:
-            host: "<host>"
-            port: "<port>"
-            password: "<password>"
+            host: ""
+            port: ""
+            password: ""
             database: 0
             
    cache:
       groups:
          - name: TEST1
            limit: 20
-           expiry: 3600
+           expiry: 
+              unit: SECONDS
+              value: 3600
            nullable: true
          - name: TEST2
            limit: -1
-           expiry: 0
+           expiry: 
+              unit: SECONDS
+              value: 0
            nullable: true
 
    mail:
-      host: "<host>"
-      port: "<port>"
-      username: "<username>"
-      password: "<password>"
+      host: smtp.gmail.com
+      port: 587
+      username: ""
+      password: ""
       properties:
          "mail.smtp.host": "smtp.gmail.com"
          "mail.smtp.ssl.trust": "smtp.gmail.com"
@@ -139,6 +156,7 @@ app:
          "mail.transport.protocol": "smtp"
          "mail.debug": "true"
          "mail.smtp.ssl.protocols": "TLSv1.2"
+         
    grid:
       location: "file:{user.dir}/extras/grid/**/*.json"
       #definition: "file:{user.dir}/extras/grid/grid.def"
@@ -156,49 +174,47 @@ app:
       consumer:
          secret: "df7c7d71-ec05-4ad4-9b36-1580b1a6590f"
          digest: "SHA-256"
-         expiry: 86400 # 1 hari
+         expiry: 
+            unit: SECONDS
+            value: 86400 # 1 hari
       jwtProcessor:
          secret: "77ea06ac-808b-4399-895c-a546b033d533"
          digest: "SHA-256"
-         expiry: 3600 # 1jam
+         expiry: 
+            unit: SECONDS
+            value: 3600 # 1jam
       redisExpiry:
-         ## semua dalam detik
+         timeUnit: SECONDS
          accessNull: 120
          accessItem: 300
          consumerNull: 120
          consumerItem: 600
       ## toleransi waktu atas/bawah timestamp
-      signatureTimeSpan: 60
+      signatureTimeSpan: 
+         unit: SECONDS
+         value: 60
       defaultDigest: "SHA-256"
+   
+   webAsync:
+      threadNamePrefix: "WEB-ASYNC"
+      corePoolSize: 10
+      maxPoolSize: 100
 
 other:   
    trxManager:
       second:
-         datasource:
-            driver-class-name: com.mysql.cj.jdbc.Driver
-            jdbc-url: jdbc:mysql://localhost:3306/springboot_sample_2?createDatabaseIfNotExist=true&autoReconnect=true
-            username: "<username>"
-            password: "<password>"  
          jpa:
             properties:
                hibernate:
                   hbm2ddl:
                      auto: update
-                  dialect: org.hibernate.dialect.MySQL8Dialect
                   show_sql: true
-                  audit_identifier: spring_sample_2
-                  audit_bean_name: auditSessionFactory_2
+                  audit_identifier: spring_sample_other
+                  audit_bean_name: otherAuditSessionFactory
          audit:
-            datasource:
-               driver-class-name: com.mysql.cj.jdbc.Driver
-               jdbc-url: jdbc:mysql://localhost:3306/__audit_springboot_sample_2?createDatabaseIfNotExist=true&autoReconnect=true
-               username: "<username>"
-               password: "<password>"  
             jpa:
                properties:
                   hibernate:
-                     hbm2ddl:
-                        auto: update
                      show_sql: true
             properties:
                generate:
@@ -206,11 +222,11 @@ other:
                enable:
                   audit: true
                table:
-                  index: false 
+                  index: false
              
 logging:
    file:
-      name: "./logs/ideahut-springboot-template.log"
+      name: "./logs/ideahut-springboot-3x-template-mvc.log"
    pattern:
       console: '%d %p [%X{traceId}] %F\(%M:%L\) : %msg%n'
       file: '%d %p [%X{traceId}] %F\(%M:%L\) : %msg%n'
@@ -227,3 +243,11 @@ logging:
             jackson:
                dataformat:
                   xml: OFF
+         zaxxer:
+            hikari:
+               pool:
+                  ProxyConnection: ERROR
+      net:
+         ideahut:
+            springboot:
+               bean: DEBUG

@@ -11,10 +11,14 @@ import org.springframework.context.annotation.Configuration;
 import lombok.Getter;
 import lombok.Setter;
 import net.ideahut.springboot.admin.AdminProperties;
+import net.ideahut.springboot.api.ApiTokenServiceImpl;
+import net.ideahut.springboot.api.WebMvcApiServiceImpl;
 import net.ideahut.springboot.audit.DatabaseAuditProperties;
 import net.ideahut.springboot.cache.CacheGroupProperties;
 import net.ideahut.springboot.entity.DatabaseProperties;
+import net.ideahut.springboot.entity.EntityForeignKeyParam;
 import net.ideahut.springboot.mail.MailProperties;
+import net.ideahut.springboot.object.TimeValue;
 import net.ideahut.springboot.redis.RedisProperties;
 import net.ideahut.springboot.task.TaskProperties;
 
@@ -27,9 +31,12 @@ import net.ideahut.springboot.task.TaskProperties;
 @Getter
 public class AppProperties {
 	
+	private Boolean waitAllBeanConfigured;
 	private Boolean loggingError;
+	private Boolean autoStartScheduler;
 	private String messagePath;
 	private String reportPath;
+	private EntityForeignKeyParam foreignKey;
 	
 	private Map<String, String> cors = new HashMap<>();
 	private List<Class<?>> ignoredHandlerClasses = new ArrayList<>();
@@ -40,9 +47,10 @@ public class AppProperties {
 	private Redis redis = new Redis();
 	private Cache cache = new Cache();
 	private Grid grid = new Grid();
-	//private TrxManager trxManager = new TrxManager();
+	//private TrxManager trxManager = new TrxManager()
 	private Admin admin = new Admin();
 	private Api api = new Api();
+	private TaskProperties webAsync = new TaskProperties();
 	
 	
 	@Setter
@@ -89,47 +97,26 @@ public class AppProperties {
 	public static class Api {
 		private String name;
 		private Enable enable = new Enable();
-		private Consumer consumer = new Consumer();
-		private JwtProcessor jwtProcessor = new JwtProcessor();
-		private RedisExpiry redisExpiry = new RedisExpiry();
-		private Integer signatureTimeSpan;
+		// batas atas / bawah timestamp signature yang dikirim oleh service lain
+		// contoh: jika diset +- 1 menit, maka request dengan timestamp di luar range 1 menit akan ditolak
+		private TimeValue signatureTimeSpan;
 		private String defaultDigest;
+		// Parameter Service yang akan di-consume oleh service lain
+		private ApiTokenServiceImpl.Consumer consumer = new ApiTokenServiceImpl.Consumer();
+		// Parameter untuk membuat Jwt Token
+		private ApiTokenServiceImpl.JwtProcessor jwtProcessor = new ApiTokenServiceImpl.JwtProcessor();
+		private WebMvcApiServiceImpl.RedisExpiry redisExpiry = new WebMvcApiServiceImpl.RedisExpiry();
 		
 		@Setter
 		@Getter
 		public static class Enable {
+			// bisa di-consume oleh service lain atau tidak
 			private Boolean consumer;
+			// support api crud atau tidak
 			private Boolean crud;
+			// housekeeping, otomatis akan membersihkan crud dan request mapping yang tidak tersedia
+			// dari semua konfigurasi api di database
 			private Boolean sync;
-		}
-		
-		// Service akan di-consume oleh service lain
-		@Setter
-		@Getter
-		public static class Consumer {
-			private String secret;
-			private String digest;
-			private Long expiry;
-		}
-		
-		// Parameter untuk membuat Jwt Token
-		@Setter
-		@Getter
-		public static class JwtProcessor {
-			private String secret;
-			private String digest;
-			private Long expiry;
-			private Boolean check;
-		}
-		
-		// Berapa lama object disimpan di redis dalam detik
-		@Setter
-		@Getter
-		public static class RedisExpiry {
-			private Integer accessNull;
-			private Integer accessItem;
-			private Integer consumerNull;
-			private Integer consumerItem;
 		}
 	}
 	

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import net.ideahut.springboot.annotation.Public;
-import net.ideahut.springboot.object.Result;
 import net.ideahut.springboot.template.service.MessageService;
 
 @ComponentScan
@@ -28,16 +27,14 @@ class MessageController {
 
 	@Public
 	@GetMapping(value = "/mobile")
-	protected Result mobile() {
-		JsonNode mobile = messageService.getResource("mobile");
-		return Result.success(mobile);
+	JsonNode mobile() {
+		return messageService.getResource("mobile");
 	}
 	
 	@Public
 	@GetMapping(value = "/portal")
-	protected Result portal() {
-		JsonNode portal = messageService.getResource("portal");
-		return Result.success(portal);
+	JsonNode portal() {
+		return messageService.getResource("portal");
 	}
 	
 }

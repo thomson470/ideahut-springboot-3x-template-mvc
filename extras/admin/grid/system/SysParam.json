@@ -137,11 +137,9 @@
             "label": "Value",
             "type": "words",
             "nullable": true,
+		    "nullEmpty": true,
             "insertable": true,
-            "editable": true,
-            "validations": [
-                "required"
-            ]
+            "editable": true
         },
         {
             "name": "description",

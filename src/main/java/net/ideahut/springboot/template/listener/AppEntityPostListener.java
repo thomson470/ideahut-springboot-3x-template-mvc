@@ -9,9 +9,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
-import net.ideahut.springboot.annotation.Audit;
 import net.ideahut.springboot.api.ApiHandler;
 import net.ideahut.springboot.audit.AuditHandler;
+import net.ideahut.springboot.audit.AuditInfo;
 import net.ideahut.springboot.bean.BeanConfigure;
 import net.ideahut.springboot.entity.EntityPostListener;
 import net.ideahut.springboot.entity.EntityTrxManager;
@@ -78,8 +78,10 @@ class AppEntityPostListener implements EntityPostListener, BeanConfigure<EntityP
 
 	@Override
 	public void onPostDelete(Object entity) {
+		AuditInfo auditInfo = AuditInfo.context();
 		taskHandler.execute(() -> {
-			onAudit(entity, "DELETE");
+			auditInfo.setToContext();
+			auditHandler.save("DELETE", entity);
 			EntityPostListener listener = entities.get(entity.getClass());
 			if (listener != null) {
 				listener.onPostDelete(entity);
@@ -89,8 +91,10 @@ class AppEntityPostListener implements EntityPostListener, BeanConfigure<EntityP
 
 	@Override
 	public void onPostInsert(Object entity) {
+		AuditInfo auditInfo = AuditInfo.context();
 		taskHandler.execute(() -> {
-			onAudit(entity, "INSERT");
+			auditInfo.setToContext();
+			auditHandler.save("INSERT", entity);
 			EntityPostListener listener = entities.get(entity.getClass());
 			if (listener != null) {
 				listener.onPostInsert(entity);
@@ -100,21 +104,15 @@ class AppEntityPostListener implements EntityPostListener, BeanConfigure<EntityP
 
 	@Override
 	public void onPostUpdate(Object entity) {
+		AuditInfo auditInfo = AuditInfo.context();
 		taskHandler.execute(() -> {
-			onAudit(entity, "UPDATE");
+			auditInfo.setToContext();
+			auditHandler.save("UPDATE", entity);
 			EntityPostListener listener = entities.get(entity.getClass());
 			if (listener != null) {
 				listener.onPostUpdate(entity);
 			}
 		});
-	}
-	
-	// AUDIT
-	private void onAudit(Object entity, String action) {
-		Audit audit = entity.getClass().getAnnotation(Audit.class);
-		if (audit != null && audit.value()) {
-			auditHandler.save(action, entity);
-		}
 	}
 	
 }

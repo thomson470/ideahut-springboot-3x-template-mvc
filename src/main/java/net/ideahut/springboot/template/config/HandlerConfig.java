@@ -31,6 +31,8 @@ import net.ideahut.springboot.mail.MailHandlerImpl;
 import net.ideahut.springboot.mapper.DataMapper;
 import net.ideahut.springboot.report.ReportHandler;
 import net.ideahut.springboot.report.ReportHandlerImpl;
+import net.ideahut.springboot.rest.OkHttpRestHandler;
+import net.ideahut.springboot.rest.RestHandler;
 import net.ideahut.springboot.sysparam.SysParamHandler;
 import net.ideahut.springboot.sysparam.SysParamHandlerImpl;
 import net.ideahut.springboot.sysparam.entity.SysParam;
@@ -43,13 +45,15 @@ import net.ideahut.springboot.util.FrameworkUtil;
 
 /*
  * Konfigurasi handler:
- * - ApiHandler
  * - AuditHandler
  * - CacheGroupHandler
  * - CacheHandler
  * - CrudHandler
+ * - GridHandler
+ * - InitHandler
  * - ReportHandler
  * - MailHandler
+ * - RestHandler
  * - SysParamHandler
  * - SchedulerHandler
  */
@@ -60,7 +64,7 @@ class HandlerConfig {
 	 * INIT
 	 */
 	@Bean
-	protected InitHandler initHandler(
+	InitHandler initHandler(
 		ApplicationContext applicationContext		
 	) {
 		return new InitHandlerImpl()
@@ -71,10 +75,11 @@ class HandlerConfig {
 	 * AUDIT
 	 */
 	@Bean
-	protected AuditHandler auditHandler(
+	AuditHandler auditHandler(
 		AppProperties appProperties,
 		EntityTrxManager entityTrxManager,
-		@Qualifier(AppConstants.Bean.Task.AUDIT) TaskHandler taskHandler
+		@Qualifier(AppConstants.Bean.Task.AUDIT) 
+		TaskHandler taskHandler
 	) {
 		return new DatabaseMultiAuditHandler()
 		.setEntityTrxManager(entityTrxManager)
@@ -85,7 +90,8 @@ class HandlerConfig {
 		return new DatabaseSingleAuditHandler()
 		.setEntityTrxManager(entityTrxManager)
 		.setProperties(appProperties.getAudit().getProperties())
-		.setTaskHandler(auditAsync);
+		.setTaskHandler(taskHandler)
+		.setRejectNonAuditEntity(true);
 		*/
 	}
 	
@@ -93,7 +99,7 @@ class HandlerConfig {
 	 * CACHE GROUP
 	 */
 	@Bean
-	protected CacheGroupHandler cacheGroupHandler(
+	CacheGroupHandler cacheGroupHandler(
 		AppProperties appProperties,
 		DataMapper dataMapper,
 		RedisTemplate<String, byte[]> redisTemplate,
@@ -110,10 +116,12 @@ class HandlerConfig {
 	 * CACHE
 	 */
 	@Bean
-	protected CacheHandler cacheHandler(
+	CacheHandler cacheHandler(
 		DataMapper dataMapper,
-		@Qualifier(AppConstants.Bean.Redis.COMMON) RedisTemplate<String, byte[]> redisTemplate,
-		@Qualifier(AppConstants.Bean.Task.COMMON) TaskHandler taskHandler
+		@Qualifier(AppConstants.Bean.Redis.COMMON) 
+		RedisTemplate<String, byte[]> redisTemplate,
+		@Qualifier(AppConstants.Bean.Task.COMMON) 
+		TaskHandler taskHandler
 	) throws Exception {
 		return new RedisCacheHandler()
 		.setDataMapper(dataMapper)
@@ -128,9 +136,10 @@ class HandlerConfig {
 	 * MAIL
 	 */
 	@Bean
-	protected MailHandler mailHandler(
+	MailHandler mailHandler(
 		AppProperties appProperties,
-		@Qualifier(AppConstants.Bean.Task.COMMON) TaskHandler taskHandler
+		@Qualifier(AppConstants.Bean.Task.COMMON) 
+		TaskHandler taskHandler
     ) {
 		return new MailHandlerImpl()
 		.setTaskHandler(taskHandler)
@@ -141,7 +150,7 @@ class HandlerConfig {
 	 * GRID
 	 */
 	@Bean
-	protected GridHandler gridHandler(
+	GridHandler gridHandler(
 		AppProperties appProperties,
 		DataMapper dataMapper,
 		RedisTemplate<String, byte[]> redisTemplate
@@ -160,7 +169,7 @@ class HandlerConfig {
 	 * SYSPARAM
 	 */
 	@Bean
-	protected SysParamHandler sysParamHandler(
+	SysParamHandler sysParamHandler(
 		DataMapper dataMapper,
 		RedisTemplate<String, byte[]> redisTemplate,
 		EntityTrxManager entityTrxManager
@@ -182,7 +191,8 @@ class HandlerConfig {
 	SchedulerHandler schedulerHandler(
 		DataMapper dataMapper,
 		EntityTrxManager entityTrxManager,
-		@Qualifier(AppConstants.Bean.Task.COMMON) TaskHandler taskHandler
+		@Qualifier(AppConstants.Bean.Task.COMMON) 
+		TaskHandler taskHandler
 	) {
 		return new SchedulerHandlerImpl()
 		.setEntityClass(new JobEntityClass()
@@ -203,10 +213,22 @@ class HandlerConfig {
 	
 	
 	/*
+	 * REST
+	 */
+	@Bean
+	RestHandler restHandler(
+		DataMapper dataMapper
+	) {
+		return new OkHttpRestHandler()
+		.setDataMapper(dataMapper);
+	}
+	
+	
+	/*
 	 * REPORT
 	 */
 	@Bean
-	protected ReportHandler reportHandler() {
+	ReportHandler reportHandler() {
 		return new ReportHandlerImpl();
 	}
 	

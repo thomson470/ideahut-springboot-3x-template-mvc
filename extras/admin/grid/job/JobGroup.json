@@ -1,9 +1,9 @@
 {
-    "order": 4,
+    "order": 3,
     "name": "JobGroup",
-    "title": "JobGroup",
+    "title": "Group",
     "crud": {
-        "name": "net.ideahut.springboot.job.entity.JobGroup"
+		"name": "net.ideahut.springboot.job.entity.JobGroup"
     },
     "id": {
         "type": "STANDARD",
@@ -100,7 +100,7 @@
                 "name": "updatedOn",
                 "label": "UpdatedOn",
                 "field": "updatedOn",
-                "align": "left",
+                "align": "center",
                 "sortable": true,
                 "format": "function(val, row) { try { return __util__.format.date(val, {format: 'YYYY-MM-DD HH:mm', months: __grid__[row._grid_id_].additionals.MONTHS, days: __grid__[row._grid_id_].additionals.DAYS}); } catch(e) { return val; } }"
             },
@@ -108,7 +108,7 @@
                 "name": "createdOn",
                 "label": "CreatedOn",
                 "field": "createdOn",
-                "align": "left",
+                "align": "center",
                 "sortable": true,
                 "format": "function(val, row) { try { return __util__.format.date(val, {format: 'YYYY-MM-DD HH:mm', months: __grid__[row._grid_id_].additionals.MONTHS, days: __grid__[row._grid_id_].additionals.DAYS}); } catch(e) { return val; } }"
             }

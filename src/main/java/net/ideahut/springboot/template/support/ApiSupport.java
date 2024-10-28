@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.util.Assert;
 
+import net.ideahut.springboot.api.ApiEntityClass;
 import net.ideahut.springboot.api.ApiHandler;
 import net.ideahut.springboot.api.ApiHandlerImpl;
 import net.ideahut.springboot.api.dto.ApiProviderConfigDto;
@@ -37,7 +38,7 @@ public class ApiSupport {
 		Map<Class<?>, EntityPostListener> listeners = new HashMap<>();
 		
 		ApiHandlerImpl apiHandlerImpl = (ApiHandlerImpl) apiHandler;
-		ApiHandlerImpl.EntityClass classOfEntity = apiHandlerImpl.getEntityClass();
+		ApiEntityClass classOfEntity = apiHandlerImpl.getEntityClass();
 		TrxManagerInfo trxManagerInfo = FrameworkUtil.getTrxManagerInfo(entityTrxManager, classOfEntity.getTrxManagerName());
 		Assert.notNull(trxManagerInfo, "TrxManager is not found, for: " + classOfEntity.getTrxManagerName());
 		

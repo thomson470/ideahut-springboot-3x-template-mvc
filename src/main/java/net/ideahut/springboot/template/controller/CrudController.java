@@ -55,7 +55,7 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 	 */
 	@Public
 	@GetMapping(value = "/info/constant")
-	protected Result infoConstant() {
+	Result infoConstant() {
 		return super.constant();
 	}	
 	
@@ -65,7 +65,7 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 	 * BODY ACTION
 	 */
 	@PostMapping(value = "/action/{action}")
-	protected Result action(
+	Result action(
 		@PathVariable("action") String action,
 		HttpServletRequest request
 	) throws Exception {
@@ -87,7 +87,7 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 			RequestMethod.DELETE 
 		}
 	)
-	protected Result parameter(
+	Result parameter(
 		@PathVariable("action") String action,
 		HttpServletRequest request
 	) throws Exception {
@@ -115,7 +115,7 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 	 * COLLECTION (CrudAction.PAGE)
 	 */
 	@GetMapping(value = "/rest/{name}/{index}/{size}")
-	protected Result collection(
+	Result collection(
 		@PathVariable("name") String name, 
 		@PathVariable("index") Integer index, 
 		@PathVariable("size") Integer size,
@@ -135,7 +135,7 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 	 * CREATE
 	 */
 	@PostMapping(value = "/rest/{name}")
-	protected Result create(
+	Result create(
 		@PathVariable("name") String name,
 		@RequestParam(value = "manager", required = false) String manager,
 		@RequestParam(value = "value", required = false) String value,
@@ -151,7 +151,7 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 	 * UPDATE
 	 */
 	@PutMapping(value = "/rest/{name}/{id}")
-	protected Result update(
+	Result update(
 		@PathVariable("name") String name,
 		@PathVariable("id") String id,
 		@RequestParam(value = "manager", required = false) String manager,

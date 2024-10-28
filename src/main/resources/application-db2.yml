@@ -1,22 +1,30 @@
-spring:  
+spring:
    datasource:
       driver-class-name: "com.ibm.db2.jcc.DB2Driver"
-      jdbc-url: "jdbc:db2://localhost:50000/sample"
-      username: "<username>"
-      password: "<password>"
-   #jpa:
-      #properties:
-         #hibernate:
-            #dialect: "org.hibernate.dialect.DB2Dialect"
+      jdbc-url: "jdbc:db2://"
+      username: ""
+      password: ""
             
 app:
    audit:
       datasource:
          driver-class-name: "com.ibm.db2.jcc.DB2Driver"
-         jdbc-url: "jdbc:db2://localhost:50001/audit"
-         username: "<username>"
-         password: "<password>"   
-      #jpa:
-         #properties:
-            #hibernate:
-               #dialect: "org.hibernate.dialect.DB2Dialect"
+         jdbc-url: "jdbc:db2://"
+         username: ""
+         password: ""
+         
+other:   
+   trxManager:
+      second:
+         datasource:
+            driver-class-name: "com.ibm.db2.jcc.DB2Driver"
+            jdbc-url: "jdbc:db2://"
+            username: ""
+            password: ""
+            
+         audit:
+            datasource:
+               driver-class-name: "com.ibm.db2.jcc.DB2Driver"
+               jdbc-url: "jdbc:db2://"
+               username: ""
+               password: ""

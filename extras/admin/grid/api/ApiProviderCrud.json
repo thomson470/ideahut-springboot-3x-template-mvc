@@ -7,6 +7,7 @@
         "joins": [
             {
                 "name": "net.ideahut.springboot.api.entity.ApiCrud",
+                "alias": "ApiCrud",
                 "store": "apiCrud",
                 "match": "contain",
                 "relations": [
@@ -70,19 +71,19 @@
                 "condition": "ANY_LIKE"
             },
             {
-                "name": "apiCrud.className",
+                "name": "ApiCrud.className",
                 "label": "Crud Class",
                 "type": "text",
                 "condition": "ANY_LIKE"
             },
             {
-                "name": "apiCrud.packageName",
+                "name": "ApiCrud.packageName",
                 "label": "Crud Package",
                 "type": "text",
                 "condition": "ANY_LIKE"
             },
             {
-                "name": "apiCrud.manager",
+                "name": "ApiCrud.manager",
                 "label": "Crud Manager",
                 "type": "text",
                 "condition": "ANY_LIKE"

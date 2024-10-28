@@ -23,6 +23,7 @@ import net.ideahut.springboot.report.ReportInput;
 import net.ideahut.springboot.report.ReportType;
 import net.ideahut.springboot.template.object.ReportData;
 import net.ideahut.springboot.template.properties.AppProperties;
+import net.ideahut.springboot.util.ErrorUtil;
 import net.ideahut.springboot.util.FrameworkUtil;
 import net.ideahut.springboot.util.StringUtil;
 import net.sf.jasperreports.engine.JasperReport;
@@ -60,13 +61,13 @@ class ReportController implements InitializingBean {
 		path = FrameworkUtil.replacePath(appProperties.getReportPath());
 		path = StringUtil.removeEnd(path, "/");
 		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(this.getClass().getClassLoader());
-		template = resolver.getResource(path + "/sample.jasper").getContentAsByteArray();
-		imageHeader = resolver.getResource(path + "/tree1.png").getContentAsByteArray();
-		imageDetail = resolver.getResource(path + "/tree2.png").getContentAsByteArray();
+		template = FrameworkUtil.getResourceAsByteArray(resolver.getResource(path + "/sample.jasper"));
+		imageHeader = FrameworkUtil.getResourceAsByteArray(resolver.getResource(path + "/tree1.png"));
+		imageDetail = FrameworkUtil.getResourceAsByteArray(resolver.getResource(path + "/tree2.png"));
 	}
 	
 	@GetMapping
-	protected ResponseEntity<StreamingResponseBody> get(
+	ResponseEntity<StreamingResponseBody> get(
 		@RequestParam("name") String name
 	) {
 		ReportType type = getType(name);
@@ -94,7 +95,7 @@ class ReportController implements InitializingBean {
 				
 				reportHandler.exportReport(input, response);
 			} catch (Exception e) {
-				throw FrameworkUtil.exception(e);
+				throw ErrorUtil.exception(e);
 			}
 		};
 		return ResponseEntity.ok().contentType(MediaType.valueOf(type.getContentType())).body(body);

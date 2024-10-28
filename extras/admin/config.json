@@ -1,10 +1,12 @@
 {
 	"api": {
-		"requestPath": "/admin"
+		"requestPath": "/_/api",
+		"timeout": 60,
+		"debug": false
 	},
 	"resource": {
 		"title": "",
-		"requestPath": "/_",
+		"requestPath": "/_/ui",
 		"locations": "file:{user.dir}/extras/admin/resource/",
 		"indexFile": "index.html",
 		"alwaysToIndex": true,
@@ -22,5 +24,8 @@
 		"resourceEndpoint": "http://localhost:6401/sync/resource",
 		"tokenEndpoint": "http://localhost:6401/sync/token",
 		"resourceDirectory": "{user.dir}/extras/admin/resource"
-	}
+	},
+	"waitForJobsToCompleteWhenStopScheduler": false,
+	"collectDatabaseMetadata": true,
+	"showOnlyExecutableRedis": true
 }

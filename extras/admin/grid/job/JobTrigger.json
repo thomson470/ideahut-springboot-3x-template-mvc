@@ -1,12 +1,13 @@
 {
-	"order": 5,
-    "name": "JobTrigger",
-    "title": "JobTrigger",
+	"order": 4,
+	"name": "JobTrigger",
+    "title": "Trigger",
     "crud": {
-        "name": "net.ideahut.springboot.job.entity.JobTrigger",
+		"name": "net.ideahut.springboot.job.entity.JobTrigger",
         "joins": [
             {
                 "name": "net.ideahut.springboot.job.entity.JobInstance",
+                "alias": "JobInstance",
                 "store": "instance",
                 "match": "contain",
                 "relations": [
@@ -18,6 +19,7 @@
             },
             {
                 "name": "net.ideahut.springboot.job.entity.JobType",
+                "alias": "JobType",
                 "store": "type",
                 "match": "contain",
                 "relations": [
@@ -29,6 +31,7 @@
             },
             {
                 "name": "net.ideahut.springboot.job.entity.JobGroup",
+                "alias": "JobGroup",
                 "store": "group",
                 "match": "contain",
                 "relations": [
@@ -80,19 +83,19 @@
                 "condition": "ANY_LIKE"
             },
             {
-                "name": "group.name",
+                "name": "JobGroup.name",
                 "label": "Group",
                 "type": "text",
                 "condition": "ANY_LIKE"
             },
             {
-                "name": "type.name",
+                "name": "JobType.name",
                 "label": "Type",
                 "type": "text",
                 "condition": "ANY_LIKE"
             },
             {
-                "name": "instance.name",
+                "name": "JobInstance.name",
                 "label": "Instance",
                 "type": "text",
                 "condition": "ANY_LIKE"
@@ -166,8 +169,7 @@
                 "label": "CronExpression",
                 "field": "cronExpression",
                 "align": "left",
-                "sortable": true,
-                "format": ""
+                "sortable": true
             },
             {
                 "name": "isActive",
@@ -242,7 +244,7 @@
                 "name": "updatedOn",
                 "label": "UpdatedOn",
                 "field": "updatedOn",
-                "align": "left",
+                "align": "center",
                 "sortable": true,
                 "format": "function(val, row) { try { return __util__.format.date(val, {format: 'YYYY-MM-DD HH:mm:ss', months: __grid__[row._grid_id_].additionals.MONTHS, days: __grid__[row._grid_id_].additionals.DAYS}); } catch(e) { return val; } }"
             },
@@ -250,7 +252,7 @@
                 "name": "createdOn",
                 "label": "CreatedOn",
                 "field": "createdOn",
-                "align": "left",
+                "align": "center",
                 "sortable": true,
                 "format": "function(val, row) { try { return __util__.format.date(val, {format: 'YYYY-MM-DD HH:mm:ss', months: __grid__[row._grid_id_].additionals.MONTHS, days: __grid__[row._grid_id_].additionals.DAYS}); } catch(e) { return val; } }"
             }
@@ -387,7 +389,7 @@
         "group": {
             "title": "JobGroup",
             "crud": {
-                "name": "net.ideahut.springboot.job.entity.JobGroup"
+				"name": "net.ideahut.springboot.job.entity.JobGroup"
             },
             "id": {
                 "type": "STANDARD",
@@ -475,7 +477,7 @@
         "instance": {
             "title": "JobInstance",
             "crud": {
-                "name": "net.ideahut.springboot.job.entity.JobInstance"
+				"name": "net.ideahut.springboot.job.entity.JobInstance"
             },
             "id": {
                 "type": "STANDARD",
@@ -548,8 +550,7 @@
                         "label": "Description",
                         "field": "description",
                         "align": "left",
-                        "sortable": true,
-                        "format": ""
+                        "sortable": true
                     }
                 ]
             }
@@ -557,7 +558,7 @@
         "type": {
             "title": "JobType",
             "crud": {
-                "name": "net.ideahut.springboot.job.entity.JobType"
+				"name": "net.ideahut.springboot.job.entity.JobType"
             },
             "id": {
                 "type": "STANDARD",
@@ -644,7 +645,7 @@
         "type_parameter": {
             "title": "JobTypeParameter",
             "crud": {
-                "name": "net.ideahut.springboot.job.entity.JobTypeParam"
+				"name": "net.ideahut.springboot.job.entity.JobTypeParam"
             },
             "id": {
                 "type": "COMPOSITE",
@@ -720,7 +721,7 @@
         {
             "title": "Configuration",
             "crud": {
-                "name": "net.ideahut.springboot.job.entity.JobTriggerConfig"
+				"name": "net.ideahut.springboot.job.entity.JobTriggerConfig"
             },
             "id": {
                 "type": "COMPOSITE",
@@ -811,7 +812,7 @@
                         "name": "updatedOn",
                         "label": "UpdatedOn",
                         "field": "updatedOn",
-                        "align": "left",
+                        "align": "center",
                         "sortable": true,
                         "format": "function(val, row) { try { return __util__.format.date(val, {format: 'YYYY-MM-DD HH:mm', months: __grid__[row._grid_id_].additionals.MONTHS, days: __grid__[row._grid_id_].additionals.DAYS}); } catch(e) { return val; } }"
                     },
@@ -819,7 +820,7 @@
                         "name": "createdOn",
                         "label": "CreatedOn",
                         "field": "createdOn",
-                        "align": "left",
+                        "align": "center",
                         "sortable": true,
                         "format": "function(val, row) { try { return __util__.format.date(val, {format: 'YYYY-MM-DD HH:mm', months: __grid__[row._grid_id_].additionals.MONTHS, days: __grid__[row._grid_id_].additionals.DAYS}); } catch(e) { return val; } }"
                     }
