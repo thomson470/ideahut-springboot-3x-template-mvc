@@ -23,10 +23,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import jakarta.persistence.EntityManagerFactory;
 import net.ideahut.springboot.entity.DatasourceProperties;
 import net.ideahut.springboot.entity.JpaProperties;
+import net.ideahut.springboot.helper.FrameworkHelper;
 import net.ideahut.springboot.template.Application;
 import net.ideahut.springboot.template.properties.AppProperties.Audit;
 import net.ideahut.springboot.template.properties.OtherProperties;
-import net.ideahut.springboot.util.FrameworkUtil;
 
 /*
  * Konfigurasi Transaction Manager & Entity Manager yang kedua
@@ -81,7 +81,7 @@ class TrxManagerConfigOther {
 		DataSource dataSource
 	) {
 		JpaProperties jpa = otherProperties.getTrxManager().getSecond().getJpa();
-		Map<String, Object> properties = FrameworkUtil.getHibernateSettings(jpa.getProperties());
+		Map<String, Object> properties = FrameworkHelper.getHibernateSettings(jpa.getProperties());
 		return builder
 		.dataSource(dataSource)
 		.managedTypes(persistenceManagedTypes)
@@ -125,7 +125,7 @@ class TrxManagerConfigOther {
 		DataSource datasource
 	) {
 		Audit audit = otherProperties.getTrxManager().getSecond().getAudit();
-		Properties properties = FrameworkUtil.getHibernateProperties(audit.getJpa().getProperties());
+		Properties properties = FrameworkHelper.getHibernateProperties(audit.getJpa().getProperties());
 		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(datasource);
         sessionFactory.setHibernateProperties(properties);

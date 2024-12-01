@@ -1,5 +1,6 @@
 package net.ideahut.springboot.template.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,8 +18,10 @@ import net.ideahut.springboot.annotation.Public;
 import net.ideahut.springboot.crud.CrudAction;
 import net.ideahut.springboot.crud.CrudHandler;
 import net.ideahut.springboot.crud.CrudPermission;
+import net.ideahut.springboot.helper.ObjectHelper;
+import net.ideahut.springboot.helper.WebMvcHelper;
+import net.ideahut.springboot.object.Page;
 import net.ideahut.springboot.object.Result;
-import net.ideahut.springboot.util.WebMvcUtil;
 
 @Public
 @ComponentScan
@@ -69,7 +72,7 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 		@PathVariable("action") String action,
 		HttpServletRequest request
 	) throws Exception {
-		byte[] data = WebMvcUtil.getBodyAsBytes(request);
+		byte[] data = WebMvcHelper.getBodyAsBytes(request);
 		return super.body(CrudAction.valueOf(action.toUpperCase()), data);
 	}
 	
@@ -126,7 +129,10 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 		@RequestParam(value = "fields", required = false) String fields,
 		@RequestParam(value = "loads", required = false) String loads		
 	) {
-		return super.collection(manager, name, index, size, count, filters, orders, fields, loads);
+		String scount = ObjectHelper.useOrDefault(count, "").trim().toLowerCase();
+		Boolean pcount = "1".equals(scount) || "true".equals(scount);
+		Page page = Page.of(index, size, pcount);
+		return super.collection(manager, name, page, filters, orders, fields, loads);
 	}
 	
 	
@@ -141,7 +147,7 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 		@RequestParam(value = "value", required = false) String value,
 		HttpServletRequest request
 	) throws Exception {
-		byte[] data = WebMvcUtil.getBodyAsBytes(request);
+		byte[] data = WebMvcHelper.getBodyAsBytes(request);
 		return super.create(manager, name, value, data);
 	}
 	
@@ -158,7 +164,7 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 		@RequestParam(value = "value", required = false) String value,
 		HttpServletRequest request
 	) throws Exception {
-		byte[] data = WebMvcUtil.getBodyAsBytes(request);
+		byte[] data = WebMvcHelper.getBodyAsBytes(request);
 		return super.update(manager, name, id, value, data);
 	}
 	

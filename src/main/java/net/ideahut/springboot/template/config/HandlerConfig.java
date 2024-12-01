@@ -15,6 +15,7 @@ import net.ideahut.springboot.cache.RedisCacheHandler;
 import net.ideahut.springboot.entity.EntityTrxManager;
 import net.ideahut.springboot.grid.GridHandler;
 import net.ideahut.springboot.grid.GridHandlerImpl;
+import net.ideahut.springboot.helper.FrameworkHelper;
 import net.ideahut.springboot.init.InitHandler;
 import net.ideahut.springboot.init.InitHandlerImpl;
 import net.ideahut.springboot.job.JobEntityClass;
@@ -26,6 +27,8 @@ import net.ideahut.springboot.job.entity.JobTrigger;
 import net.ideahut.springboot.job.entity.JobTriggerConfig;
 import net.ideahut.springboot.job.entity.JobType;
 import net.ideahut.springboot.job.entity.JobTypeParam;
+import net.ideahut.springboot.kafka.KafkaHandler;
+import net.ideahut.springboot.kafka.KafkaHandlerImpl;
 import net.ideahut.springboot.mail.MailHandler;
 import net.ideahut.springboot.mail.MailHandlerImpl;
 import net.ideahut.springboot.mapper.DataMapper;
@@ -41,7 +44,7 @@ import net.ideahut.springboot.template.AppConstants;
 import net.ideahut.springboot.template.Application;
 import net.ideahut.springboot.template.properties.AppProperties;
 import net.ideahut.springboot.template.support.GridSupport;
-import net.ideahut.springboot.util.FrameworkUtil;
+import net.ideahut.springboot.template.support.HandlerSupport;
 
 /*
  * Konfigurasi handler:
@@ -68,7 +71,7 @@ class HandlerConfig {
 		ApplicationContext applicationContext		
 	) {
 		return new InitHandlerImpl()
-		.setEndpoint(() -> "http://localhost:" + FrameworkUtil.getPort(applicationContext) + "/warmup");
+		.setEndpoint(() -> "http://localhost:" + FrameworkHelper.getPort(applicationContext) + "/warmup");
 	}
 
 	/*
@@ -91,7 +94,7 @@ class HandlerConfig {
 		.setEntityTrxManager(entityTrxManager)
 		.setProperties(appProperties.getAudit().getProperties())
 		.setTaskHandler(taskHandler)
-		.setRejectNonAuditEntity(true);
+		.setRejectNonAuditEntity(true);//-
 		*/
 	}
 	
@@ -228,8 +231,30 @@ class HandlerConfig {
 	 * REPORT
 	 */
 	@Bean
-	ReportHandler reportHandler() {
-		return new ReportHandlerImpl();
+	ReportHandler reportHandler(
+		AppProperties appProperties		
+	) {
+		if (Boolean.FALSE.equals(appProperties.getHandler().getEnableReport())) {
+			return HandlerSupport.UNSUPPORTED_REPORT_HANDLER;
+		} else {
+			return new ReportHandlerImpl();
+		}
+	}
+	
+	
+	/*
+	 * KAFKA
+	 */
+	@Bean
+	KafkaHandler kafkaHandler(
+		AppProperties appProperties
+	) {
+		if (Boolean.FALSE.equals(appProperties.getHandler().getEnableKafka())) {
+			return HandlerSupport.UNSUPPORTED_KAFKA_HANDLER;
+		} else {
+			return new KafkaHandlerImpl()
+			.setConfigurationFile(appProperties.getKafkaConfigurationFile());
+		}
 	}
 	
 }

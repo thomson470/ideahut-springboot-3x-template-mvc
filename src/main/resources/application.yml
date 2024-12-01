@@ -11,7 +11,7 @@ management:
 
 spring:
    application:
-      name: ideahut-springboot-3x-template-mvc
+      name: "ideahut-springboot-3x-template-mvc"
    quartz:
       auto-startup: false
    servlet:
@@ -63,6 +63,7 @@ app:
    autoStartScheduler: false
    messagePath: "file:{user.dir}/extras/message/"
    reportPath: "file:{user.dir}/extras/report/"
+   kafkaConfigurationFile: "file:{user.dir}/extras/kafka/kafka1.yaml"
    
    #
    # CORS Http Header
@@ -84,7 +85,7 @@ app:
    # Beberapa database tidak support "... on update (CASCADE/SET_NULL)"
    #
    foreignKey:
-      enableExecution: true
+      enableExecution: false
       dropBeforeCreate: true
       onUpdateAction: true 
       
@@ -118,12 +119,12 @@ app:
 
    redis:
       common:
-         type: 1
+         type: 0
          testOnStartup: true
          standalone:
-            host: ""
-            port: ""
-            password: ""
+            host: 127.0.0.1
+            port: 6378
+            password: "a3213c419771fbd1a05cdde7127e6393ef852db97328b21a45de700e9bbe85db"
             database: 0
             
    cache:
@@ -144,8 +145,8 @@ app:
    mail:
       host: smtp.gmail.com
       port: 587
-      username: ""
-      password: ""
+      username: "socrates.apps.team@gmail.com"
+      password: "csbyvmyazduwlamw"
       properties:
          "mail.smtp.host": "smtp.gmail.com"
          "mail.smtp.ssl.trust": "smtp.gmail.com"
@@ -162,9 +163,12 @@ app:
       #definition: "file:{user.dir}/extras/grid/grid.def"
       
    admin:
-      configFile: "file:{user.dir}/extras/admin/config.json"
-      credentialFile: "file:{user.dir}/extras/admin/credential-bcrypt.json"
-      #credentialFile: "file:{user.dir}/extras/admin/credential-sha256.json"
+      configurationFile: "file:{user.dir}/extras/admin/configuration.yaml"
+      credentialFile: "file:{user.dir}/extras/admin/credential.yaml"
+      apiPath: "/_/api"
+      webPath: "/_/web"
+      webLocation: "file:{user.dir}/extras/admin/web/"
+      webEnabled: true
       
    api:
       enable:
@@ -199,6 +203,10 @@ app:
       threadNamePrefix: "WEB-ASYNC"
       corePoolSize: 10
       maxPoolSize: 100
+      
+   handler:
+      enableReport: true
+      enableKafka: true
 
 other:   
    trxManager:
@@ -212,6 +220,11 @@ other:
                   audit_identifier: spring_sample_other
                   audit_bean_name: otherAuditSessionFactory
          audit:
+            datasource:
+               driver-class-name: "com.mysql.cj.jdbc.Driver"
+               jdbc-url: "jdbc:mysql://localhost:3306/springboot_sample_other_audit?createDatabaseIfNotExist=true&autoReconnect=true"
+               username: "root"
+               password: "a3213c419771fbd1a05cdde7127e6393ef852db97328b21a45de700e9bbe85db"  
             jpa:
                properties:
                   hibernate:

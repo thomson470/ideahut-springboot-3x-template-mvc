@@ -15,6 +15,8 @@ import net.ideahut.springboot.audit.AuditHandler;
 import net.ideahut.springboot.bean.BeanConfigure;
 import net.ideahut.springboot.bean.BeanShutdown;
 import net.ideahut.springboot.entity.EntityTrxManager;
+import net.ideahut.springboot.helper.ErrorHelper;
+import net.ideahut.springboot.helper.FrameworkHelper;
 import net.ideahut.springboot.init.InitHandler;
 import net.ideahut.springboot.job.SchedulerHandler;
 import net.ideahut.springboot.object.ApplicationInfo;
@@ -22,8 +24,6 @@ import net.ideahut.springboot.object.VersionInfo;
 import net.ideahut.springboot.sysparam.SysParamHandler;
 import net.ideahut.springboot.task.TaskHandler;
 import net.ideahut.springboot.template.properties.AppProperties;
-import net.ideahut.springboot.util.ErrorUtil;
-import net.ideahut.springboot.util.FrameworkUtil;
 
 /*
  * 1. Main Class, untuk eksekusi aplikasi.
@@ -73,7 +73,7 @@ public class Application extends SpringBootServletInitializer implements Applica
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		ApplicationContext applicationContext = event.getApplicationContext();
-		FrameworkUtil.checkDependencies(applicationContext);
+		FrameworkHelper.checkDependencies(applicationContext);
 		BeanShutdown.RuntimeHook.register(applicationContext);
 		
 		log.info("Configuring application '" + applicationContext.getId() + "'...");
@@ -93,7 +93,7 @@ public class Application extends SpringBootServletInitializer implements Applica
 					AuditHandler.class // <-- tidak async karena akan dibaca oleh AdminHandler
 				);
 			} catch (Exception e) {
-				throw ErrorUtil.exception(e);
+				throw ErrorHelper.exception(e);
 			}
 			setReady(true);
 			
@@ -101,17 +101,20 @@ public class Application extends SpringBootServletInitializer implements Applica
 				log.info("Application has been configured in {} ms", System.currentTimeMillis() - time);
 				runInit(taskHandler, applicationContext);
 				runScheduler(taskHandler, appProperties, applicationContext);
-				VersionInfo versionInfo = FrameworkUtil.getVersionInfo();
-				ApplicationInfo applicationInfo = FrameworkUtil.getApplicationInfo(applicationContext);
+				VersionInfo versionInfo = FrameworkHelper.getVersionInfo();
+				ApplicationInfo applicationInfo = FrameworkHelper.getApplicationInfo(applicationContext);
 				writeInfo("Native           : ", applicationInfo.getInNativeImage());
 				writeInfo("Reactive         : ", applicationInfo.getReactive());
 				writeInfo("JDK              : ", versionInfo.getJava());
 				writeInfo("Spring Framework : ", versionInfo.getSpringFramework());
 				writeInfo("Spring Boot      : ", versionInfo.getSpringBoot());
 				writeInfo("Hibernate        : ", versionInfo.getHibernate());
+				writeInfo("Jedis            : ", versionInfo.getJedis());
 				writeInfo("Quartz           : ", versionInfo.getQuartz());
+				writeInfo("Kafka            : ", versionInfo.getKafka());
 				writeInfo("Ideahut          : ", versionInfo.getIdeahut());
-				log.info("Application '" + applicationContext.getId() + "' is ready to serve on port " + FrameworkUtil.getPort(applicationContext));
+				int port = FrameworkHelper.getPort(applicationContext);
+				log.info("Application '{}' is ready to serve on port {}", applicationContext.getId(), port);
 			}
 		});
 	}

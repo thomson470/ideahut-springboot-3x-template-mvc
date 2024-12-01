@@ -16,13 +16,12 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.resource.VersionResourceResolver;
 
 import net.ideahut.springboot.admin.AdminHandler;
-import net.ideahut.springboot.admin.AdminProperties;
 import net.ideahut.springboot.config.WebMvcBasicConfig;
+import net.ideahut.springboot.helper.ObjectHelper;
 import net.ideahut.springboot.mapper.DataMapper;
 import net.ideahut.springboot.task.TaskProperties;
 import net.ideahut.springboot.template.interceptor.RequestInterceptor;
 import net.ideahut.springboot.template.properties.AppProperties;
-import net.ideahut.springboot.util.ObjectUtil;
 
 /*
  * Konfigurasi Web MVC
@@ -91,12 +90,12 @@ class WebMvcConfig extends WebMvcBasicConfig {
 	public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
 		TaskProperties properties = appProperties.getWebAsync();
 		ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-		taskExecutor.setAllowCoreThreadTimeOut(ObjectUtil.useOrDefault(properties.getAllowCoreThreadTimeOut(), Boolean.FALSE));
+		taskExecutor.setAllowCoreThreadTimeOut(ObjectHelper.useOrDefault(properties.getAllowCoreThreadTimeOut(), Boolean.FALSE));
 		Integer awaitTerminationSeconds = properties.getAwaitTerminationSeconds();
 		taskExecutor.setAwaitTerminationSeconds(awaitTerminationSeconds != null && awaitTerminationSeconds > 0 ? awaitTerminationSeconds : 0);
 		Integer corePoolSize = properties.getCorePoolSize();
 		taskExecutor.setCorePoolSize(corePoolSize != null && corePoolSize > 1 ? corePoolSize : 1);
-		taskExecutor.setDaemon(ObjectUtil.useOrDefault(properties.getDaemon(), Boolean.FALSE));
+		taskExecutor.setDaemon(ObjectHelper.useOrDefault(properties.getDaemon(), Boolean.FALSE));
 		Integer keepAliveSeconds = properties.getKeepAliveSeconds();
 		taskExecutor.setKeepAliveSeconds(keepAliveSeconds != null && keepAliveSeconds > 0 ? keepAliveSeconds : 30);
 		Integer maxPoolSize = properties.getMaxPoolSize();
@@ -107,7 +106,7 @@ class WebMvcConfig extends WebMvcBasicConfig {
 		taskExecutor.setThreadNamePrefix(threadNamePrefix != null && !threadNamePrefix.trim().isEmpty() ? threadNamePrefix : ("WebAsync-" + System.nanoTime() + "-"));
 		Integer threadPriority = properties.getThreadPriority();
 		taskExecutor.setThreadPriority(threadPriority != null && threadPriority > 0 ? threadPriority : Thread.NORM_PRIORITY);
-		taskExecutor.setWaitForTasksToCompleteOnShutdown(ObjectUtil.useOrDefault(properties.getWaitForJobsToCompleteOnShutdown(), Boolean.FALSE));
+		taskExecutor.setWaitForTasksToCompleteOnShutdown(ObjectHelper.useOrDefault(properties.getWaitForJobsToCompleteOnShutdown(), Boolean.FALSE));
 		taskExecutor.afterPropertiesSet();
 	    configurer.setTaskExecutor(taskExecutor);
 		super.configureAsyncSupport(configurer);
@@ -119,14 +118,13 @@ class WebMvcConfig extends WebMvcBasicConfig {
 	 */
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		AdminProperties.Resource resource = adminHandler.getProperties().getResource();
-		if (resource != null) {
+		if (adminHandler.isWebEnabled()) {
 			registry
-			.addResourceHandler(resource.getRequestPath() + "/**")
-			.addResourceLocations(resource.getLocations())
+			.addResourceHandler(adminHandler.getWebPath() + "/**")
+			.addResourceLocations(adminHandler.getWebLocation())
 			.setCacheControl(CacheControl.maxAge(60, TimeUnit.DAYS))
 	        .resourceChain(false)
-	        .addResolver(new VersionResourceResolver().addContentVersionStrategy(resource.getRequestPath() + "/**"));
+	        .addResolver(new VersionResourceResolver().addContentVersionStrategy(adminHandler.getWebPath() + "/**"));
 		}
 		super.addResourceHandlers(registry);
 	}

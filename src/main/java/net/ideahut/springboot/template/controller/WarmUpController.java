@@ -1,6 +1,7 @@
 package net.ideahut.springboot.template.controller;
 
 
+
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.util.UUID;

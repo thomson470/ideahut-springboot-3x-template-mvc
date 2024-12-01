@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-interface SoftDeleteRepository<T, ID> extends CrudRepository<T, ID>, PagingAndSortingRepository<T, ID> {
+interface SoftDeleteRepository<T, I> extends CrudRepository<T, I>, PagingAndSortingRepository<T, I> {
 
 	@Override
 	@Query("select e from #{#entityName} e where e.deletedOn is null")
@@ -16,6 +16,6 @@ interface SoftDeleteRepository<T, ID> extends CrudRepository<T, ID>, PagingAndSo
 
 	@Override
 	@Query("select e from #{#entityName} e where e.deletedOn is null")
-	Optional<T> findById(ID id);
+	Optional<T> findById(I id);
 	
 }

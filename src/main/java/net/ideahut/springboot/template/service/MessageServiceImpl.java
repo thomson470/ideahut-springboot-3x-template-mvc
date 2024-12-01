@@ -29,24 +29,25 @@ import jakarta.servlet.http.HttpServletRequest;
 import net.ideahut.springboot.bean.BeanConfigure;
 import net.ideahut.springboot.bean.BeanReload;
 import net.ideahut.springboot.context.RequestContext;
+import net.ideahut.springboot.helper.FrameworkHelper;
+import net.ideahut.springboot.helper.ObjectHelper;
+import net.ideahut.springboot.helper.StringHelper;
+import net.ideahut.springboot.helper.WebMvcHelper;
 import net.ideahut.springboot.mapper.DataMapper;
 import net.ideahut.springboot.message.MessageHandler;
 import net.ideahut.springboot.object.Message;
 import net.ideahut.springboot.object.Option;
 import net.ideahut.springboot.template.properties.AppProperties;
-import net.ideahut.springboot.util.FrameworkUtil;
-import net.ideahut.springboot.util.StringUtil;
-import net.ideahut.springboot.util.WebMvcUtil;
 
 @Service
-public class MessageServiceImpl implements MessageService, BeanReload, BeanConfigure<MessageService> {
+class MessageServiceImpl implements MessageService, BeanReload, BeanConfigure<MessageService> {
 	
 	private static final TypeReference<Set<String>> TYPEREF_KEYS = new TypeReference<Set<String>>() {};
-	private static final List<Option> activeLanguages = Arrays.asList(
+	private static final List<Option> ACTIVE_LANGUAGES = Arrays.asList(
 		new Option("id", "Bahasa"),
 		new Option("en", "English")
 	);
-	private static final String defaultLanguage = "id";
+	private static final String DEFAULT_LANGUAGE = "id";
 	
 	private static final class Keys {
 		private Keys() {}
@@ -57,12 +58,20 @@ public class MessageServiceImpl implements MessageService, BeanReload, BeanConfi
 		private static final String LANGUAGE_WORDS = PREFIX + "--LANGUAGE_WORDS--";
 	}
 	
+	private final AppProperties appProperties;
+	private final DataMapper dataMapper;
+	private final RedisTemplate<String, byte[]> redisTemplate;
+	
 	@Autowired
-	private DataMapper dataMapper;
-	@Autowired
-	private RedisTemplate<String, byte[]> redisTemplate;
-	@Autowired
-	private AppProperties appProperties;
+	MessageServiceImpl(
+		AppProperties appProperties,
+		DataMapper dataMapper,
+		RedisTemplate<String, byte[]> redisTemplate
+	) {
+		this.appProperties = appProperties;
+		this.dataMapper = dataMapper;
+		this.redisTemplate = redisTemplate;
+	}
 	
 	@Override
 	public Callable<MessageService> onConfigureBean(ApplicationContext applicationContext) {
@@ -99,8 +108,6 @@ public class MessageServiceImpl implements MessageService, BeanReload, BeanConfi
 			byte[] bytes = dataMapper.writeAsBytes(keys, DataMapper.JSON);
 			valueOps.set(Keys.RESOURCE_KEYS, bytes);
 			loadMessage();
-		} catch (Exception e) {
-			throw e;
 		} finally {
 			lock(false);
 		}
@@ -156,17 +163,20 @@ public class MessageServiceImpl implements MessageService, BeanReload, BeanConfi
 	 */
 	private Map<String, byte[]> loadResource(String type) throws Exception {
 		Map<String, byte[]> map = new HashMap<>();
-		String path = FrameworkUtil.replacePath(StringUtil.removeEnd(appProperties.getMessagePath(), "/"));
+		String path = FrameworkHelper.replacePath(StringHelper.removeEnd(appProperties.getMessagePath(), "/"));
 		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(this.getClass().getClassLoader());
 		Resource[] resources = resolver.getResources(path + "/" + type + "/*.json");
 		for (Resource resource : resources) {
-			String language = resource.getFilename().replace(".json", "");
-			byte[] bytes = IOUtils.toByteArray(resource.getInputStream());
-			String ckey = Keys.PREFIX + "-" + type + "-" + language;
-			// menvalidasi json
-			JsonNode node = dataMapper.read(bytes, JsonNode.class);
-			bytes = dataMapper.writeAsBytes(node, DataMapper.JSON);
-			map.put(ckey, bytes);
+			String filename = ObjectHelper.useOrDefault(resource.getFilename(), "");
+			if (!filename.isEmpty()) {
+				String language = filename.replace(".json", "");
+				byte[] bytes = IOUtils.toByteArray(resource.getInputStream());
+				String ckey = Keys.PREFIX + "-" + type + "-" + language;
+				// menvalidasi json
+				JsonNode node = dataMapper.read(bytes, JsonNode.class);
+				bytes = dataMapper.writeAsBytes(node, DataMapper.JSON);
+				map.put(ckey, bytes);
+			}
 		}
 		return map;
 	}
@@ -176,7 +186,7 @@ public class MessageServiceImpl implements MessageService, BeanReload, BeanConfi
 	 */
 	private boolean isMessageImplemented = false;
 	private void loadMessage() throws Exception {
-		// TODO: impelementasi pengambilan data dari database untuk disimpan ke redis
+		// impelementasi pengambilan data dari database untuk disimpan ke redis
 	}
 	
 	private String getRequestLanguage() {
@@ -184,15 +194,15 @@ public class MessageServiceImpl implements MessageService, BeanReload, BeanConfi
 		if (language != null) {
 			return language;
 		}
-		HttpServletRequest request = WebMvcUtil.getRequest();
-		language = WebMvcUtil.getHeader(request, HttpHeaders.ACCEPT_LANGUAGE, "");
+		HttpServletRequest request = WebMvcHelper.getRequest();
+		language = WebMvcHelper.getHeader(request, HttpHeaders.ACCEPT_LANGUAGE, "");
 		String flang = language;
-		Option option = activeLanguages.stream()
+		Option option = ACTIVE_LANGUAGES.stream()
 		  .filter(o -> flang.equals(o.getValue()))
 		  .findAny()
 		  .orElse(null);
 		if (option == null) {
-			language = defaultLanguage;
+			language = DEFAULT_LANGUAGE;
 		}
 		RequestContext.currentContext().setAttribute(MessageHandler.Attribute.LANGUAGE, language);
 		return language;
@@ -200,19 +210,19 @@ public class MessageServiceImpl implements MessageService, BeanReload, BeanConfi
 
 	@Override
 	public List<Option> getActiveLanguages() {
-		return activeLanguages;
+		return ACTIVE_LANGUAGES;
 	}
 
 	@Override
 	public String getDefaultLanguage() {
-		return defaultLanguage;
+		return DEFAULT_LANGUAGE;
 	}
 
 	@Override
 	public JsonNode getResource(String type) {
 		ObjectNode node = dataMapper.createObjectNode();
 		String language = getRequestLanguage();
-		node.putArray("languages").addAll(dataMapper.convert(activeLanguages, ArrayNode.class));
+		node.putArray("languages").addAll(dataMapper.convert(ACTIVE_LANGUAGES, ArrayNode.class));
 		node.put("active", language);
 		ValueOperations<String, byte[]> valueOps = redisTemplate.opsForValue();
 		byte[] bytes = valueOps.get(Keys.PREFIX + "-" + type + "-" + language);
@@ -231,31 +241,7 @@ public class MessageServiceImpl implements MessageService, BeanReload, BeanConfi
 		String text = "";
 		if (code != null) {
 			if (checkArgs) {
-				if (args != null) {
-					List<String> codes = new ArrayList<>();
-					codes.add(code);
-					codes.addAll(Arrays.asList(args));
-					List<String> words = getList(codes.toArray(new String[0]));
-					text = words.remove(0);
-					codes.remove(0);
-					if (text == null) {
-						text = code;
-					}
-					if (codes.size() == words.size()) {
-						int i = 0;
-						while (!words.isEmpty()) {
-							String word = words.remove(0);
-							if (word == null) {
-								word = codes.get(i);
-							}
-							text = text.replace("{" + i + "}", word + "");
-							i++;
-						}
-						codes.clear();
-					}
-				} else {
-					text = getWord(code);
-				}
+				text = getTextArgs(code, args);
 			} else {
 				text = getWord(code);
 				if (args != null) {
@@ -315,7 +301,7 @@ public class MessageServiceImpl implements MessageService, BeanReload, BeanConfi
 	@Override
 	public List<String> getList(String... codes) {
 		if (!isMessageImplemented) {
-			return codes != null ? new ArrayList<>(Arrays.asList(codes)) : new ArrayList<>();
+			return ObjectHelper.callOrElse(codes != null, () -> new ArrayList<>(Arrays.asList(codes)), ArrayList::new);
 		}
 		
 		List<String> list = new ArrayList<>();
@@ -333,7 +319,7 @@ public class MessageServiceImpl implements MessageService, BeanReload, BeanConfi
 				int i = 0;
 				while (!lvalues.isEmpty()) {
 					byte[] value = lvalues.remove(0);
-					list.add(value != null ? new String(value) : lcodes.get(i));
+					list.add(ObjectHelper.useOrElse(value == null, lcodes.get(i), () -> new String(value)));
 					i++;
 				}
 			}
@@ -360,6 +346,36 @@ public class MessageServiceImpl implements MessageService, BeanReload, BeanConfi
 			}
 		}
 		return "";
+	}
+	
+	private String getTextArgs(String code, String... args) {
+		String text;
+		if (args != null) {
+			List<String> codes = new ArrayList<>();
+			codes.add(code);
+			codes.addAll(Arrays.asList(args));
+			List<String> words = getList(codes.toArray(new String[0]));
+			text = words.remove(0);
+			codes.remove(0);
+			if (text == null) {
+				text = code;
+			}
+			if (codes.size() == words.size()) {
+				int i = 0;
+				while (!words.isEmpty()) {
+					String word = words.remove(0);
+					if (word == null) {
+						word = codes.get(i);
+					}
+					text = text.replace("{" + i + "}", word + "");
+					i++;
+				}
+				codes.clear();
+			}
+		} else {
+			text = getWord(code);
+		}
+		return text;
 	}
 
 }

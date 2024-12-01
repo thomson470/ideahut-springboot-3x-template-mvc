@@ -47,7 +47,7 @@ public class AutoGenStrIdHardDel extends EntityAudit {
 	//@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = AppConstants.Default.TIMEZONE)
 	//@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     //@Column(name = "date_", nullable = false)
-    //private Date date;
+    //private Date date;//-
 	
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "date_", nullable = false)
@@ -55,11 +55,11 @@ public class AutoGenStrIdHardDel extends EntityAudit {
 	
 	//@JsonFormat(pattern = "yyyy-MM-dd", timezone = AppConstants.Default.TIMEZONE)
 	//@Column(name = "date_", nullable = false)
-    //private LocalDate date;
+    //private LocalDate date;//-
 	
 	//@JsonFormat(pattern = "HH:mm:ss", timezone = AppConstants.Default.TIMEZONE)
 	//@Column(name = "time_", nullable = false)
-    //private LocalTime date;
+    //private LocalTime date;//-
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "condition_", nullable = false)

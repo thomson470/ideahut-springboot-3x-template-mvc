@@ -12,11 +12,11 @@ import net.ideahut.springboot.crud.CrudResource;
 import net.ideahut.springboot.entity.EntityInfo;
 import net.ideahut.springboot.entity.EntityTrxManager;
 import net.ideahut.springboot.entity.TrxManagerInfo;
+import net.ideahut.springboot.helper.ErrorHelper;
+import net.ideahut.springboot.helper.ObjectHelper;
 import net.ideahut.springboot.mapper.DataMapper;
 import net.ideahut.springboot.template.Application;
 import net.ideahut.springboot.template.support.CrudSupport;
-import net.ideahut.springboot.util.ErrorUtil;
-import net.ideahut.springboot.util.ObjectUtil;
 
 @Configuration
 class CrudConfig {
@@ -48,7 +48,7 @@ class CrudConfig {
 	) {
 		return (manager, name) -> {
 			try {
-				Class<?> clazz = ObjectUtil.classOf(Application.Package.APPLICATION + ".entity." + name);
+				Class<?> clazz = ObjectHelper.classOf(Application.Package.APPLICATION + ".entity." + name);
 				TrxManagerInfo trxManagerInfo = entityTrxManager.getDefaultTrxManagerInfo();
 				if (manager != null && !manager.isEmpty()) {
 					trxManagerInfo = entityTrxManager.getTrxManagerInfo(manager);
@@ -60,7 +60,7 @@ class CrudConfig {
 				properties.setUseNative(false);
 				return properties;
 			} catch (Exception e) {
-				throw ErrorUtil.exception(e);
+				throw ErrorHelper.exception(e);
 			}
 		};
 	}
@@ -74,14 +74,14 @@ class CrudConfig {
 	@Bean
 	CrudResource crudResource(
 		WebMvcApiService apiService
-	) {
-		return (manager, name) -> {
-			ApiAccess apiAccess = RequestContext.currentContext().getAttribute(ApiAccess.CONTEXT);
-			CrudProperties properties = apiService.getApiCrudProperties(apiAccess, name);
-			Assert.notNull(properties, "CrudProperties is not found: " + name);
-			return properties;
-		};
-	}
+	) {//-
+		return (manager, name) -> {//-
+			ApiAccess apiAccess = RequestContext.currentContext().getAttribute(ApiAccess.CONTEXT);//-
+			CrudProperties properties = apiService.getApiCrudProperties(apiAccess, name);//-
+			Assert.notNull(properties, "CrudProperties is not found: " + name);//-
+			return properties;//-
+		};//-
+	}//-
 	*/
 	
 	
@@ -99,13 +99,13 @@ class CrudConfig {
 	 */
 	/*
 	@Bean
-	CrudPermission crudPermission() {
-		return (action, request) -> {
-			CrudProperties properties = request.getProperties();
-			Set<CrudAction> actions = properties.getActions();
-			return actions != null && actions.contains(action);
-		};
-	}
+	CrudPermission crudPermission() {//-
+		return (action, request) -> {//-
+			CrudProperties properties = request.getProperties();//-
+			Set<CrudAction> actions = properties.getActions();//-
+			return actions != null && actions.contains(action);//-
+		};//-
+	}//-
 	*/
 	
 }

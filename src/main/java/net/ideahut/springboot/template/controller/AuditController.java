@@ -1,5 +1,6 @@
 package net.ideahut.springboot.template.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,11 +16,11 @@ import net.ideahut.springboot.audit.AuditRequest;
 import net.ideahut.springboot.entity.EntityTrxManager;
 import net.ideahut.springboot.entity.TrxManagerInfo;
 import net.ideahut.springboot.exception.ResultRuntimeException;
+import net.ideahut.springboot.helper.ObjectHelper;
+import net.ideahut.springboot.helper.WebMvcHelper;
 import net.ideahut.springboot.object.Page;
 import net.ideahut.springboot.object.Result;
 import net.ideahut.springboot.template.Application;
-import net.ideahut.springboot.util.ObjectUtil;
-import net.ideahut.springboot.util.WebMvcUtil;
 
 /*
  * API untuk melihat data audit
@@ -45,7 +46,7 @@ class AuditController {
 	
 	@PostMapping(value = "/list")
 	Result list(HttpServletRequest request) throws Exception {
-		byte[] data = WebMvcUtil.getBodyAsBytes(request);
+		byte[] data = WebMvcHelper.getBodyAsBytes(request);
 		AuditRequest auditRequest = auditHandler.getRequest(data);
 		TrxManagerInfo trxManagerInfo;
 		String manager = auditRequest.getManager();
@@ -60,11 +61,11 @@ class AuditController {
 		String entity = auditRequest.getEntity();
 		if (entity != null && !entity.isEmpty() && auditRequest.getClassOfEntity() == null) {
 			try {
-				Class<?> classOfEntity = ObjectUtil.classOf(entity);
+				Class<?> classOfEntity = ObjectHelper.classOf(entity);
 				auditRequest.setClassOfEntity(classOfEntity);
 			} catch(Exception e1) {
 				try {
-					Class<?> type = ObjectUtil.classOf(Application.Package.APPLICATION + ".entity." + entity);
+					Class<?> type = ObjectHelper.classOf(Application.Package.APPLICATION + ".entity." + entity);
 					auditRequest.setClassOfEntity(type);	
 				} catch (Exception e2) {
 					throw new ResultRuntimeException(Result.error("AUDIT-02", "Entity is not found, for: " + entity));

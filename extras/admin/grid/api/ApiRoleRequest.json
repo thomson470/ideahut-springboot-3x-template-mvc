@@ -80,7 +80,7 @@
             "packageName",
             "className",
             "functionName",
-            "parameterLength",
+            "parameterCount",
             "consumes",
             "produces",
             "updatedOn",
@@ -367,7 +367,7 @@
                     "packageName",
                     "className",
                     "functionName",
-                    "parameterLength",
+                    "parameterCount",
                     "consumes",
                     "produces"
                 ],
@@ -408,9 +408,9 @@
 		                "sortable": true
 		            },
 		            {
-		                "name": "parameterLength",
+		                "name": "parameterCount",
 		                "label": "Parameter",
-		                "field": "parameterLength",
+		                "field": "parameterCount",
 		                "align": "left",
 		                "sortable": true
 		            },

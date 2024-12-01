@@ -1,5 +1,6 @@
 package net.ideahut.springboot.template.controller;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,11 +15,11 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.mail.internet.InternetAddress;
 import lombok.Getter;
 import lombok.Setter;
+import net.ideahut.springboot.helper.ObjectHelper;
 import net.ideahut.springboot.mail.MailHandler;
 import net.ideahut.springboot.mail.MailObject;
 import net.ideahut.springboot.mail.MailObject.Attachment;
 import net.ideahut.springboot.object.Result;
-import net.ideahut.springboot.util.ObjectUtil;
 
 /*
  * Contoh penggunaan MailHandler
@@ -64,15 +65,15 @@ class MailController {
 	private void sendMail(Form form, boolean async) throws Exception {
 		MailObject mail = new MailObject();
 		
-		String subject = ObjectUtil.useOrDefault(form.getSubject(), "");
-		subject = ObjectUtil.useOrElse(!subject.trim().isEmpty(), subject, "Test-Mail");
+		String subject = ObjectHelper.useOrDefault(form.getSubject(), "");
+		subject = ObjectHelper.useOrElse(!subject.trim().isEmpty(), subject, "Test-Mail");
 		mail.setSubject(subject);
 		
-		String content = ObjectUtil.useOrDefault(form.getContent(), "");
-		content = ObjectUtil.useOrElse(!content.trim().isEmpty(), content, "Ini adalah contoh email");
+		String content = ObjectHelper.useOrDefault(form.getContent(), "");
+		content = ObjectHelper.useOrElse(!content.trim().isEmpty(), content, "Ini adalah contoh email");
 		mail.setHtmlText(content);
 		
-		String sender = ObjectUtil.useOrDefault(form.getFrom(), "").trim();
+		String sender = ObjectHelper.useOrDefault(form.getFrom(), "").trim();
 		if (!sender.isEmpty()) {
 			mail.setFrom(new InternetAddress(sender, sender));
 		}

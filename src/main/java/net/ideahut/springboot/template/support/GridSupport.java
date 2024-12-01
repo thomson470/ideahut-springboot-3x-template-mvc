@@ -41,6 +41,8 @@ public final class GridSupport {
 		Map<String, GridOption> options = new HashMap<>();
 		options.put("CRUD_ACTION", StaticOption.CRUD_ACTION);
 		options.put("GENDER", StaticOption.GENDER);
+		options.put("LANGUAGE", StaticOption.LANGUAGE);
+		options.put("MESSAGE_TYPE", StaticOption.MESSAGE_TYPE);
 		options.put("YES_NO", StaticOption.YES_NO);
 		options.put("MENU_TYPE", StaticOption.MENU_TYPE);
 		options.put("DIGEST", StaticOption.DIGEST);
@@ -63,6 +65,28 @@ public final class GridSupport {
 			Arrays.asList(
 				new Option("M", "Male"),
 				new Option("F", "Female")
+			)
+		);
+		
+		// LANGUAGE
+		public static final GridOption LANGUAGE = new GridOptionFromCollector(() ->
+			Arrays.asList(
+				new Option("id", "Bahasa"),
+				new Option("en", "English")
+			)
+		);
+		
+		// MESSAGE TYPE
+		public static final GridOption MESSAGE_TYPE = new GridOptionFromCollector(() ->
+			Arrays.asList(
+				new Option("E", "Error"),
+				new Option("G", "Grid"),
+				new Option("L", "Label"),
+				new Option("M", "Message"),
+				new Option("N", "Notification"),
+				new Option("Q", "Question"),
+				new Option("R", "Menu"),
+				new Option("W", "Web")
 			)
 		);
 		
@@ -117,6 +141,7 @@ public final class GridSupport {
 			Collections.sort(options, (o1, o2) -> o1.getValue().compareTo(o2.getValue()));
 			return options;
 		});
+		
 	}
 	
 	/*

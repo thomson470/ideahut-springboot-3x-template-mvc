@@ -31,7 +31,7 @@ public class Information extends EntityAudit {
 
 	@Id
 	@GeneratedValue(generator = OdtIdGenerator.NAME)
-	@GenericGenerator(name = OdtIdGenerator.NAME, strategy = OdtIdGenerator.STRATEGY)
+	@GenericGenerator(name = OdtIdGenerator.NAME, type = OdtIdGenerator.class)
 	@Column(name = "information_id", unique = true, nullable = false, length = 64)
 	private String informationId;
 	

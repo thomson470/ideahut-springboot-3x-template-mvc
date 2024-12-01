@@ -10,9 +10,8 @@ import org.springframework.context.annotation.Configuration;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.ideahut.springboot.admin.AdminProperties;
+import net.ideahut.springboot.api.ApiService;
 import net.ideahut.springboot.api.ApiTokenServiceImpl;
-import net.ideahut.springboot.api.WebMvcApiServiceImpl;
 import net.ideahut.springboot.audit.DatabaseAuditProperties;
 import net.ideahut.springboot.cache.CacheGroupProperties;
 import net.ideahut.springboot.entity.DatabaseProperties;
@@ -36,6 +35,7 @@ public class AppProperties {
 	private Boolean autoStartScheduler;
 	private String messagePath;
 	private String reportPath;
+	private String kafkaConfigurationFile;
 	private EntityForeignKeyParam foreignKey;
 	
 	private Map<String, String> cors = new HashMap<>();
@@ -51,6 +51,7 @@ public class AppProperties {
 	private Admin admin = new Admin();
 	private Api api = new Api();
 	private TaskProperties webAsync = new TaskProperties();
+	private Handler handler = new Handler();
 	
 	
 	@Setter
@@ -68,7 +69,7 @@ public class AppProperties {
 	@Setter
 	@Getter
 	public static class Redis {
-		private RedisProperties common 	= new RedisProperties();
+		private RedisProperties.Connection common 	= new RedisProperties.Connection();
 	}
 	
 	@Setter
@@ -80,9 +81,13 @@ public class AppProperties {
 	
 	@Setter
 	@Getter
-	public static class Admin extends AdminProperties {
-		private String configFile;
+	public static class Admin {
+		private String configurationFile;
 		private String credentialFile;
+		private String apiPath;
+		private String webPath;
+		private String webLocation;
+		private Boolean webEnabled;
 	}
 	
 	@Setter
@@ -90,6 +95,13 @@ public class AppProperties {
 	public static class Grid {
 		private String location;
 		private String definition;
+	}
+	
+	@Setter
+	@Getter
+	public static class Handler {
+		private Boolean enableReport;
+		private Boolean enableKafka;
 	}
 	
 	@Setter
@@ -105,7 +117,7 @@ public class AppProperties {
 		private ApiTokenServiceImpl.Consumer consumer = new ApiTokenServiceImpl.Consumer();
 		// Parameter untuk membuat Jwt Token
 		private ApiTokenServiceImpl.JwtProcessor jwtProcessor = new ApiTokenServiceImpl.JwtProcessor();
-		private WebMvcApiServiceImpl.RedisExpiry redisExpiry = new WebMvcApiServiceImpl.RedisExpiry();
+		private ApiService.RedisExpiry redisExpiry = new ApiService.RedisExpiry();
 		
 		@Setter
 		@Getter

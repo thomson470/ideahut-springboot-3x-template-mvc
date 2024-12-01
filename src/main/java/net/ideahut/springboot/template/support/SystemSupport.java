@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.ideahut.springboot.entity.EntityPostListener;
+import net.ideahut.springboot.helper.ObjectHelper;
 import net.ideahut.springboot.sysparam.SysParamHandler;
 import net.ideahut.springboot.sysparam.SysParamReloader;
 import net.ideahut.springboot.sysparam.SysParamRemover;
@@ -22,7 +23,7 @@ public class SystemSupport {
 		listeners.put(SysParam.class, new EntityPostListener() {
 			@Override
 			public void onPostDelete(Object entity) {
-				if (sysParamHandler instanceof SysParamRemover) {
+				if (ObjectHelper.isInstance(SysParamRemover.class, sysParamHandler)) {
 					SysParam sysParam = (SysParam) entity;
 					((SysParamRemover)sysParamHandler).removeSysParam(sysParam.getSysCode(), sysParam.getParamCode());
 				}
@@ -33,7 +34,7 @@ public class SystemSupport {
 			}
 			@Override
 			public void onPostUpdate(Object entity) {
-				if (sysParamHandler instanceof SysParamReloader) {
+				if (ObjectHelper.isInstance(SysParamReloader.class, sysParamHandler)) {
 					SysParam sysParam = (SysParam) entity;
 					((SysParamReloader)sysParamHandler).reloadSysCodes(sysParam.getSysCode());
 				}

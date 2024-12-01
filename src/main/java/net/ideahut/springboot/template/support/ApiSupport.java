@@ -22,9 +22,9 @@ import net.ideahut.springboot.api.dto.ApiRoleRequestDto;
 import net.ideahut.springboot.entity.EntityPostListener;
 import net.ideahut.springboot.entity.EntityTrxManager;
 import net.ideahut.springboot.entity.TrxManagerInfo;
+import net.ideahut.springboot.helper.FrameworkHelper;
 import net.ideahut.springboot.mapper.DataMapper;
 import net.ideahut.springboot.support.EntityPostListenerForAllAction;
-import net.ideahut.springboot.util.FrameworkUtil;
 
 public class ApiSupport {
 	
@@ -39,7 +39,7 @@ public class ApiSupport {
 		
 		ApiHandlerImpl apiHandlerImpl = (ApiHandlerImpl) apiHandler;
 		ApiEntityClass classOfEntity = apiHandlerImpl.getEntityClass();
-		TrxManagerInfo trxManagerInfo = FrameworkUtil.getTrxManagerInfo(entityTrxManager, classOfEntity.getTrxManagerName());
+		TrxManagerInfo trxManagerInfo = FrameworkHelper.getTrxManagerInfo(entityTrxManager, classOfEntity.getTrxManagerName());
 		Assert.notNull(trxManagerInfo, "TrxManager is not found, for: " + classOfEntity.getTrxManagerName());
 		
 		
@@ -93,11 +93,8 @@ public class ApiSupport {
 			apiHandlerImpl.removeApiProvider(dto.getApiName());
 		}));
 		
-		
 		// ApiRole
-		listeners.put(classOfEntity.getApiRole(), new EntityPostListenerForAllAction(entity -> {
-			apiHandlerImpl.clearCache();
-		}));
+		listeners.put(classOfEntity.getApiRole(), new EntityPostListenerForAllAction(entity -> apiHandlerImpl.clearCache()));
 		
 		// ApiRoleCrud
 		listeners.put(classOfEntity.getApiRoleCrud(), new EntityPostListenerForAllAction(entity -> {

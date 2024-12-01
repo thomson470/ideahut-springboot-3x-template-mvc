@@ -11,13 +11,12 @@ import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import net.ideahut.springboot.admin.AdminHandler;
-import net.ideahut.springboot.admin.AdminProperties;
 import net.ideahut.springboot.filter.SecurityAuthorizationFilter;
 import net.ideahut.springboot.filter.WebMvcRequestFilter;
+import net.ideahut.springboot.helper.WebMvcHelper;
 import net.ideahut.springboot.security.SecurityAuthorization;
 import net.ideahut.springboot.template.AppConstants;
 import net.ideahut.springboot.template.properties.AppProperties;
-import net.ideahut.springboot.util.WebMvcUtil;
 
 /*
  * Konfigurasi Filter
@@ -31,7 +30,7 @@ class FilterConfig {
 		AppProperties appProperties,
 		RequestMappingHandlerMapping handlerMapping
 	) {		
-		return WebMvcUtil.createFilterBean(
+		return WebMvcHelper.createFilterBean(
 			environment,
 			new WebMvcRequestFilter()
 				.setHandlerMapping(handlerMapping)
@@ -48,21 +47,24 @@ class FilterConfig {
 	FilterRegistrationBean<SecurityAuthorizationFilter> adminFilter(
 		Environment environment,
 		AdminHandler adminHandler,
-		@Qualifier(AppConstants.Bean.Security.ADMIN) SecurityAuthorization adminSecurity
+		@Qualifier(AppConstants.Bean.Security.ADMIN) 
+		SecurityAuthorization adminSecurity
 	) {
-		AdminProperties properties = adminHandler.getProperties();
 		List<String> paths = new ArrayList<>();
-		paths.add(properties.getApi().getRequestPath() + "/*");
-		if (properties.getResource() != null && properties.getResource().getRequestPath() != null) {
-			paths.add(properties.getResource().getRequestPath() + "/*");
+		// API wajib ada
+		paths.add(adminHandler.getApiPath() + "/*");
+		if (adminHandler.isWebEnabled()) {
+			// Web tidak wajib ada
+			paths.add(adminHandler.getWebPath() + "/*");
 		}
-		return WebMvcUtil.createFilterBean(
+		return WebMvcHelper.createFilterBean(
 			environment,
 			new SecurityAuthorizationFilter()
 				.setSecurityAuthorization(adminSecurity),
 			2,
 			paths.toArray(new String[0])
 		);
+		
 	}
 	
 }

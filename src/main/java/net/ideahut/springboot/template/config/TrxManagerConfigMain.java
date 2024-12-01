@@ -25,10 +25,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import jakarta.persistence.EntityManagerFactory;
+import net.ideahut.springboot.helper.FrameworkHelper;
 import net.ideahut.springboot.template.Application;
 import net.ideahut.springboot.template.properties.AppProperties;
 import net.ideahut.springboot.template.properties.AppProperties.Audit;
-import net.ideahut.springboot.util.FrameworkUtil;
 
 /*
  * Konfigurasi Primary Transaction Manager & Entity Manager
@@ -87,10 +87,10 @@ class TrxManagerConfigMain {
 		@Qualifier("mainDataSource") 
 		DataSource dataSource
 	) {
-		Map<String, Object> properties = FrameworkUtil.getHibernateSettings(environment, "spring.jpa.properties");
+		Map<String, Object> properties = FrameworkHelper.getHibernateSettings(environment, "spring.jpa.properties");
 		/*
 		 * Session Factory audit dapat di-set disini
-		 *    EntityIntegrator.setAuditSessionFactory("spring_sample_main", properties, mainAuditSessionFactory);
+		 *    EntityIntegrator.setAuditSessionFactory("spring_sample_main", properties, mainAuditSessionFactory);//-
 		 * atau bisa juga di application.properties / application.yml di property:
 		 * - "spring.jpa.properties.hibernate.audit_identifier": audit id yang digunakan agar terhubung dengan AuditHandler, contoh: spring_sample_main
 		 * - "spring.jpa.properties.hibernate.audit_bean_name": nama bean audit session factory, contoh: mainAuditSessionFactory
@@ -138,7 +138,7 @@ class TrxManagerConfigMain {
 		@Qualifier("mainAuditDatasource") DataSource datasource
 	) {
 		Audit audit = appProperties.getAudit();
-		Properties properties = FrameworkUtil.getHibernateProperties(audit.getJpa().getProperties());
+		Properties properties = FrameworkHelper.getHibernateProperties(audit.getJpa().getProperties());
 		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(datasource);
         sessionFactory.setHibernateProperties(properties);

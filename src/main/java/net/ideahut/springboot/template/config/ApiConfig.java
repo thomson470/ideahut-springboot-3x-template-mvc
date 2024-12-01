@@ -48,6 +48,7 @@ class ApiConfig {
 		.setEntityTrxManager(entityTrxManager)
 		//.setNullExpiry(null)
 		.setRedisPrefix("API-HANDLER")
+		//.setRedisAppIdEnabled(true)
 		.setRedisTemplate(redisTemplate)
 		.setTaskHandler(taskHandler);
 	}
@@ -76,7 +77,7 @@ class ApiConfig {
 		.setDataMapper(dataMapper)
 		.setDefaultDigest("SHA-256")
 		//.setHeader(null)
-		.setRedisExpiry( appProperties.getApi().getRedisExpiry())
+		.setRedisExpiry(appProperties.getApi().getRedisExpiry())
 		.setRedisPrefix("API-SERVICE")
 		.setRedisTemplate(redisTemplate)
 		.setRestHandler(restHandler);

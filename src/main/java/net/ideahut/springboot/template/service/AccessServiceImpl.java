@@ -29,11 +29,11 @@ import net.ideahut.springboot.api.processor.HostJwtApiProcessor;
 import net.ideahut.springboot.api.processor.StandardJwtApiProcessor;
 import net.ideahut.springboot.bean.BeanConfigure;
 import net.ideahut.springboot.context.RequestContext;
+import net.ideahut.springboot.helper.TimeHelper;
+import net.ideahut.springboot.helper.WebMvcHelper;
 import net.ideahut.springboot.mapper.DataMapper;
 import net.ideahut.springboot.object.TimeValue;
 import net.ideahut.springboot.template.AppConstants;
-import net.ideahut.springboot.util.TimeUtil;
-import net.ideahut.springboot.util.WebMvcUtil;
 
 @Service
 class AccessServiceImpl implements AccessService, BeanConfigure<AccessService> {
@@ -92,13 +92,13 @@ class AccessServiceImpl implements AccessService, BeanConfigure<AccessService> {
 		String username, 
 		String password
 	) throws Exception {
-		String apiType = WebMvcUtil.getHeader(httpRequest, apiService.getApiHeader().getTypeHeader(), StandardJwtApiProcessor.API_TYPE);
+		String apiType = WebMvcHelper.getHeader(httpRequest, apiService.getApiHeader().getTypeHeader(), StandardJwtApiProcessor.API_TYPE);
 		boolean isJwt = JWT_PROCESSORS.contains(apiType);
 		Assert.isTrue(isJwt, "Currenty only support JWT Processor");
 		Assert.isTrue(USERNAME.equals(username) && PASSWORD.equals(password), "Invalid user");
 		ApiRequest apiRequest = apiService.getApiRequest(httpRequest, true);
 		ApiAccess apiAccess = new ApiAccess()
-		.setValidUntil(TimeValue.of(TimeUnit.MILLISECONDS, TimeUtil.currentEpochMillis() + API_ACCESS_EXPIRY))
+		.setValidUntil(TimeValue.of(TimeUnit.MILLISECONDS, TimeHelper.currentEpochMillis() + API_ACCESS_EXPIRY))
 		.setApiUser(new ApiUser()
 			.setId(USERID)
 			.setUsername(USERNAME)
@@ -133,7 +133,7 @@ class AccessServiceImpl implements AccessService, BeanConfigure<AccessService> {
 	public ApiAccess info(ApiParameter apiParameter) {
 		String apiKey = apiParameter != null ? apiParameter.getApiKey() : null;
 		if (apiKey == null) {
-			ApiRequest apiRequest = apiService.getApiRequest(WebMvcUtil.getRequest(), false);
+			ApiRequest apiRequest = apiService.getApiRequest(WebMvcHelper.getRequest(), false);
 			apiKey = apiService.getApiKey(apiRequest);
 		}
 		ValueOperations<String, byte[]> valops = redisTemplate.opsForValue();

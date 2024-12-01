@@ -21,22 +21,28 @@ class RedisConfig {
 	@Primary
 	@Bean(name = AppConstants.Bean.Redis.COMMON)
 	RedisTemplate<String, byte[]> commonRedis(
-		AppProperties appProperties		
+		AppProperties appProperties
 	) throws Exception {
-		RedisProperties properties = appProperties.getRedis().getCommon();
+		RedisProperties.Connection properties = appProperties.getRedis().getCommon();
 		RedisConnectionFactory connectionFactory = RedisHelper.createRedisConnectionFactory(properties, true);
-		return RedisHelper.createRedisTemplate(connectionFactory, false);
+		return RedisHelper.createRedisTemplate(connectionFactory, getTemplate(), false);
 	}
 	
 	@Bean(name = AppConstants.Bean.Redis.ACCESS)
 	RedisTemplate<String, byte[]> accessRedis(
 		DataMapper dataMapper,
-		AppProperties appProperties		
+		AppProperties appProperties
 	) throws Exception {
-		RedisProperties properties = dataMapper.copy(appProperties.getRedis().getCommon());
+		RedisProperties.Connection properties = dataMapper.copy(appProperties.getRedis().getCommon());
 		properties.getStandalone().setDatabase(1);
 		RedisConnectionFactory connectionFactory = RedisHelper.createRedisConnectionFactory(properties, true);
-		return RedisHelper.createRedisTemplate(connectionFactory, false);
+		return RedisHelper.createRedisTemplate(connectionFactory, getTemplate(), false);
+	}
+	
+	private RedisProperties.Template getTemplate() {
+		return new RedisProperties.Template()
+		.setKeyType(String.class)
+		.setValueType(byte[].class);
 	}
 	
 }

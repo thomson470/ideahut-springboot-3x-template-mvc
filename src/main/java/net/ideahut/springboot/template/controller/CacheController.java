@@ -1,5 +1,6 @@
 package net.ideahut.springboot.template.controller;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -18,11 +19,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import net.ideahut.springboot.cache.CacheGroupHandler;
 import net.ideahut.springboot.cache.CacheGroupProperties;
+import net.ideahut.springboot.helper.TimeHelper;
 import net.ideahut.springboot.mapper.DataMapper;
 import net.ideahut.springboot.object.Result;
 import net.ideahut.springboot.template.object.CacheData;
 import net.ideahut.springboot.template.properties.AppProperties;
-import net.ideahut.springboot.util.TimeUtil;
 
 /*
  * Contoh penggunaan CacheGroupHandler
@@ -79,7 +80,7 @@ class CacheController {
 				data.setContent("Contoh cache - " + UUID.randomUUID());
 				data.setGroup(group(group));
 				data.setKey(key);
-				data.setTimestamp(TimeUtil.currentEpochMillis());
+				data.setTimestamp(TimeHelper.currentEpochMillis());
 				flag.set(0, Boolean.FALSE);
 				return data;
 			}
