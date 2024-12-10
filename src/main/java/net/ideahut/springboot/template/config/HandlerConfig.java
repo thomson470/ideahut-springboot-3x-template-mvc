@@ -8,6 +8,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import net.ideahut.springboot.audit.AuditHandler;
 import net.ideahut.springboot.audit.DatabaseMultiAuditHandler;
+import net.ideahut.springboot.audit.DatabaseSingleAuditHandler;
 import net.ideahut.springboot.cache.CacheGroupHandler;
 import net.ideahut.springboot.cache.CacheHandler;
 import net.ideahut.springboot.cache.RedisCacheGroupHandler;
@@ -18,15 +19,8 @@ import net.ideahut.springboot.grid.GridHandlerImpl;
 import net.ideahut.springboot.helper.FrameworkHelper;
 import net.ideahut.springboot.init.InitHandler;
 import net.ideahut.springboot.init.InitHandlerImpl;
-import net.ideahut.springboot.job.JobEntityClass;
 import net.ideahut.springboot.job.SchedulerHandler;
 import net.ideahut.springboot.job.SchedulerHandlerImpl;
-import net.ideahut.springboot.job.entity.JobGroup;
-import net.ideahut.springboot.job.entity.JobInstance;
-import net.ideahut.springboot.job.entity.JobTrigger;
-import net.ideahut.springboot.job.entity.JobTriggerConfig;
-import net.ideahut.springboot.job.entity.JobType;
-import net.ideahut.springboot.job.entity.JobTypeParam;
 import net.ideahut.springboot.kafka.KafkaHandler;
 import net.ideahut.springboot.kafka.KafkaHandlerImpl;
 import net.ideahut.springboot.mail.MailHandler;
@@ -38,7 +32,6 @@ import net.ideahut.springboot.rest.OkHttpRestHandler;
 import net.ideahut.springboot.rest.RestHandler;
 import net.ideahut.springboot.sysparam.SysParamHandler;
 import net.ideahut.springboot.sysparam.SysParamHandlerImpl;
-import net.ideahut.springboot.sysparam.entity.SysParam;
 import net.ideahut.springboot.task.TaskHandler;
 import net.ideahut.springboot.template.AppConstants;
 import net.ideahut.springboot.template.Application;
@@ -59,6 +52,7 @@ import net.ideahut.springboot.template.support.HandlerSupport;
  * - RestHandler
  * - SysParamHandler
  * - SchedulerHandler
+ * - KafkaHandler
  */
 @Configuration
 class HandlerConfig {
@@ -71,7 +65,13 @@ class HandlerConfig {
 		ApplicationContext applicationContext		
 	) {
 		return new InitHandlerImpl()
-		.setEndpoint(() -> "http://localhost:" + FrameworkHelper.getPort(applicationContext) + "/warmup");
+		
+		// Endpoint untuk inisialisasi DispatcherServlet
+		.setEndpoint(() -> "http://localhost:" + FrameworkHelper.getPort(applicationContext) + "/warmup")
+		
+		// Custom jika mekanisme berbeda
+		//.setServletCall(null)
+		;
 	}
 
 	/*
@@ -84,18 +84,20 @@ class HandlerConfig {
 		@Qualifier(AppConstants.Bean.Task.AUDIT) 
 		TaskHandler taskHandler
 	) {
-		return new DatabaseMultiAuditHandler()
-		.setEntityTrxManager(entityTrxManager)
-		.setProperties(appProperties.getAudit().getProperties())
-		.setTaskHandler(taskHandler)
-		.setRejectNonAuditEntity(true);
-		/*
-		return new DatabaseSingleAuditHandler()
-		.setEntityTrxManager(entityTrxManager)
-		.setProperties(appProperties.getAudit().getProperties())
-		.setTaskHandler(taskHandler)
-		.setRejectNonAuditEntity(true);//-
-		*/
+		AppProperties.Audit audit = appProperties.getAudit();
+		if (Boolean.TRUE.equals(audit.getIsSingleAudit())) {
+			return new DatabaseSingleAuditHandler()
+			.setEntityTrxManager(entityTrxManager)
+			.setProperties(audit.getProperties())
+			.setRejectNonAuditEntity(!Boolean.FALSE.equals(audit.getRejectNonAuditEntity()))
+			.setTaskHandler(taskHandler);
+		} else {
+			return new DatabaseMultiAuditHandler()
+			.setEntityTrxManager(entityTrxManager)
+			.setProperties(audit.getProperties())
+			.setRejectNonAuditEntity(!Boolean.FALSE.equals(audit.getRejectNonAuditEntity()))
+			.setTaskHandler(taskHandler);
+		}
 	}
 	
 	/*
@@ -160,11 +162,26 @@ class HandlerConfig {
 	) {
 		AppProperties.Grid grid = appProperties.getGrid();
 		return new GridHandlerImpl()
+				
+		// DataMapper
 		.setDataMapper(dataMapper)
+		
+		// Directory lokasi file-file template
 		.setLocation(grid.getLocation())
+		
+		// File definisi order, title, dll yang akan ditampilakan di UI
 		.setDefinition(grid.getDefinition())
+		
+		// RedisTemplate
 		.setRedisTemplate(redisTemplate)
+		
+		// Untuk menerjemahkan judul, label, deskripsi, dll yang ada di template grid
+		//.setMessageHandler(null)
+		
+		// Daftar array yang digunakan di template grid, contoh: DAYS, MONTHS, dll
 		.setAdditionals(GridSupport.getAdditionals())
+		
+		// Daftar option select ynag digunakan di template grid, contoh: GENDER, BOOLEAN, dll
 		.setOptions(GridSupport.getOptions());
 	}
 	
@@ -178,11 +195,24 @@ class HandlerConfig {
 		EntityTrxManager entityTrxManager
 	) {
 		return new SysParamHandlerImpl()
+		
+		// DataMapper
 		.setDataMapper(dataMapper)
+		
+		// Daftar Entity class dan nama trxManager yang terkait dengan SysParamHandler
+		// default semua class di package 'net.ideahut.springboot.sysparam.entity'
+		//.setEntityClass(null)
+		
+		// EntityTrxManager
 		.setEntityTrxManager(entityTrxManager)
-		.setEntityClass(new SysParamHandlerImpl.EntityClass()
-			.setSysParam(SysParam.class)	
-		)
+		
+		// AppId akan digabungkan dengan prefix untuk key
+		//.setRedisAppIdEnabled(null)
+		
+		// Redis prefix untuk key
+		.setRedisPrefix("SYS_PARAM")
+		
+		// RedisTemplate
 		.setRedisTemplate(redisTemplate);
 	}
 	
@@ -198,20 +228,38 @@ class HandlerConfig {
 		TaskHandler taskHandler
 	) {
 		return new SchedulerHandlerImpl()
-		.setEntityClass(new JobEntityClass()
-			.setTrxManagerName(null)
-			.setGroup(JobGroup.class)
-			.setInstance(JobInstance.class)
-			.setTrigger(JobTrigger.class)
-			.setTriggerConfig(JobTriggerConfig.class)
-			.setType(JobType.class)
-			.setTypeParam(JobTypeParam.class)
-		)
+		
+		// DataMapper		
 		.setDataMapper(dataMapper)
+		
+		// Daftar Entity class dan nama trxManager yang terkait dengan SchedulerHandler
+		// default semua class di package 'net.ideahut.springboot.job.entity'
+		//.setEntityClass(null)
+		
+		// EntityTrxManager
 		.setEntityTrxManager(entityTrxManager)
-		.setInstanceId(null)
+		
+		// Untuk membagi job yang dieksekusi berdasarkan instance (lihat Entity JobTrigger)
+		// Jika tidak diset akan digunakan ID dari application context atau dari property 'spring.application.name'
+		//.setInstanceId(null)
+		
+		// Daftar package class-class job, sehingga di database bisa disimpan menggunakan SimpleClassName
 		.setJobPackages(Application.Package.APPLICATION + ".job")
-		.setTaskHandler(taskHandler);
+		
+		// Service untuk menghandle fungsi-fungsi job, seperti mengambil trigger, menyimpan hasil, dll
+		// Secara default sudah ada, hanya diperlukan jika custom
+		//.setJobService(null)
+		
+		// SchedulerFactory
+		// Secara default sudah ada, hanya diperlukan jika custom
+		//.setSchedulerFactory(null)
+		
+		// TaskHandler
+		.setTaskHandler(taskHandler)
+		
+		// Terkait dengan logger, nama key untuk id log yang digenerate random, default: 'traceId'
+		//.setTraceKey(null)
+		;
 	}
 	
 	

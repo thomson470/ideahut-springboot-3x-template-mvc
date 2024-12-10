@@ -19,17 +19,25 @@ import net.ideahut.springboot.template.properties.AppProperties;
 @Configuration
 class CommonConfig {
 
+	/*
+	 * DATA MAPPER
+	 */
 	@Bean
 	DataMapper dataMapper() {
 		return new DataMapperImpl();
 	}
 	
+	
+	/*
+	 * ENTITY TRX MANAGER
+	 */
 	@Bean
 	EntityTrxManager entityTrxManager(
 		AppProperties appProperties
 	) {
 		return new EntityTrxManagerImpl()
-		.setForeignKeyParam(appProperties.getForeignKey())
+		
+		// Entity / Model yang tidak memiliki anotasi @ApiExclude, dan tidak ingin dipublikasikan oleh ApiService
 		.setApiExcludeParams(
 			new EntityApiExcludeParam()
 			.addEntityClasses(ApiConfigHelper.getApiExcludeEntities())
@@ -40,6 +48,8 @@ class CommonConfig {
 				Message.class
 			)
 		)
+		
+		// Entity / Model yang tidak memiliki anotasi @Audit, dan ingin setiap perubahannya disimpan
 		.setAuditParams(
 			new EntityAuditParam()
 			.addEntityClasses(ApiConfigHelper.getAuditEntities())
@@ -49,7 +59,15 @@ class CommonConfig {
 				Language.class,
 				Message.class
 			)
-		);
+		)
+		
+		// Daftar EntityPreListener & EntityPostListener, default autodetect = true
+		.setEntityListenerParam(null)
+		
+		// Parameter untuk menghandle anotasi @ForeignKeyEntity
+		// Ini solusi jika terjadi error saat membuat native image dimana entity memiliki @ManyToOne & @OneToMany
+		// tapi package-nya berbeda dengan package project (error ByteCodeProvider saat runtime)
+		.setForeignKeyParam(appProperties.getForeignKey());
 	}
 	
 }

@@ -11,10 +11,10 @@ import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import net.ideahut.springboot.admin.AdminHandler;
-import net.ideahut.springboot.filter.SecurityAuthorizationFilter;
 import net.ideahut.springboot.filter.WebMvcRequestFilter;
+import net.ideahut.springboot.filter.WebMvcSecurityFilter;
 import net.ideahut.springboot.helper.WebMvcHelper;
-import net.ideahut.springboot.security.SecurityAuthorization;
+import net.ideahut.springboot.security.WebMvcSecurity;
 import net.ideahut.springboot.template.AppConstants;
 import net.ideahut.springboot.template.properties.AppProperties;
 
@@ -44,11 +44,11 @@ class FilterConfig {
 	}
 	
 	@Bean
-	FilterRegistrationBean<SecurityAuthorizationFilter> adminFilter(
+	FilterRegistrationBean<WebMvcSecurityFilter> adminFilter(
 		Environment environment,
 		AdminHandler adminHandler,
 		@Qualifier(AppConstants.Bean.Security.ADMIN) 
-		SecurityAuthorization adminSecurity
+		WebMvcSecurity adminSecurity
 	) {
 		List<String> paths = new ArrayList<>();
 		// API wajib ada
@@ -59,8 +59,8 @@ class FilterConfig {
 		}
 		return WebMvcHelper.createFilterBean(
 			environment,
-			new SecurityAuthorizationFilter()
-				.setSecurityAuthorization(adminSecurity),
+			new WebMvcSecurityFilter()
+				.setWebMvcSecurity(adminSecurity),
 			2,
 			paths.toArray(new String[0])
 		);

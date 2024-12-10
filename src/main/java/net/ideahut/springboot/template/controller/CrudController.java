@@ -70,9 +70,9 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 	@PostMapping(value = "/action/{action}")
 	Result action(
 		@PathVariable("action") String action,
-		HttpServletRequest request
+		HttpServletRequest httpRequest
 	) throws Exception {
-		byte[] data = WebMvcHelper.getBodyAsBytes(request);
+		byte[] data = WebMvcHelper.getBodyAsBytes(httpRequest);
 		return super.body(CrudAction.valueOf(action.toUpperCase()), data);
 	}
 	
@@ -92,9 +92,9 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 	)
 	Result parameter(
 		@PathVariable("action") String action,
-		HttpServletRequest request
+		HttpServletRequest httpRequest
 	) throws Exception {
-		return super.parameter(CrudAction.valueOf(action.toUpperCase()), request);		
+		return super.parameter(CrudAction.valueOf(action.toUpperCase()), httpRequest);		
 	}
 	
 	
@@ -145,9 +145,9 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 		@PathVariable("name") String name,
 		@RequestParam(value = "manager", required = false) String manager,
 		@RequestParam(value = "value", required = false) String value,
-		HttpServletRequest request
+		HttpServletRequest httpRequest
 	) throws Exception {
-		byte[] data = WebMvcHelper.getBodyAsBytes(request);
+		byte[] data = WebMvcHelper.getBodyAsBytes(httpRequest);
 		return super.create(manager, name, value, data);
 	}
 	
@@ -162,9 +162,9 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 		@PathVariable("id") String id,
 		@RequestParam(value = "manager", required = false) String manager,
 		@RequestParam(value = "value", required = false) String value,
-		HttpServletRequest request
+		HttpServletRequest httpRequest
 	) throws Exception {
-		byte[] data = WebMvcHelper.getBodyAsBytes(request);
+		byte[] data = WebMvcHelper.getBodyAsBytes(httpRequest);
 		return super.update(manager, name, id, value, data);
 	}
 	

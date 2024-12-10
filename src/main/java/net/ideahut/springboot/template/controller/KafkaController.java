@@ -19,7 +19,6 @@ import net.ideahut.springboot.sysparam.dto.SysParamDto;
 import net.ideahut.springboot.task.TaskListExecutor;
 import net.ideahut.springboot.task.TaskResult;
 
-//@Slf4j
 @Public
 @RestController
 @RequestMapping("/kafka")

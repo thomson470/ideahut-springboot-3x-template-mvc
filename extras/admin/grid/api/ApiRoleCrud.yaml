@@ -413,9 +413,9 @@ children:
     - "filterId"
   relations:
   - source: "apiRoleCode"
-    target: "apiCrudRole.apiRoleCode"
+    target: "apiRoleCode"
   - source: "apiCrudCode"
-    target: "apiCrudRole.apiCrudCode"
+    target: "apiCrudCode"
   labels:
   - title: "ApiRole Code"
     value: "apiRoleCode"

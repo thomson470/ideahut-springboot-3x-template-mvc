@@ -38,7 +38,7 @@ public class ApiSupport {
 		Map<Class<?>, EntityPostListener> listeners = new HashMap<>();
 		
 		ApiHandlerImpl apiHandlerImpl = (ApiHandlerImpl) apiHandler;
-		ApiEntityClass classOfEntity = apiHandlerImpl.getEntityClass();
+		ApiEntityClass classOfEntity = apiHandler.getApiEntityClass();
 		TrxManagerInfo trxManagerInfo = FrameworkHelper.getTrxManagerInfo(entityTrxManager, classOfEntity.getTrxManagerName());
 		Assert.notNull(trxManagerInfo, "TrxManager is not found, for: " + classOfEntity.getTrxManagerName());
 		

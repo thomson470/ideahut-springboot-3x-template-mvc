@@ -18,6 +18,7 @@ class RuntimeHintsConfig {
 			/*
 			 * Tambah class-class yang akan diregistrasi untuk native di sini
 			 */
+			
 		}
 		
 	}

@@ -46,12 +46,12 @@ table:
   visibles:
   - "apiName"
   - "isActive"
-  - "isConsumer"
+  - "isOpen"
   - "digest"
   - "secret"
   - "baseUrl"
   - "accessUrl"
-  - "consumerUrl"
+  - "tokenUrl"
   - "updatedOn"
   - "createdOn"
   columns:
@@ -67,9 +67,9 @@ table:
     sortable: true
     format: "function(val, row) { try { return __grid__[row._grid_id_].options.YES_NO.find(x\
       \ => x.value === val).label; } catch(e) { return val; } }"
-  - name: "isConsumer"
-    label: "Consumer"
-    field: "isConsumer"
+  - name: "isOpen"
+    label: "Open"
+    field: "isOpen"
     align: "center"
     sortable: true
     format: "function(val, row) { try { return __grid__[row._grid_id_].options.YES_NO.find(x\
@@ -96,9 +96,9 @@ table:
     field: "accessUrl"
     align: "left"
     sortable: true
-  - name: "consumerUrl"
-    label: "ConsumerUrl"
-    field: "consumerUrl"
+  - name: "tokenUrl"
+    label: "TokenUrl"
+    field: "tokenUrl"
     align: "left"
     sortable: true
   - name: "updatedOn"
@@ -139,8 +139,8 @@ fields:
   validations:
   - "required"
   - "maxlength:1"
-- name: "isConsumer"
-  label: "Consumer"
+- name: "isOpen"
+  label: "Open"
   type: "option"
   option: "YES_NO"
   nullable: false
@@ -182,8 +182,8 @@ fields:
   editable: true
   validations:
   - "maxlength:1024"
-- name: "consumerUrl"
-  label: "ConsumerUrl"
+- name: "tokenUrl"
+  label: "TokenUrl"
   type: "words"
   nullable: true
   insertable: true

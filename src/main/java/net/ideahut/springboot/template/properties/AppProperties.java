@@ -30,15 +30,33 @@ import net.ideahut.springboot.task.TaskProperties;
 @Getter
 public class AppProperties {
 	
+	// Tunggu semua bean selesai saat reconfigure (service status menjadi ready)
 	private Boolean waitAllBeanConfigured;
+	
+	// Log semua error yang terjadi
 	private Boolean loggingError;
+	
+	// Start scheduler pada saat startup
 	private Boolean autoStartScheduler;
+	
+	// Direktori file message berdasarkan bahasa
 	private String messagePath;
+	
+	// Lokasi file report (jrxml / jasper)
 	private String reportPath;
+	
+	// File konfigurasi kafka
 	private String kafkaConfigurationFile;
+	
+	// Parameter untuk menghandle anotasi @ForeignKeyEntity
+	// Ini solusi jika terjadi error saat membuat native image dimana entity memiliki @ManyToOne & @OneToMany
+	// tapi package-nya berbeda dengan package project (error ByteCodeProvider saat runtime)
 	private EntityForeignKeyParam foreignKey;
 	
+	// Daftar header CORS di setiap request
 	private Map<String, String> cors = new HashMap<>();
+	
+	// Daftar class yang akan diignore jika terjadi error
 	private List<Class<?>> ignoredHandlerClasses = new ArrayList<>();
 	
 	private MailProperties mail = new MailProperties();
@@ -50,6 +68,7 @@ public class AppProperties {
 	//private TrxManager trxManager = new TrxManager()
 	private Admin admin = new Admin();
 	private Api api = new Api();
+	private Crud crud = new Crud();
 	private TaskProperties webAsync = new TaskProperties();
 	private Handler handler = new Handler();
 	
@@ -63,6 +82,8 @@ public class AppProperties {
 	@Setter
 	@Getter
 	public static class Audit extends DatabaseProperties {
+		private Boolean isSingleAudit;
+		private Boolean rejectNonAuditEntity;
 		private DatabaseAuditProperties properties = new DatabaseAuditProperties();
 	}
 	
@@ -88,6 +109,7 @@ public class AppProperties {
 		private String webPath;
 		private String webLocation;
 		private Boolean webEnabled;
+		private Boolean useBasicAuth;
 	}
 	
 	@Setter
@@ -130,6 +152,16 @@ public class AppProperties {
 			// dari semua konfigurasi api di database
 			private Boolean sync;
 		}
+	}
+	
+	@Setter
+	@Getter
+	public static class Crud {
+		// Resource akan diambil menggunakan fungsi ApiService
+		private Boolean enableApiService;
+		
+		// Permission akan dicek atau tidak
+		private Boolean enablePermission;
 	}
 	
 }
