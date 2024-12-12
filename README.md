@@ -4,7 +4,7 @@
 - Dokumentasi dapat dilihat di [Ideahut Springboot](https://github.com/ideahut-apps-team/ideahut-springboot-docs/)
 
 ## Admin
-- `URL`  : https://localhost:5401/_/web
+- `URL`  : http://localhost:5401/_/web
 - `User` : admin
 - `Pass` : password
 <div align="left">
