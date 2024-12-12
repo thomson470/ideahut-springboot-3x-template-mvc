@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.mail.internet.InternetAddress;
 import lombok.Getter;
 import lombok.Setter;
+import net.ideahut.springboot.annotation.Public;
 import net.ideahut.springboot.helper.ObjectHelper;
 import net.ideahut.springboot.mail.MailHandler;
 import net.ideahut.springboot.mail.MailObject;
@@ -24,6 +25,7 @@ import net.ideahut.springboot.object.Result;
 /*
  * Contoh penggunaan MailHandler
  */
+@Public
 @ComponentScan
 @RestController
 @RequestMapping("/mail")

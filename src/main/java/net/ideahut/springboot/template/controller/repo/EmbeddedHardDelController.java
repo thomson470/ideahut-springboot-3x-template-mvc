@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.ideahut.springboot.annotation.Public;
 import net.ideahut.springboot.entity.EntityInfo;
 import net.ideahut.springboot.entity.EntityTrxManager;
 import net.ideahut.springboot.entity.TrxManagerInfo;
@@ -26,6 +27,7 @@ import net.ideahut.springboot.template.entity.app.EmbeddedHardDel;
 import net.ideahut.springboot.template.entity.app.EmbededId;
 import net.ideahut.springboot.template.repo.EmbeddedHardDelRepo;
 
+@Public
 @ComponentScan
 @RestController
 @RequestMapping("/repo/EmbeddedHardDel")

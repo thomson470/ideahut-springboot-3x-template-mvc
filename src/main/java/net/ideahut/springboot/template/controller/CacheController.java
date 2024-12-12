@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import net.ideahut.springboot.annotation.Public;
 import net.ideahut.springboot.cache.CacheGroupHandler;
 import net.ideahut.springboot.cache.CacheGroupProperties;
 import net.ideahut.springboot.helper.TimeHelper;
@@ -28,6 +29,7 @@ import net.ideahut.springboot.template.properties.AppProperties;
 /*
  * Contoh penggunaan CacheGroupHandler
  */
+@Public
 @ComponentScan
 @RestController
 @RequestMapping("/cache")

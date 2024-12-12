@@ -7,18 +7,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import net.ideahut.springboot.annotation.Public;
 
+@Public
 @ComponentScan
 @RestController
 @RequestMapping("/")
 class RootController {
 
-	@Public
 	@GetMapping("")
 	void get() {
 		/**/
 	}
 	
-	@Public
 	@GetMapping("favicon.ico")
 	void favicon() {
 		/**/

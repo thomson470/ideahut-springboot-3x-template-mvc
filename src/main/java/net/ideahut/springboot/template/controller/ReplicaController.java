@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.ideahut.springboot.annotation.Public;
 import net.ideahut.springboot.entity.EntityInfo;
 import net.ideahut.springboot.entity.EntityReplica;
 import net.ideahut.springboot.entity.EntityTrxManager;
@@ -18,6 +19,7 @@ import net.ideahut.springboot.object.Result;
 import net.ideahut.springboot.template.entity.app.Information;
 import net.ideahut.springboot.template.entity.app.InformationLink;
 
+@Public
 @ComponentScan
 @RestController
 @RequestMapping("/replica")

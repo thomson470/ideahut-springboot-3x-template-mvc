@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import net.ideahut.springboot.annotation.Public;
 import net.ideahut.springboot.template.service.MessageService;
 
+@Public
 @ComponentScan
 @RestController
 @RequestMapping("/message")
@@ -26,13 +27,11 @@ class MessageController {
 		this.messageService = messageService;
 	}
 
-	@Public
 	@GetMapping(value = "/mobile")
 	JsonNode mobile() {
 		return messageService.getResource("mobile");
 	}
 	
-	@Public
 	@GetMapping(value = "/portal")
 	JsonNode portal() {
 		return messageService.getResource("portal");

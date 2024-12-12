@@ -33,21 +33,21 @@
 	</parent>
 	-->
 	
+	<!--
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.2.2</version>
 		<relativePath/>
 	</parent>
+	-->
 	
-	<!--
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.2.3</version>
 		<relativePath/>
 	</parent>
-	-->
 	
 
 	<properties>
@@ -84,8 +84,8 @@
 			<version>3.2.0</version>
 			<!--<artifactId>ideahut-springboot-3.1.6</artifactId>-->
 			<!--<artifactId>ideahut-springboot-3.2.1</artifactId>-->
-			<artifactId>ideahut-springboot-3.2.2</artifactId>
-			<!--<artifactId>ideahut-springboot-3.2.3</artifactId>-->
+			<!--<artifactId>ideahut-springboot-3.2.2</artifactId>-->
+			<artifactId>ideahut-springboot-3.2.3</artifactId>
 		</dependency>
 
 
