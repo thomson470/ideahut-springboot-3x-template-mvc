@@ -8,7 +8,7 @@
 - `User` : admin
 - `Pass` : password
 <div align="left">
-   <img src="./admin.jpg" alt="Admin" title="Admin" width="800" />
+   <img src="./screenshot.jpg" alt="Admin" title="Admin" width="800" />
 </div>
 
 ## Native
