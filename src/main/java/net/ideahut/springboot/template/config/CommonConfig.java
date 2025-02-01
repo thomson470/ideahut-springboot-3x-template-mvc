@@ -8,11 +8,14 @@ import net.ideahut.springboot.entity.EntityApiExcludeParam;
 import net.ideahut.springboot.entity.EntityAuditParam;
 import net.ideahut.springboot.entity.EntityTrxManager;
 import net.ideahut.springboot.entity.EntityTrxManagerImpl;
+import net.ideahut.springboot.helper.FrameworkHelper;
 import net.ideahut.springboot.job.JobConfigHelper;
 import net.ideahut.springboot.mapper.DataMapper;
 import net.ideahut.springboot.mapper.DataMapperImpl;
 import net.ideahut.springboot.message.entity.Language;
 import net.ideahut.springboot.message.entity.Message;
+import net.ideahut.springboot.serializer.BinarySerializer;
+import net.ideahut.springboot.serializer.FuryBinarySerializer;
 import net.ideahut.springboot.sysparam.entity.SysParam;
 import net.ideahut.springboot.template.properties.AppProperties;
 
@@ -24,7 +27,34 @@ class CommonConfig {
 	 */
 	@Bean
 	DataMapper dataMapper() {
-		return new DataMapperImpl();
+		DataMapper dataMapper = new DataMapperImpl();
+		FrameworkHelper.setDefaultDataMapper(dataMapper);
+		return dataMapper;
+	}
+	
+	
+	/*
+	 * BINARY SERIALIZER
+	 * 
+	 * Daftar binary serializer yang disupport:
+	 * - DataMapperBinarySerializer (Jackson) -> http://fasterxml.com/
+	 * - HessianBinarySerializer -> http://hessian.caucho.com/
+	 * - JdkBinarySerializer -> https://docs.oracle.com/javase/7/docs/api/java/io/ObjectOutputStream.html
+	 * - KryoBinarySerializer -> https://github.com/EsotericSoftware/kryo
+	 * - FuryBinarySerializer -> https://fury.apache.org/
+	 * 
+	 */
+	@Bean
+	BinarySerializer binarySerializer() {
+		//BinarySerializer binarySerializer = new DataMapperBinarySerializer().setFormat(DataMapper.JSON);//-
+		//BinarySerializer binarySerializer = new DataMapperBinarySerializer().setFormat(DataMapper.XML);//-
+		//BinarySerializer binarySerializer = new HessianBinarySerializer().setVersion(1);//-
+		//BinarySerializer binarySerializer = new HessianBinarySerializer().setVersion(2);//-
+		//BinarySerializer binarySerializer = new JdkBinarySerializer();//-
+		//BinarySerializer binarySerializer = new KryoBinarySerializer();//-
+		BinarySerializer binarySerializer = new FuryBinarySerializer();
+		FrameworkHelper.setDefaultBinarySerializer(binarySerializer);
+		return binarySerializer;
 	}
 	
 	

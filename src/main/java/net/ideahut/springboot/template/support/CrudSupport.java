@@ -18,25 +18,35 @@ private CrudSupport() {}
 	public static Map<String, CrudSpecific> getSpecifics() {
 		Map<String, CrudSpecific> specifics = new HashMap<>();
 		specifics.put("APP_ID", StaticSpecific.APP_ID);
-		specifics.put("ROLE_CODE", StaticSpecific.ROLE_CODE);
+		specifics.put("APP_ROLE", StaticSpecific.APP_ROLE);
 		specifics.put("USER_ID", StaticSpecific.USER_ID);
+		specifics.put("USER_ROLE", StaticSpecific.USER_ROLE);
 		return specifics;
 	}
 	
 	private static class StaticSpecific {
 		private StaticSpecific() {}
 		
-		// API_NAME
+		// APP_ID
 		private static final CrudSpecific APP_ID = context -> {
 			ApiAccess access = RequestContext.currentContext().getAttribute(ApiAccess.CONTEXT);
 			if (access != null) {
-				return access.getAttribute(String.class, ApiAccess.Attribute.APPID);
+				return access.getAttribute(String.class, ApiAccess.Attribute.APP_ID);
 			}
 			return null;
 		};
 		
-		// ROLE CODE
-		private static final CrudSpecific ROLE_CODE = context -> {
+		// APP_ROLE
+		private static final CrudSpecific APP_ROLE = context -> {
+			ApiAccess access = RequestContext.currentContext().getAttribute(ApiAccess.CONTEXT);
+			if (access != null) {
+				return access.getAttribute(String.class, ApiAccess.Attribute.APP_ROLE);
+			}
+			return null;
+		};
+		
+		// USER ROLE
+		private static final CrudSpecific USER_ROLE = context -> {
 			ApiAccess access = RequestContext.currentContext().getAttribute(ApiAccess.CONTEXT);
 			if (access != null) {
 				return access.getApiUser() != null ? access.getApiUser().getAttribute(String.class, ApiUser.Attribute.ROLE) : null;

@@ -61,7 +61,10 @@ class CrudConfig {
 		EntityTrxManager entityTrxManager,
 		WebMvcApiService apiService
 	) {
-		AppProperties.Crud crud = appProperties.getCrud();
+		AppProperties.Crud crud = ObjectHelper.useOrDefault(
+			appProperties.getCrud(), 
+			AppProperties.Crud::new
+		);
 		if (Boolean.TRUE.equals(crud.getEnableApiService())) {
 			 // CrudResource  diambil menggunakan ApiService (PRODUCTION)
 			 // - Parameter manager yang didefinisikan di CrudRequest tidak akan digunakan, karena sudah ada di table
@@ -103,7 +106,10 @@ class CrudConfig {
 	CrudPermission crudPermission(
 		AppProperties appProperties	
 	) {
-		AppProperties.Crud crud = appProperties.getCrud();
+		AppProperties.Crud crud = ObjectHelper.useOrDefault(
+			appProperties.getCrud(), 
+			AppProperties.Crud::new
+		);
 		if (!Boolean.FALSE.equals(crud.getEnablePermission())) {
 			// Cek berdasarkan action (CREATE, UPDATE, DELETE, dll)
 			return (action, request) -> {

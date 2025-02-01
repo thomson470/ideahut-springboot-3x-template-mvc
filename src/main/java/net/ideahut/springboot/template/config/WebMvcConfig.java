@@ -88,25 +88,43 @@ class WebMvcConfig extends WebMvcBasicConfig {
 	 */
 	@Override
 	public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
-		TaskProperties properties = appProperties.getWebAsync();
-		ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-		taskExecutor.setAllowCoreThreadTimeOut(ObjectHelper.useOrDefault(properties.getAllowCoreThreadTimeOut(), Boolean.FALSE));
+		TaskProperties properties = ObjectHelper.useOrDefault(appProperties.getWebAsync(), TaskProperties::new);
+		Boolean allowCoreThreadTimeOut = ObjectHelper.useOrDefault(properties.getAllowCoreThreadTimeOut(), Boolean.FALSE);
 		Integer awaitTerminationSeconds = properties.getAwaitTerminationSeconds();
-		taskExecutor.setAwaitTerminationSeconds(awaitTerminationSeconds != null && awaitTerminationSeconds > 0 ? awaitTerminationSeconds : 0);
+		awaitTerminationSeconds = ObjectHelper.useOrElse(
+			awaitTerminationSeconds != null && awaitTerminationSeconds > 0, 
+			awaitTerminationSeconds, 
+			() -> 0
+		);
 		Integer corePoolSize = properties.getCorePoolSize();
-		taskExecutor.setCorePoolSize(corePoolSize != null && corePoolSize > 1 ? corePoolSize : 1);
-		taskExecutor.setDaemon(ObjectHelper.useOrDefault(properties.getDaemon(), Boolean.FALSE));
+		corePoolSize = ObjectHelper.useOrElse(corePoolSize != null && corePoolSize > 1, corePoolSize, 1);
+		Boolean daemon = ObjectHelper.useOrDefault(properties.getDaemon(), Boolean.FALSE);
 		Integer keepAliveSeconds = properties.getKeepAliveSeconds();
-		taskExecutor.setKeepAliveSeconds(keepAliveSeconds != null && keepAliveSeconds > 0 ? keepAliveSeconds : 30);
+		keepAliveSeconds = ObjectHelper.useOrElse(keepAliveSeconds != null && keepAliveSeconds > 0, keepAliveSeconds, 30);
 		Integer maxPoolSize = properties.getMaxPoolSize();
-		taskExecutor.setMaxPoolSize(maxPoolSize != null && maxPoolSize > 0 ? maxPoolSize : taskExecutor.getCorePoolSize());
+		maxPoolSize = ObjectHelper.useOrElse(maxPoolSize != null && maxPoolSize > 0, maxPoolSize, corePoolSize);
 		Integer queueCapacity = properties.getQueueCapacity();
-		taskExecutor.setQueueCapacity(queueCapacity != null && queueCapacity > 0 ? queueCapacity : Integer.MAX_VALUE);
+		queueCapacity = ObjectHelper.useOrElse(queueCapacity != null && queueCapacity > 0, queueCapacity, Integer.MAX_VALUE);
 		String threadNamePrefix = properties.getThreadNamePrefix();
-		taskExecutor.setThreadNamePrefix(threadNamePrefix != null && !threadNamePrefix.trim().isEmpty() ? threadNamePrefix : ("WebAsync-" + System.nanoTime() + "-"));
+		threadNamePrefix = ObjectHelper.useOrElse(
+			threadNamePrefix != null && !threadNamePrefix.trim().isEmpty(), 
+			threadNamePrefix, 
+			() -> "WebAsync-" + System.nanoTime() + "-"
+		);
 		Integer threadPriority = properties.getThreadPriority();
-		taskExecutor.setThreadPriority(threadPriority != null && threadPriority > 0 ? threadPriority : Thread.NORM_PRIORITY);
-		taskExecutor.setWaitForTasksToCompleteOnShutdown(ObjectHelper.useOrDefault(properties.getWaitForJobsToCompleteOnShutdown(), Boolean.FALSE));
+		threadPriority = ObjectHelper.useOrElse(threadPriority != null && threadPriority > 0, threadPriority, Thread.NORM_PRIORITY);
+		Boolean waitForJobsToCompleteOnShutdown = ObjectHelper.useOrDefault(properties.getWaitForJobsToCompleteOnShutdown(), Boolean.FALSE);
+		ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+		taskExecutor.setAllowCoreThreadTimeOut(allowCoreThreadTimeOut);
+		taskExecutor.setAwaitTerminationSeconds(awaitTerminationSeconds);
+		taskExecutor.setCorePoolSize(corePoolSize);
+		taskExecutor.setDaemon(daemon);
+		taskExecutor.setKeepAliveSeconds(keepAliveSeconds);
+		taskExecutor.setMaxPoolSize(maxPoolSize);
+		taskExecutor.setQueueCapacity(queueCapacity);
+		taskExecutor.setThreadNamePrefix(threadNamePrefix);
+		taskExecutor.setThreadPriority(threadPriority);
+		taskExecutor.setWaitForTasksToCompleteOnShutdown(waitForJobsToCompleteOnShutdown);
 		taskExecutor.afterPropertiesSet();
 	    configurer.setTaskExecutor(taskExecutor);
 		super.configureAsyncSupport(configurer);

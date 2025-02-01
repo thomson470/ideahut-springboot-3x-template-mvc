@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -32,13 +33,11 @@ import net.ideahut.springboot.security.SecurityUser;
 import net.ideahut.springboot.security.WebMvcSecurity;
 import net.ideahut.springboot.template.AppConstants;
 import net.ideahut.springboot.template.Application;
-import net.ideahut.springboot.template.properties.AppProperties;
 
 @Component
 @ComponentScan
 public class RequestInterceptor implements HandlerInterceptor {
 	
-	private final AppProperties appProperties;
 	private final AdminHandler adminHandler;
 	private final WebMvcSecurity adminSecurity;
 	private final SecurityCredential adminCredential;
@@ -52,7 +51,6 @@ public class RequestInterceptor implements HandlerInterceptor {
 	
 	@Autowired
 	RequestInterceptor(
-		AppProperties appProperties,
 		AdminHandler adminHandler,
 		@Qualifier(AppConstants.Bean.Security.ADMIN)
 		WebMvcSecurity adminSecurity,
@@ -60,7 +58,6 @@ public class RequestInterceptor implements HandlerInterceptor {
 		SecurityCredential adminCredential,
 		WebMvcApiService apiService
 	) {
-		this.appProperties = appProperties;
 		this.adminHandler = adminHandler;
 		this.adminSecurity = adminSecurity;
 		this.adminCredential = adminCredential;
@@ -77,8 +74,8 @@ public class RequestInterceptor implements HandlerInterceptor {
 		
 		if (ObjectHelper.isInstance(HandlerMethod.class, handler)) {
 			HandlerMethod hm = (HandlerMethod) handler;
-			if (appProperties.getIgnoredHandlerClasses().contains(hm.getBeanType())) {
-				return true;			
+			if (ObjectHelper.isAssignable(ErrorController.class, hm.getBeanType())) {
+				return true;
 			}
 			AuditInfo.context().setInfo(hm.getBeanType().getName() + ":" + hm.getMethod().getName() + "(" + hm.getMethod().getParameterCount() + ")");	
 			if (adminHandler.isAdminPath(request.getServletPath())) {

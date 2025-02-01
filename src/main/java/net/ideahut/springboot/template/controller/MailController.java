@@ -107,8 +107,8 @@ class MailController {
 		MultipartFile multipart = form.getAttachment();
 		if (multipart != null) {
 			mail.setMultipart(true);
-			Attachment attachment = new Attachment("Attachment", multipart.getBytes(), multipart.getContentType());
-			mail.setAttachment(new Attachment[] { attachment });
+			Attachment attachment = Attachment.of("Attachment", multipart.getBytes(), multipart.getContentType());
+			mail.setAttachment(attachment);
 		}
 		mailHandler.send(mail, async);
 	}

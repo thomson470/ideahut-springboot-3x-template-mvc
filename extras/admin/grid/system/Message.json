@@ -11,7 +11,7 @@
                 "match": "contain",
                 "relations": [
                     {
-                        "source": "id.languageCode",
+                        "source": "languageCode",
                         "target": "languageCode"
                     }
                 ]
@@ -51,21 +51,21 @@
         },
         "filters": [
             {
-                "name": "id.languageCode",
+                "name": "languageCode",
                 "label": "Language",
                 "type": "option",
                 "option": "LANGUAGE",
                 "condition": "EQUAL"
             },
             {
-                "name": "id.messageType",
+                "name": "messageType",
                 "label": "Type",
                 "type": "option",
                 "option": "MESSAGE_TYPE",
                 "condition": "EQUAL"
             },
             {
-                "name": "id.messageCode",
+                "name": "messageCode",
                 "label": "Code",
                 "type": "text",
                 "condition": "ANY_LIKE"
@@ -78,37 +78,36 @@
             }
         ],
         "visibles": [
-            "id.languageCode",
-            "id.messageType",
-            "id.messageCode",
+            "languageCode",
+            "messageType",
+            "messageCode",
             "content",
             "updatedOn",
             "createdOn"
         ],
         "columns": [
 			{
-                "name": "id.languageCode",
+                "name": "languageCode",
                 "label": "Language",
-                "field": "id",
+                "field": "languageCode",
                 "align": "left",
                 "sortable": true,
-                "format": "function(val, row) { try { return __grid__[row._grid_id_].options.LANGUAGE.find(x => x.value === val.languageCode).label; } catch(e) { return val; } }"
+                "format": "function(val, row) { try { return __grid__[row._grid_id_].options.LANGUAGE.find(x => x.value === val).label; } catch(e) { return val; } }"
             },
             {
-                "name": "id.messageType",
+                "name": "messageType",
                 "label": "Type",
-                "field": "id",
+                "field": "messageType",
                 "align": "left",
                 "sortable": true,
-                "format": "function(val, row) { try { return __grid__[row._grid_id_].options.MESSAGE_TYPE.find(x => x.value === val.messageType).label; } catch(e) { return val; } }"
+                "format": "function(val, row) { try { return __grid__[row._grid_id_].options.MESSAGE_TYPE.find(x => x.value === val).label; } catch(e) { return val; } }"
             },
             {
-                "name": "id.messageCode",
+                "name": "messageCode",
                 "label": "Code",
-                "field": "id",
+                "field": "messageCode",
                 "align": "left",
-                "sortable": true,
-                "format": "function(val, row) { try { return val.messageCode; } catch(e) { return val; } }"
+                "sortable": true
             },
             {
                 "name": "content",
@@ -137,7 +136,7 @@
     },
     "fields": [
 		{
-            "name": "id.languageCode",
+            "name": "languageCode",
             "label": "Language",
             "type": "option",
             "option": "LANGUAGE",
@@ -149,7 +148,7 @@
             ]
         },
         {
-            "name": "id.messageType",
+            "name": "messageType",
             "label": "Type",
             "type": "option",
             "option": "MESSAGE_TYPE",
@@ -161,7 +160,7 @@
             ]
         },
         {
-            "name": "id.messageCode",
+            "name": "messageCode",
             "label": "Code",
             "type": "text",
             "nullable": false,

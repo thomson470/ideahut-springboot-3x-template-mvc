@@ -25,10 +25,13 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import jakarta.persistence.EntityManagerFactory;
+import net.ideahut.springboot.definition.DatabaseAuditDefinition;
+import net.ideahut.springboot.entity.DatasourceProperties;
+import net.ideahut.springboot.entity.JpaProperties;
 import net.ideahut.springboot.helper.FrameworkHelper;
+import net.ideahut.springboot.helper.ObjectHelper;
 import net.ideahut.springboot.template.Application;
 import net.ideahut.springboot.template.properties.AppProperties;
-import net.ideahut.springboot.template.properties.AppProperties.Audit;
 
 /*
  * Konfigurasi Primary Transaction Manager & Entity Manager
@@ -116,18 +119,23 @@ class TrxManagerConfigMain {
 	DataSource auditDatasource(
 		AppProperties appProperties		
 	) {
-		Audit audit = appProperties.getAudit();
-		String jndi = audit.getDatasource().getJndiName();
+		DatabaseAuditDefinition audit = ObjectHelper.callOrElse(
+			appProperties.getAudit() != null, 
+			appProperties::getAudit, 
+			DatabaseAuditDefinition::new
+		);
+		DatasourceProperties datasource = ObjectHelper.useOrDefault(audit.getDatasource(), DatasourceProperties::new);
+		String jndi = datasource.getJndiName();
 		jndi = jndi != null ? jndi.trim() : "";
 		if (jndi.length() != 0) {
 			JndiDataSourceLookup lookup = new JndiDataSourceLookup();
 			return lookup.getDataSource(jndi);
 		} else {
 			return DataSourceBuilder.create()
-			.driverClassName(audit.getDatasource().getDriverClassName())
-			.url(audit.getDatasource().getJdbcUrl())
-			.username(audit.getDatasource().getUsername())
-			.password(audit.getDatasource().getPassword())
+			.driverClassName(datasource.getDriverClassName())
+			.url(datasource.getJdbcUrl())
+			.username(datasource.getUsername())
+			.password(datasource.getPassword())
 			.build();
 		}
     }	
@@ -135,10 +143,16 @@ class TrxManagerConfigMain {
 	@Bean(name = "mainAuditSessionFactory")
 	LocalSessionFactoryBean auditSessionFactory(
 		AppProperties appProperties,
-		@Qualifier("mainAuditDatasource") DataSource datasource
+		@Qualifier("mainAuditDatasource") 
+		DataSource datasource
 	) {
-		Audit audit = appProperties.getAudit();
-		Properties properties = FrameworkHelper.getHibernateProperties(audit.getJpa().getProperties());
+		DatabaseAuditDefinition audit = ObjectHelper.callOrElse(
+			appProperties.getAudit() != null, 
+			appProperties::getAudit, 
+			DatabaseAuditDefinition::new
+		);
+		JpaProperties jpa = ObjectHelper.useOrDefault(audit.getJpa(), JpaProperties::new);
+		Properties properties = FrameworkHelper.getHibernateProperties(jpa.getProperties());
 		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(datasource);
         sessionFactory.setHibernateProperties(properties);

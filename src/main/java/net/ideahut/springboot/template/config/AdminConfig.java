@@ -10,12 +10,17 @@ import net.ideahut.springboot.admin.AdminConfigHelper;
 import net.ideahut.springboot.admin.AdminHandler;
 import net.ideahut.springboot.admin.AdminHandlerImpl;
 import net.ideahut.springboot.admin.WebMvcAdminSecurity;
+import net.ideahut.springboot.definition.AdminDefinition;
+import net.ideahut.springboot.helper.ObjectHelper;
 import net.ideahut.springboot.mapper.DataMapper;
+import net.ideahut.springboot.redis.RedisParam;
 import net.ideahut.springboot.rest.RestHandler;
+import net.ideahut.springboot.security.LocalMemoryCredential;
 import net.ideahut.springboot.security.RedisMemoryCredential;
 import net.ideahut.springboot.security.SecurityCredential;
 import net.ideahut.springboot.security.WebMvcBasicAuthSecurity;
 import net.ideahut.springboot.security.WebMvcSecurity;
+import net.ideahut.springboot.serializer.BinarySerializer;
 import net.ideahut.springboot.template.AppConstants;
 import net.ideahut.springboot.template.properties.AppProperties;
 import net.ideahut.springboot.template.support.GridSupport;
@@ -36,27 +41,32 @@ class AdminConfig {
 	AdminHandler adminHandler(
 		AppProperties appProperties,
 		ApplicationContext applicationContext,
-		DataMapper dataMapper,
+		BinarySerializer binarySerializer,
 		@Qualifier(AppConstants.Bean.Redis.COMMON) 
 		RedisTemplate<String, byte[]> redisTemplate,
 		RestHandler restHandler
 	) {
-		AppProperties.Admin admin = appProperties.getAdmin();
+		AdminDefinition.Handler handler = ObjectHelper.callOrElse(
+			appProperties.getAdmin() != null && appProperties.getAdmin().getHandler() != null, 
+			() -> appProperties.getAdmin().getHandler(), 
+			AdminDefinition.Handler::new
+		);
 		return new AdminHandlerImpl()
 				
 		// Memperbaharui data-data di javascript & html resource admin sesuai dengan konfigurasi, seperti: judul, timeout, dll
-		.setAfterReload(handler -> AdminConfigHelper.afterReloadAdminResource(handler, applicationContext, ""))
+		.setAfterReload(h -> AdminConfigHelper.afterReloadAdmin(h, applicationContext, ""))
 		
 		// Path untuk mengakses API Admin
-		.setApiPath(admin.getApiPath())
+		.setApiPath(handler.getApiPath())
+		
+		// Serialize & deserialize byte array ke redis
+		.setBinarySerializer(binarySerializer)
 		
 		// Custom cek token ke central, secara default sudah tersedia
 		//.setCheckTokenCentral(null)
 		
 		// Lokasi konfigurasi file untuk fitur admin
-		.setConfigurationFile(admin.getConfigurationFile())
-		
-		.setDataMapper(dataMapper)
+		.setConfigurationFile(handler.getConfigurationFile())
 		
 		// Daftar array yang digunakan di template grid, contoh: DAYS, MONTHS, dll
 		.setGridAdditionals(GridSupport.getAdditionals())
@@ -65,10 +75,10 @@ class AdminConfig {
 		.setGridOptions(GridSupport.getOptions())
 		
 		// Untuk menerjemahkan judul, deskripsi, dll yang ada di template grid
-		//.setMessageHandler(null)
+		.setMessageHandler(null)
 		
 		// Opsi AdminProperties jika configuration file tidak di-set
-		//.setProperties(null)
+		.setProperties(null)
 		
 		// Untuk menyimpan data-data admin, seperti: template grid, authorization, dll
 		.setRedisTemplate(redisTemplate)
@@ -83,13 +93,13 @@ class AdminConfig {
 		//.setSyncToCentral(null)
 		
 		// Flag Admin UI bisa diakses atau tidak
-		.setWebEnabled(admin.getWebEnabled())
+		.setWebEnabled(handler.getWebEnabled())
 		
 		// Lokasi resource Admin UI
-		.setWebLocation(admin.getWebLocation())
+		.setWebLocation(handler.getWebLocation())
 		
 		// Context Path untuk mengakses Admin UI
-		.setWebPath(admin.getWebPath());
+		.setWebPath(handler.getWebPath());
 	}
 	
 	
@@ -99,37 +109,64 @@ class AdminConfig {
 	@Bean(name = AppConstants.Bean.Credential.ADMIN)
 	SecurityCredential adminCredential(
 		AppProperties appProperties,
-		DataMapper dataMapper,
+		BinarySerializer binarySerializer,
 		@Qualifier(AppConstants.Bean.Redis.COMMON)
 		RedisTemplate<String, byte[]> redisTemplate
 	) {
-		AppProperties.Admin admin = appProperties.getAdmin();
-		return new RedisMemoryCredential()
-		
-		// Lokasi file kredensial
-		.setCredentialFile(admin.getCredentialFile())
-		
-		// DataMapper
-		.setDataMapper(dataMapper)
-		
-		// Optional expiry jika tidak didefinisikan di credential file
-		//.setExpiry(null)
-		
-		// Optional passwordType jika tidak didefinisikan di credential file
-		//.setPasswordType(null)
-		
-		// AppId akan digabungkan dengan prefix untuk key
-		//.setRedisAppIdEnabled(null)
-		
-		// Redis prefix untuk key
-		.setRedisPrefix("ADMIN-CREDENTIAL")
-		
-		// Redis template
-		.setRedisTemplate(redisTemplate)
-		
-		// Optional daftar user jika tidak didefinisikan di credential file
-		//.setUsers(null)
-		;
+		AdminDefinition.Credential credential = ObjectHelper.callOrElse(
+			appProperties.getAdmin() != null && appProperties.getAdmin().getCredential() != null, 
+			() -> appProperties.getAdmin().getCredential(), 
+			AdminDefinition.Credential::new
+		);
+		if (Boolean.TRUE.equals(credential.getUseLocalMemory())) {
+			
+			// Local Memory
+			return new LocalMemoryCredential()
+					
+			// Serialize & deserialize byte array di local memory
+			.setBinarySerializer(binarySerializer)
+					
+			// Cek yang sudah kadaluarsa
+			.setCheckInterval(credential.getCheckInterval())
+			
+			// Lokasi file kredensial
+			.setCredentialFile(credential.getCredentialFile())
+			
+			// Optional, jika tidak didefinisikan di credential file
+			.setExpiry(credential.getExpiry())
+			
+			// Optional, jika tidak didefinisikan di credential file
+			.setPasswordType(credential.getPasswordType())
+			
+			// Optional, jika tidak didefinisikan di credential file
+			.setUsers(credential.getUsers());
+			
+		} else {
+			
+			// Redis memory
+			return new RedisMemoryCredential()
+			
+			// Serialize & deserialize byte array di redis	
+			.setBinarySerializer(binarySerializer)
+			
+			// Lokasi file kredensial
+			.setCredentialFile(credential.getCredentialFile())
+			
+			// Optional, jika tidak didefinisikan di credential file
+			.setExpiry(credential.getExpiry())
+			
+			// Optional, jika tidak didefinisikan di credential file
+			.setPasswordType(credential.getPasswordType())
+			
+			// RedisTemplate dan definisi penyimpanan key-nya
+			.setRedisParam(
+				new RedisParam<String, byte[]>(credential.getStorageKeyParam())
+				.setRedisTemplate(redisTemplate)
+			)
+			
+			// Optional, jika tidak didefinisikan di credential file
+			.setUsers(credential.getUsers());
+		}
 	}
 	
 	
@@ -144,27 +181,44 @@ class AdminConfig {
 		@Qualifier(AppConstants.Bean.Credential.ADMIN)
 		SecurityCredential credential
 	) {
-		AppProperties.Admin admin = appProperties.getAdmin();
-		if (Boolean.TRUE.equals(admin.getUseBasicAuth())) {
-			// Basic Auth Security
+		AdminDefinition.Security security = ObjectHelper.callOrElse(
+			appProperties.getAdmin() != null && appProperties.getAdmin().getSecurity() != null, 
+			() -> appProperties.getAdmin().getSecurity(), 
+			AdminDefinition.Security::new
+		);
+		if (Boolean.TRUE.equals(security.getUseBasicAuth())) {
+			
+			// Bsic Auth
 			return new WebMvcBasicAuthSecurity()
+					
+			// Credential
 			.setCredential(credential)
-			.setRealm("Admin");
+			
+			// Realm, ditampilkan di-popup browser
+			.setRealm(security.getRealm());
+			
 		} else {
+			
+			// Berdasarkan AdminHandler
 			return new WebMvcAdminSecurity()
+					
+			// Admin handler		
 			.setAdminHandler(adminHandler)
+			
+			// Credential
 			.setCredential(credential)
+			
+			// DataMapper
 			.setDataMapper(dataMapper)
 			
-			// Remote host dicek atau tidak
-			//.setEnableRemoteHost(null)
+			// Pengecekan host yang diperoleh pada saat login
+			.setEnableRemoteHost(security.getEnableRemoteHost())
 			
-			// User Agent dicek atau tidal
-			//.setEnableUserAgent(null)
+			// Pengecekan User-Agent yang diperoleh pada saat login
+			.setEnableUserAgent(security.getEnableUserAgent())
 			
-			// Nama header untuk token
-			//.setHeaderKey(null)
-			;
+			// Http header untuk menyimpan token, default: 'Authorization'
+			.setHeaderKey(security.getHeaderKey());
 		}
 	}
 	

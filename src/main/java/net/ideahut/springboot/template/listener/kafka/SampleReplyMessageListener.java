@@ -9,19 +9,19 @@ import net.ideahut.springboot.sysparam.dto.SysParamDto;
 public class SampleReplyMessageListener {
 
 	public void listen01(ConsumerRecord<String, String> data, KafkaReply<String, SysParamDto> reply) {
-		reply.send(createResponse(data.value()), null);
+		reply.send(createResponse(data.value()));
 	}
 	
 	public void listen02(KafkaReply<String, SysParamDto> reply, ConsumerRecord<String, String> data) {
-		reply.send(createResponse(data.value()), null);
+		reply.send(createResponse(data.value()));
 	}
 	
 	public void listen03(String text, KafkaReply<String, SysParamDto> reply) {
-		reply.send(createResponse(text), null);
+		reply.send(createResponse(text));
 	}
 	
 	public void listen04(KafkaReply<String, SysParamDto> reply, String text) {
-		reply.send(createResponse(text), null);
+		reply.send(createResponse(text));
 	}
 	
 	public SysParamDto listen05(ConsumerRecord<String, String> data) {
@@ -33,7 +33,7 @@ public class SampleReplyMessageListener {
 	}
 	
 	public ReplyMessageListener<String, String, SysParamDto> listen07() {
-		return (data, reply) -> reply.send(createResponse(data.value()), null);
+		return (data, reply) -> reply.send(createResponse(data.value()));
 	}
 	
 	private SysParamDto createResponse(String text) {

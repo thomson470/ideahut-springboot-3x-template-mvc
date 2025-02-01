@@ -15,9 +15,13 @@ import net.ideahut.springboot.api.ApiTokenService;
 import net.ideahut.springboot.api.ApiTokenServiceImpl;
 import net.ideahut.springboot.api.WebMvcApiService;
 import net.ideahut.springboot.api.WebMvcApiServiceImpl;
+import net.ideahut.springboot.definition.ApiDefinition;
 import net.ideahut.springboot.entity.EntityTrxManager;
+import net.ideahut.springboot.helper.ObjectHelper;
 import net.ideahut.springboot.mapper.DataMapper;
+import net.ideahut.springboot.redis.RedisParam;
 import net.ideahut.springboot.rest.RestHandler;
+import net.ideahut.springboot.serializer.BinarySerializer;
 import net.ideahut.springboot.task.TaskHandler;
 import net.ideahut.springboot.template.AppConstants;
 import net.ideahut.springboot.template.properties.AppProperties;
@@ -32,54 +36,55 @@ class ApiConfig {
 	@Bean
 	ApiHandler apiHandler(
 		AppProperties appProperties,
-		DataMapper dataMapper,
 		EntityTrxManager entityTrxManager,
+		BinarySerializer binarySerializer,
 		@Qualifier(AppConstants.Bean.Redis.ACCESS)
 		RedisTemplate<String, byte[]> redisTemplate,
 		@Qualifier(AppConstants.Bean.Task.COMMON)
 		TaskHandler taskHandler
 	) {
-		AppProperties.Api.Enable enable = appProperties.getApi().getEnable();
+		ApiDefinition.Handler handler = ObjectHelper.callOrElse(
+			appProperties.getApi() != null && appProperties.getApi().getHandler() != null, 
+			() -> appProperties.getApi().getHandler(), 
+			ApiDefinition.Handler::new
+		);
 		return new ApiHandlerImpl()
 		
-		// Jumlah thread pada saat reload bean (menyiapkan crud & request mapping data), default: 3 thread
-		//.setConfigureThreads(null)
+		// Serialize & deserialize byte array ke redis
+		.setBinarySerializer(binarySerializer)
 		
-		// DataMapper
-		.setDataMapper(dataMapper)
+		// Jumlah thread pada saat reload bean (menyiapkan data crud & request mapping), default: 3 thread
+		.setConfigureThreads(handler.getConfigureThreads())
 		
 		// Flag apakah bisa di-consume oleh Api Service / Provider lain
-		.setEnableConsumer(enable.getConsumer())
+		.setEnableConsumer(handler.getEnableConsumer())
 		
 		// Flag apakah Api Crud aktif atau tidak
-		.setEnableCrud(enable.getCrud())
+		.setEnableCrud(handler.getEnableCrud())
 		
-		// Flag apakah data Crud & Request di database dihapus jika tidak tersedia di aplikasi
-		.setEnableSync(enable.getSync())
+		// Flag apakah data Crud & Request Mapping di database dihapus jika tidak tersedia di aplikasi
+		.setEnableSync(handler.getEnableSync())
 		
 		// Daftar Entity class dan nama trxManager yang terkait dengan ApiHandler
 		// default semua class di package net.ideahut.springboot.api.entity
-		//.setEntityClass(null)
+		.setEntityClass(null)
 		
 		// EntityTrxManager
 		.setEntityTrxManager(entityTrxManager)
 		
 		// Waktu kadaluarsa data null yang disimpan di redis (agar tidak perlu selalu cek ke database)
-		//.setNullExpiry(null)
+		.setNullExpiry(handler.getNullExpiry())
 		
-		// AppId akan digabungkan dengan prefix untuk key
-		//.setRedisAppIdEnabled(null)
+		// RedisTemplate dan definisi penamaan key-nya
+		.setRedisParam(
+			new RedisParam<String, byte[]>(handler.getRedisParam())
+			.setRedisTemplate(redisTemplate)
+		)
 		
-		// Redis prefix untuk key
-		.setRedisPrefix("API-HANDLER")
+		// Optional, jika bean lebih dari satu atau namanya berbeda 
+		.setRequestMappingHandlerMappingBeanName(null)
 		
-		// Redis Template
-		.setRedisTemplate(redisTemplate)
-		
-		// Menggunakan nama bean, jika RequestMappingHandlerMapping di application context lebih dari satu
-		//.setRequestMappingHandlerMappingBeanName(null)
-		
-		// TaskHandler
+		// TaskHandler, untuk asinkronus
 		.setTaskHandler(taskHandler);
 	}
 	
@@ -90,7 +95,7 @@ class ApiConfig {
 	@Bean
 	WebMvcApiService apiService(
 		AppProperties appProperties,
-		DataMapper dataMapper,
+		BinarySerializer binarySerializer,
 		@Qualifier(AppConstants.Bean.Redis.ACCESS)
 		RedisTemplate<String, byte[]> redisTemplate,
 		ApiHandler apiHandler,
@@ -100,56 +105,61 @@ class ApiConfig {
 		ApiTokenService apiTokenService,
 		ApiAccessInternalService apiAccessInternalService
 	) {
+		ApiDefinition.Service service = ObjectHelper.callOrElse(
+			appProperties.getApi() != null && appProperties.getApi().getService() != null, 
+			() -> appProperties.getApi().getService(), 
+			ApiDefinition.Service::new
+		);
 		return new WebMvcApiServiceImpl()
-		
+				
 		// Untuk mendapatkan ApiAccess, jika token diterbitkan oleh service ini sendiri
 		.setApiAccessInternalService(apiAccessInternalService)
 		
 		// Untuk mendapatkan ApiAccess ke service yang menerbitkan token
 		// Secara default sudah dihandle, fungsi ini diperlukan jika ada custom
-		//.setApiAccessRemoteService(null)
+		.setApiAccessRemoteService(null)
 		
 		// ApiHandler
 		.setApiHandler(apiHandler)
 		
 		// ApiName, akan didaftarkan ke database di setiap service yang terhubung
-		// Jika tidak diset akan digunakan ID dari application context atau dari property 'spring.application.name'
-		.setApiName(appProperties.getApi().getName())
+		// Jika tidak diset akan digunakan ID dari application context (property 'spring.application.name')
+		.setApiName(service.getApiName())
 		
 		// Daftar ApiProcessor yang digunakan
 		.setApiProcessors(ApiConfigHelper.getAllDefaultProcessors())
 		
 		// Untuk custom RestClient, seperti menambahkan sertifikat, timeout, dll.
 		// Secara default sudah ada, hanya diperlukan jika custom
-		//.setApiRestClientCreator(null)
+		.setApiRestClientCreator(null)
 		
 		// Secara default sudah ada, hanya diperlukan untuk mendapatkan ApiSource custom
 		// misalnya daftar ApiSource tersimpan di file
-		//.setApiSourceService(null)
+		.setApiSourceService(null)
 		
 		// Service untuk meng-handle token
 		.setApiTokenService(apiTokenService)
 		
-		// DataMapper
-		.setDataMapper(dataMapper)
+		// Serialize & deserialize byte array ke redis
+		.setBinarySerializer(binarySerializer)
 		
-		// Default digest jika tidak didefinisikan di database
-		.setDefaultDigest("SHA-256")
+		// index redisTemplate untuk meyimpan consumer token jika menggunakan MultipleRedisTemplate
+		.setConsumerTokenIndex(null)
+		
+		// Default digest jika tidak didefinisikan di konfigurasi consumer & processor
+		.setDefaultDigest(service.getDefaultDigest())
 		
 		// Custom Header name
-		//.setHeader(null)
-		
-		// AppId akan digabungkan dengan prefix untuk key
-		//.setRedisAppIdEnabled(null)
+		.setHeader(null)
 		
 		// Custom redis expiry, untuk data access & consumer baik yang null maupun tidak
-		//.setRedisExpiry(null)
+		.setRedisExpiry(service.getRedisExpiry())
 		
-		// Redis prefix untuk key
-		.setRedisPrefix("API-SERVICE")
-		
-		// RedisTemplate
-		.setRedisTemplate(redisTemplate)
+		// RedisTemplate dan definisi penamaan key-nya
+		.setRedisParam(
+			new RedisParam<String, byte[]>(service.getRedisParam())
+			.setRedisTemplate(redisTemplate)
+		)
 		
 		// RestHandler
 		.setRestHandler(restHandler);
@@ -164,21 +174,25 @@ class ApiConfig {
 		AppProperties appProperties,
 		DataMapper dataMapper
 	) {
-		AppProperties.Api api = appProperties.getApi();
+		ApiDefinition.Token token = ObjectHelper.callOrElse(
+			appProperties.getApi() != null && appProperties.getApi().getToken() != null, 
+			() -> appProperties.getApi().getToken(), 
+			ApiDefinition.Token::new
+		);
 		return new ApiTokenServiceImpl()
-				
+		
 		// Default consumer (komunikasi antar service) secret, digest , & expiry, jika tidak diset di database
-		.setConsumer(api.getConsumer())
+		.setConsumerJwtParam(token.getConsumerJwtParam())
 		
 		// DataMapper
 		.setDataMapper(dataMapper)
 		
 		// Default JwtProcessor secret, digest , & expiry, jika tidak diset di database
-		.setJwtProcessor(api.getJwtProcessor())
+		.setProcessorJwtParam(token.getProcessorJwtParam())
 		
 		// Batas atas & bawah timestamp signature yang dikirim
 		// Contoh: jika diset 1 menit, berarti signature yang dikirim valid jika timestamp client dalam range -+ 1 menit
-		.setSignatureTimeSpan(api.getSignatureTimeSpan());
+		.setSignatureTimeSpan(token.getSignatureTimeSpan());
 	}
 	
 	
@@ -203,10 +217,10 @@ class ApiConfig {
 	) {
 		return new ApiConsumerServiceImpl()
 				
-		// Untuk mendapatkan token ke Api Service lain
+		// Untuk mendapatkan ApiAccess berdasarkan token ke Api Service lain
 		// Secara default sudah dihandle, fungsi ini diperlukan jika ada custom
 		// contoh jika request menggunakan SSL certificate, atau custom header
-		//.setApiConsumerTokenGetter(null)
+		.setApiConsumerTokenGetter(null)
 		
 		// Api Service
 		.setApiService(apiService)

@@ -23,6 +23,7 @@ import net.ideahut.springboot.api.processor.HostJwtApiProcessor;
 import net.ideahut.springboot.api.processor.StandardAuthApiProcessor;
 import net.ideahut.springboot.api.processor.StandardHeaderApiProcessor;
 import net.ideahut.springboot.api.processor.StandardJwtApiProcessor;
+import net.ideahut.springboot.crud.Condition;
 import net.ideahut.springboot.crud.CrudAction;
 import net.ideahut.springboot.grid.GridAdditional;
 import net.ideahut.springboot.grid.GridOption;
@@ -39,7 +40,6 @@ public final class GridSupport {
 	 */
 	public static Map<String, GridOption> getOptions() {
 		Map<String, GridOption> options = new HashMap<>();
-		options.put("CRUD_ACTION", StaticOption.CRUD_ACTION);
 		options.put("GENDER", StaticOption.GENDER);
 		options.put("LANGUAGE", StaticOption.LANGUAGE);
 		options.put("MESSAGE_TYPE", StaticOption.MESSAGE_TYPE);
@@ -47,6 +47,8 @@ public final class GridSupport {
 		options.put("MENU_TYPE", StaticOption.MENU_TYPE);
 		options.put("DIGEST", StaticOption.DIGEST);
 		options.put("API_TYPE", StaticOption.API_TYPE);
+		options.put("CRUD_ACTION", StaticOption.CRUD_ACTION);
+		options.put("CRUD_CONDITION", StaticOption.CRUD_CONDITION);
 		return options;
 	}
 	public static class StaticOption {
@@ -95,6 +97,16 @@ public final class GridSupport {
 			List<Option> options = new ArrayList<>();
 			for (CrudAction action : CrudAction.values()) {
 				options.add(new Option(action.name(), action.name()));
+			}
+			Collections.sort(options, (o1, o2) -> o1.getLabel().compareTo(o2.getLabel()));
+			return options;
+		});
+		
+		// CRUD CONDITION
+		public static final GridOption CRUD_CONDITION = new GridOptionFromCollector(() -> {
+			List<Option> options = new ArrayList<>();
+			for (Condition condition : Condition.values()) {
+				options.add(new Option(condition.name(), condition.name()));
 			}
 			Collections.sort(options, (o1, o2) -> o1.getLabel().compareTo(o2.getLabel()));
 			return options;

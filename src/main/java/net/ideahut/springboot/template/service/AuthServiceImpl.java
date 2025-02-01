@@ -34,6 +34,7 @@ import net.ideahut.springboot.bean.BeanConfigure;
 import net.ideahut.springboot.entity.EntityTrxManager;
 import net.ideahut.springboot.entity.TrxManagerInfo;
 import net.ideahut.springboot.helper.FrameworkHelper;
+import net.ideahut.springboot.helper.ObjectHelper;
 import net.ideahut.springboot.helper.StringHelper;
 import net.ideahut.springboot.helper.TimeHelper;
 import net.ideahut.springboot.mapper.DataMapper;
@@ -111,9 +112,10 @@ class AuthServiceImpl implements AuthService, BeanConfigure<AuthService> {
 		String password
 	) throws Exception {
 		UserData user = users.get(username);
-		Assert.isTrue(user != null && user.getPassword().equals(password), "Invalid user");
+		Assert.notNull(user, "User not found");
+		Assert.isTrue(user.getPassword().equals(password), "Invalid password");
 		
-		String apiType = apiRequest.getHeader(apiService.getApiHeader().getTypeHeader(), StandardJwtApiProcessor.API_TYPE);
+		String apiType = apiRequest.getHeader(apiService.getApiHeader().getType(), StandardJwtApiProcessor.API_TYPE);
 		ApiProcessor apiProcessor = apiService.getApiProcessor(apiType);
 		Assert.notNull(apiProcessor, "ApiProcessor not found");
 		boolean isJwtCheck = apiRequest.getHeader(boolean.class, "Jwt-Check", false);
@@ -131,7 +133,7 @@ class AuthServiceImpl implements AuthService, BeanConfigure<AuthService> {
 		)
 		.setServiceRole(serviceRole)
 		// set appid
-		.setAttribute(ApiAccess.Attribute.APPID, apiService.getApiName());
+		.setAttribute(ApiAccess.Attribute.APP_ID, apiService.getApiName());
 		if (isJwtType && isJwtCheck) {
 			apiAccess.setAttribute(ApiAccess.Attribute.CHECK, "true");
 		}
@@ -162,7 +164,7 @@ class AuthServiceImpl implements AuthService, BeanConfigure<AuthService> {
 		if (apiAccess != null) {
 			Assert.isTrue(isInternalApiAccess(apiAccess), "Invalid ApiPublisher");
 			redisTemplate.delete(REDIS_PREFIX + apiAccess.getApiKey());
-			apiService.removeApiAccess(apiAccess.getApiKey());
+			apiService.removeApiAccess(null, apiAccess.getApiKey());
 		}
 		return apiAccess;
 	}
@@ -171,7 +173,8 @@ class AuthServiceImpl implements AuthService, BeanConfigure<AuthService> {
 	public ApiAccess info(
 		ApiRequest apiRequest
 	) {
-		String apiKey = apiService.getApiKey(apiRequest);
+		ApiParameter apiParameter = apiService.getApiParameter(apiRequest);
+		String apiKey = apiParameter != null ? apiParameter.getApiKey() : null;
 		if (apiKey != null) {
 			byte[] bytes = RedisHelper.getValue(redisTemplate, REDIS_PREFIX, apiKey);
 			if (bytes != null) {
@@ -190,16 +193,17 @@ class AuthServiceImpl implements AuthService, BeanConfigure<AuthService> {
 	public ApiAccess getApiAccessForExternal(
 		ApiRequest apiRequest
 	) {
-		String apiKey = apiService.getApiKey(apiRequest);
+		ApiParameter apiParameter = apiService.getApiParameter(apiRequest);
+		String apiKey = apiParameter != null ? apiParameter.getApiKey() : null;
 		Assert.hasLength(apiKey, "ApiKey required");
 		ApiHeader apiHeader = apiService.getApiHeader();
-		String from = apiRequest.getHeader(apiHeader.getFromHeader(), "");
-		Assert.hasLength(from, "Header '" + apiHeader.getFromHeader() + "' required");
+		String from = apiRequest.getHeader(apiHeader.getFrom(), "");
+		Assert.hasLength(from, "Header '" + apiHeader.getFrom() + "' required");
 		ApiSource apiSource = apiService.getApiSource(from);
 		Assert.notNull(apiSource, "ApiSource not found");
-		Long timestamp = StringHelper.valueOf(Long.class, apiRequest.getHeader(apiHeader.getTimestampHeader()));
-		Assert.isTrue(timestamp != null && timestamp > 0, "Invalid header '" + apiHeader.getTimestampHeader() + "': " + timestamp);
-		String signature = apiRequest.getHeader(apiHeader.getSignatureHeader(), "");
+		Long timestamp = StringHelper.valueOf(Long.class, apiRequest.getHeader(apiHeader.getTimestamp()));
+		Assert.isTrue(timestamp != null && timestamp > 0, "Invalid header '" + apiHeader.getTimestamp() + "': " + timestamp);
+		String signature = apiRequest.getHeader(apiHeader.getSignature(), "");
 		Message message = apiService.getApiTokenService().validateSignature(apiHeader, apiSource, apiRequest, signature);
 		Assert.isNull(message, "Invalid signature");
 		byte[] bytes = RedisHelper.getValue(redisTemplate, REDIS_PREFIX, apiKey);
@@ -230,8 +234,8 @@ class AuthServiceImpl implements AuthService, BeanConfigure<AuthService> {
 	@Override
 	public String createConsumerToken(ApiRequest apiRequest) {
 		ApiHeader apiHeader = apiService.getApiHeader();
-		String from = apiRequest.getHeader(apiHeader.getFromHeader(), "");
-		Assert.hasLength(from, "Header '" + apiHeader.getFromHeader() + "' required");
+		String from = apiRequest.getHeader(apiHeader.getFrom(), "");
+		Assert.hasLength(from, "Header '" + apiHeader.getFrom() + "' required");
 		ApiSource apiSource = apiService.getApiSource(from);
 		Assert.notNull(apiSource, "ApiSource not found");
 		return apiService.getApiTokenService().createConsumerToken(apiHeader, apiSource, apiRequest);
@@ -249,7 +253,7 @@ class AuthServiceImpl implements AuthService, BeanConfigure<AuthService> {
 		return trxManagerInfo.transaction((Session session) -> {
 			List<Object[]> items = session.createQuery(hql.toString(), Object[].class)
 			.setParameter(1, roleCode)
-			.setParameter(2, FrameworkHelper.YES)
+			.setParameter(2, ObjectHelper.TRUE)
 			.getResultList();
 			StringMap map = new StringMap();
 			while (!items.isEmpty()) {
@@ -263,7 +267,7 @@ class AuthServiceImpl implements AuthService, BeanConfigure<AuthService> {
 	
 	private boolean isInternalApiAccess(ApiAccess apiAccess) {
 		if (apiAccess != null) {
-			return apiService.getApiName().equals(apiAccess.getAttribute(ApiAccess.Attribute.APPID));
+			return apiService.getApiName().equals(apiAccess.getAttribute(ApiAccess.Attribute.APP_ID));
 		}
 		return false;
 	}

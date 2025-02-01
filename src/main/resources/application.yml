@@ -57,29 +57,26 @@ spring:
             audit_identifier: spring_sample_main
             audit_bean_name: mainAuditSessionFactory
 
-app:
+config:
    waitAllBeanConfigured: true
    loggingError: true
    autoStartScheduler: false
    messagePath: "file:{user.dir}/extras/message/"
    reportPath: "file:{user.dir}/extras/report/"
-   kafkaConfigurationFile: "file:{user.dir}/extras/kafka/kafka1.yaml"
    
    #
-   # CORS Http Header
-   #
-   cors:
-      "Access-Control-Allow-Credentials": "true"
-      "Access-Control-Allow-Origin": "*"
-      "Access-Control-Allow-Methods": "*"
-      "Access-Control-Max-Age": "360"
-      "Access-Control-Allow-Headers": "*"
-      "Access-Control-Expose-Headers": "*"
-                     
-   ignored-handler-classes:
-      - org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController
-      - org.springframework.web.servlet.NoHandlerFoundException
-      - org.springframework.http.converter.HttpMessageNotWritableException
+   # FILTER
+   #   
+   filter:
+      traceEnable: true
+      enableTimeResult: true
+      corsHeaders:
+         "Access-Control-Allow-Credentials": "true"
+         "Access-Control-Allow-Origin": "*"
+         "Access-Control-Allow-Methods": "*"
+         "Access-Control-Max-Age": "3600"
+         "Access-Control-Allow-Headers": "*"
+         "Access-Control-Expose-Headers": "*"
    
    #
    # Model / Entity yang punya annotation @ForeignKeyEntity akan dieksekusi
@@ -88,9 +85,14 @@ app:
    foreignKey:
       enableExecution: true
       dropBeforeCreate: true
-      onUpdateAction: true 
-      
+      onUpdateAction: true
+   
+   #
+   # AUDIT
+   #
    audit:
+      useMultiTable: true
+      rejectNonAuditEntity: true
       jpa:
          properties:
             hibernate:
@@ -101,9 +103,12 @@ app:
             table: true
          enable:
             audit: true
-         #table:
-         #   index: false   
+         table:
+            prefix: "_a_"
    
+   #
+   # TASK
+   #
    task:      
       common:
          threadNamePrefix: "TASK-COMMON"
@@ -118,17 +123,27 @@ app:
          waitForJobsToCompleteOnShutdown: true
          allowCoreThreadTimeOut: true
 
+   #
+   # REDIS
+   #
    redis:
       common:
          type: 0
-         testOnStartup: true
          standalone:
             host: "<HOST>"
             port: "<PORT>"
             password: "<PASSWORD>"
             database: 0
-            
+   
+   #
+   # CACHE         
+   #
    cache:
+      useLocalMemory: false
+      redisParam:
+            prefix: "CACHE"
+            appIdEnabled: true
+            encryptEnabled: true
       groups:
          - name: TEST1
            limit: 20
@@ -142,7 +157,10 @@ app:
               unit: SECONDS
               value: 0
            nullable: true
-
+   
+   #
+   # MAIL
+   #
    mail:
       host: smtp.gmail.com
       port: 587
@@ -158,62 +176,117 @@ app:
          "mail.transport.protocol": "smtp"
          "mail.debug": "true"
          "mail.smtp.ssl.protocols": "TLSv1.2"
-         
+   
+   #
+   # GRID
+   #
    grid:
       location: "file:{user.dir}/extras/grid/**/*.json"
       #definition: "file:{user.dir}/extras/grid/grid.def"
-      
-   admin:
-      configurationFile: "file:{user.dir}/extras/admin/configuration.yaml"
-      credentialFile: "file:{user.dir}/extras/admin/credential.yaml"
-      apiPath: "/_/api"
-      webPath: "/_/web"
-      webLocation: "file:{user.dir}/extras/admin/web/"
-      webEnabled: true
-      useBasicAuth: false
-      
-   api:
-      name: "TEMPLATE-MVC"
-      enable:
-         consumer: true
-         crud: true
-         sync: true
-      consumer:
-         secret: "df7c7d71-ec05-4ad4-9b36-1580b1a6590f"
-         digest: "SHA-256"
-         expiry: 
-            unit: SECONDS
-            value: 86400 # 1 hari
-      jwtProcessor:
-         secret: "77ea06ac-808b-4399-895c-a546b033d533"
-         digest: "SHA-256"
-         expiry: 
-            unit: SECONDS
-            value: 3600 # 1jam
-      redisExpiry:
-         timeUnit: SECONDS
-         accessNull: 120
-         accessItem: 300
-         consumerNull: 120
-         consumerItem: 600
-      ## toleransi waktu atas/bawah timestamp
-      signatureTimeSpan: 
-         unit: SECONDS
-         value: 60
-      defaultDigest: "SHA-256"
    
+   #
+   # ADMIN
+   #
+   admin:
+      handler:
+         configurationFile: "file:{user.dir}/extras/admin/configuration.yaml"
+         apiPath: "/_/api"
+         webPath: "/_/web"
+         webLocation: "file:{user.dir}/extras/admin/web/"
+         webEnabled: true
+      credential:
+         useLocalMemory: false
+         credentialFile: "file:{user.dir}/extras/admin/credential.yaml"
+         
+         # LocalMemoryCredential   
+         checkInterval:
+            unit: SECONDS
+            value: 30
+         
+         # RedisMemoryCredential
+         storageKeyParam:
+            prefix: "ADMIN-CREDENTIAL"
+            appIdEnabled: true
+            encryptEnabled: true
+      security:
+         useBasicAuth: false
+         
+         # Basic Auth
+         realm: "Admin"
+         
+         # Admin Auth
+         enableRemoteHost: false
+         enableUserAgent: false
+         headerKey: "Authorization"
+   
+   #
+   # API
+   #
+   api:
+      handler:
+         enableCrud: true
+         enableSync: true
+         enableConsumer: true
+         configureThreads: 2
+         nullExpiry:
+            unit: MINUTES
+            value: 5
+         redisParam:
+            prefix: "API-HANDLER"
+            appIdEnabled: true
+            encryptEnabled: true
+      service:
+         apiName: "TEMPLATE-MVC"
+         defaultDigest: "SHA-256"
+         redisExpiry:
+            unit: MINUTES
+            accessNull: 2
+            accessObject: 5
+            consumerNull: 2
+            consumerObject: 10
+         redisParam:
+            prefix: "API-SERVICE"
+            appIdEnabled: true
+            encryptEnabled: true
+      token:
+         processorJwtParam:
+            secret: "77ea06ac-808b-4399-895c-a546b033d533"
+            digest: "SHA-256"
+            expiry:
+               unit: MINUTES
+               value: 60
+         consumerJwtParam:
+            secret: "df7c7d71-ec05-4ad4-9b36-1580b1a6590f"
+            digest: "SHA-256"
+            expiry:
+              unit: HOURS
+              value: 24
+         ## toleransi waktu atas/bawah timestamp
+         signatureTimeSpan:
+            unit: SECONDS
+            value: 60
+   
+   #
+   # WEB ASYNC
+   #   
    webAsync:
       threadNamePrefix: "WEB-ASYNC"
       corePoolSize: 10
       maxPoolSize: 100
-      
+   
+   #
+   # CRUD
+   #   
    crud:
       enableApiService: true
       enablePermission: true
-      
-   handler:
-      enableReport: true
-      enableKafka: true
+   
+   #
+   # KAFKA
+   #   
+   kafka:
+      enable: true
+      configurationFile: "file:{user.dir}/extras/kafka/localhost.yaml"
 
 other:   
    trxManager:
@@ -249,6 +322,8 @@ logging:
       org:
          hibernate: INFO
          springframework: INFO
+         apache:
+            fury: OFF
       redis:
          clients:
             jedis:

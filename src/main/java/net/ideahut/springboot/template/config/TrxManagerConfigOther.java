@@ -21,11 +21,12 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import jakarta.persistence.EntityManagerFactory;
+import net.ideahut.springboot.definition.DatabaseAuditDefinition;
 import net.ideahut.springboot.entity.DatasourceProperties;
 import net.ideahut.springboot.entity.JpaProperties;
 import net.ideahut.springboot.helper.FrameworkHelper;
+import net.ideahut.springboot.helper.ObjectHelper;
 import net.ideahut.springboot.template.Application;
-import net.ideahut.springboot.template.properties.AppProperties.Audit;
 import net.ideahut.springboot.template.properties.OtherProperties;
 
 /*
@@ -101,14 +102,14 @@ class TrxManagerConfigOther {
 	DataSource auditDatasource(
 		OtherProperties otherProperties		
 	) {
-		Audit audit = otherProperties.getTrxManager().getSecond().getAudit();
-		String jndi = audit.getDatasource().getJndiName();
+		DatabaseAuditDefinition audit = otherProperties.getTrxManager().getSecond().getAudit();
+		DatasourceProperties datasource = ObjectHelper.useOrDefault(audit.getDatasource(), DatasourceProperties::new);
+		String jndi = datasource.getJndiName();
 		jndi = jndi != null ? jndi.trim() : "";
 		if (jndi.length() != 0) {
 			JndiDataSourceLookup lookup = new JndiDataSourceLookup();
 			return lookup.getDataSource(jndi);
 		} else {
-			DatasourceProperties datasource = audit.getDatasource();
 			return DataSourceBuilder.create()
 			.driverClassName(datasource.getDriverClassName())
 			.url(datasource.getJdbcUrl())
@@ -124,7 +125,7 @@ class TrxManagerConfigOther {
 		@Qualifier("otherAuditDatasource") 
 		DataSource datasource
 	) {
-		Audit audit = otherProperties.getTrxManager().getSecond().getAudit();
+		DatabaseAuditDefinition audit = otherProperties.getTrxManager().getSecond().getAudit();
 		Properties properties = FrameworkHelper.getHibernateProperties(audit.getJpa().getProperties());
 		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(datasource);

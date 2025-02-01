@@ -51,7 +51,7 @@ api:
 ###   
 web:
    ### Nama aplikasi yang ditampilkan di halaman web, jika kosong akan diisi dengan application id springboot
-   title: ""
+   title: "Template MVC"
    ### Nama file index
    indexFile: "index.html"
    ### Jika resource tidak tersedia, akan diarahkan ke indexFile (jika diset true)
@@ -65,7 +65,16 @@ web:
    #redirectParameter: ""
    ### Nama request parameter untuk authentication, default: '_auth_'
    #authParameter: ""
-
+   #color:
+      #header: ""
+      #primary: ""
+      #secondary: ""
+      #accent: ""
+      #dark: ""
+      #positive: ""
+      #negative: ""
+      #info: ""
+      #warning: ""
 
 ###
 ### GRID

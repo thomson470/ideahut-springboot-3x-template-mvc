@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,6 +36,7 @@ import net.ideahut.springboot.mapper.DataMapper;
 import net.ideahut.springboot.message.MessageHandler;
 import net.ideahut.springboot.object.Message;
 import net.ideahut.springboot.object.Option;
+import net.ideahut.springboot.object.StringMap;
 import net.ideahut.springboot.template.properties.AppProperties;
 
 @Service
@@ -281,8 +281,8 @@ class MessageServiceImpl implements MessageService, BeanReload, BeanConfigure<Me
 	}
 
 	@Override
-	public Map<String, String> getMap(String... codes) {
-		Map<String, String> map = new LinkedHashMap<>();
+	public StringMap getMap(String... codes) {
+		StringMap map = new StringMap();
 		if (codes != null) {
 			List<String> words = getList(codes);
 			if (codes.length == words.size()) {
