@@ -11,7 +11,7 @@ spring:
             ## Tambah property ini supaya bisa paging, untuk hibernate < 6.0.0 atau springbott < 3.0.0
             legacy_limit_handler: true
             
-app:
+config:
    audit:
       datasource:
          driver-class-name: "com.microsoft.sqlserver.jdbc.SQLServerDriver"
