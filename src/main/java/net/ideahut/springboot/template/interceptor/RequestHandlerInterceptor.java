@@ -70,6 +70,11 @@ class RequestHandlerInterceptor extends WebMvcHandlerInterceptor {
 	}
 	
 	@Override
+	protected String publicBaseUrl() {
+		return null;
+	}
+	
+	@Override
 	protected WebMvcApiService apiService() {
 		return CHECK_BY_API_SERVICE ? apiService : null;
 	}
