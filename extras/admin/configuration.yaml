@@ -1,108 +1,50 @@
-###
-### KONFIGURASI ADMIN
-###
-
-### Tunggu semua job selesai pada saat scheduler di-stop (di menu Scheduler Admin)
 waitForJobsToCompleteWhenStopScheduler: false
-
-### Ambil metadata / informasi database (di menu Entity Admin)
-### Jika terjadi error pada saat menjalankan native image, bagian ini bisa diset false
 collectDatabaseMetadata: true
-
-### Hanya koneksi redis yang bisa dieksekusi yang ditampilakn (di menu Redis Admin)
-### Auto Configuratian springboot akan membuat RedisTempate default (tidak bisa dieksekusi jika koneksi ke redis menggunakan password)
 showOnlyExecutableRedis: true
 
-
-### 
-### CENTRAL
-###
 central:
-   ### URL untuk mendapatkan template / html admin terbaru 
-   webEndpoint: "http://localhost:6401/sync/web"
-   ### URL untuk mengecek token yang berasal dari Admin Central
-   tokenEndpoint: "http://localhost:6401/sync/token"
-   ### Request parameter token, untuk dikirim ke tokenEndpoint, default: '_token_'
-   #tokenParam: ""
-   ### Request header version, untuk dikirim ke webEndpoint, yang isinya adalah versi yang ada di lokal, default: 'Admin-Version'
-   #versionHeader: ""
+   webEndpoint: "https://admin-central.ideahut.net/sync/web"
+   tokenEndpoint: "https://admin-central.ideahut.net/sync/token"
 
-
-###
-### API
-###   
 api:
-   ### Path untuk login, default: '/login'
-   #loginPath: "/login"
-   ### Path untuk logout, default: '/logout'
-   #logoutPath: "/logout"
-   ### Request header (flag) untuk mendapatkan informasi, nilainya true/false, default: 'Admin-Info'
-   #infoHeader: ""
-   ### Bahasa yang digunakan untuk mengakses API lewat Web Admin
-   #language: ""
-   ### Timeout semua request ke API, dalam detik
    timeout: 30
-   ### Tampilkan di console.log Web semua request dan response API
    debug: true
 
-
-###
-### WEB
-###   
 web:
-   ### Nama aplikasi yang ditampilkan di halaman web, jika kosong akan diisi dengan application id springboot
-   title: "Template MVC"
-   ### Nama file index
+   title: "Template WebMvc"
    indexFile: "index.html"
-   ### Jika resource tidak tersedia, akan diarahkan ke indexFile (jika diset true)
    alwaysToIndex: true
-   ### Daftar path / file yang bisa diakses
+   color:
+      ## css color
+      header: ""
+      title: ""
+      primary: ""
+      secondary: ""
+      accent: ""
+      dark: ""
+      positive: ""
+      negative: ""
+      info: ""
+      warning: ""
    allowedPaths:
+      ## path yang diizinkan untuk diakses
       - "assets"
-      - "index.html"
       - "icons"
-   ### Nama request parameter untuk menyimpan url redirect, default: '_next_'
-   #redirectParameter: ""
-   ### Nama request parameter untuk authentication, default: '_auth_'
-   #authParameter: ""
-   #color:
-      #header: ""
-      #primary: ""
-      #secondary: ""
-      #accent: ""
-      #dark: ""
-      #positive: ""
-      #negative: ""
-      #info: ""
-      #warning: ""
+      - "favicon.ico"
+      - "index.html"
 
-###
-### GRID
-###   
 grid:
-   ### Grid aktif atau tidak, default: true
    enable: true
-   ### Lokasi template grid, bisa dalam format yaml & json
    location: "file:{user.dir}/extras/admin/grid/**/*.yaml"
-   ### Definisi grid, untuk mengatur order dan title yang ditampilakn di Web Admin, bisa dalam format yaml & json
    definition: "file:{user.dir}/extras/admin/grid/grid.def"
 
-
-###
-### CRUD
-###   
 crud:
-   ### Maksimum data yang akan ditampilkan
    maxLimit: 200
-   ### Query menggunakan HQL atau SQL
    useNative: false
 
+role:
+   definitionFile: "file:{user.dir}/extras/admin/roles.yaml"
 
-###
-### MODULE
-### Daftar module-module di Web Admin
-### Title & order / urutan menu di Web Admin bisa di atur
-###    
 modules:
    reload:
       #title:
