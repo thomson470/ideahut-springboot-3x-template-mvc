@@ -29,7 +29,8 @@ VIEWER:
       groupDelete: false
    scheduler:
       control: false
-      reset: false
+      resetRunning: false
+      resetLocking: false
       pause: false
       schedule: false
       trigger: false
