@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import net.ideahut.springboot.api.ApiHandler;
 import net.ideahut.springboot.audit.AuditHandler;
-import net.ideahut.springboot.audit.AuditInfo;
 import net.ideahut.springboot.bean.BeanConfigure;
 import net.ideahut.springboot.entity.EntityPostListener;
 import net.ideahut.springboot.entity.EntityTrxManager;
@@ -81,10 +80,8 @@ class AppEntityPostListener implements EntityPostListener, BeanConfigure<EntityP
 
 	@Override
 	public void onPostDelete(Object entity) {
-		AuditInfo auditInfo = AuditInfo.context();
+		auditHandler.save("DELETE", entity);
 		taskHandler.execute(() -> {
-			auditInfo.setToContext();
-			auditHandler.save("DELETE", entity);
 			EntityPostListener listener = entities.get(entity.getClass());
 			if (listener != null) {
 				listener.onPostDelete(entity);
@@ -94,10 +91,8 @@ class AppEntityPostListener implements EntityPostListener, BeanConfigure<EntityP
 
 	@Override
 	public void onPostInsert(Object entity) {
-		AuditInfo auditInfo = AuditInfo.context();
+		auditHandler.save("INSERT", entity);
 		taskHandler.execute(() -> {
-			auditInfo.setToContext();
-			auditHandler.save("INSERT", entity);
 			EntityPostListener listener = entities.get(entity.getClass());
 			if (listener != null) {
 				listener.onPostInsert(entity);
@@ -107,10 +102,8 @@ class AppEntityPostListener implements EntityPostListener, BeanConfigure<EntityP
 
 	@Override
 	public void onPostUpdate(Object entity) {
-		AuditInfo auditInfo = AuditInfo.context();
+		auditHandler.save("UPDATE", entity);
 		taskHandler.execute(() -> {
-			auditInfo.setToContext();
-			auditHandler.save("UPDATE", entity);
 			EntityPostListener listener = entities.get(entity.getClass());
 			if (listener != null) {
 				listener.onPostUpdate(entity);

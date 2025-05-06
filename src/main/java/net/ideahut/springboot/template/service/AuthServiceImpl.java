@@ -145,8 +145,7 @@ class AuthServiceImpl implements AuthService, BeanConfigure<AuthService> {
 		.setApiName(apiService.getApiName())
 		.setApiRequest(apiRequest);
 		
-		ApiSource apiSource = new ApiSource();
-		ApiAuth apiAuth = apiProcessor.createApiAuth(apiSource, apiParameter, apiAccess);
+		ApiAuth apiAuth = apiProcessor.createApiAuth(apiParameter, apiAccess);
 		byte[] bytes = dataMapper.writeAsBytes(apiAccess, DataMapper.JSON);
 		RedisHelper.setValue(
 			redisTemplate,
@@ -237,7 +236,7 @@ class AuthServiceImpl implements AuthService, BeanConfigure<AuthService> {
 		Assert.hasLength(from, "Header '" + apiHeaderValue.getApiHeaderName().getFrom() + "' required");
 		ApiSource apiSource = apiService.getApiSource(from);
 		Assert.notNull(apiSource, "ApiSource not found");
-		return apiService.getApiTokenService().createConsumerToken(apiSource, apiHeaderValue, apiRequest);
+		return apiService.getApiTokenService().createConsumerApiToken(apiSource, apiRequest);
 	}
 	
 	

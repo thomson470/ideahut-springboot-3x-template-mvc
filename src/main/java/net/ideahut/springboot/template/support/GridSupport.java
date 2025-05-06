@@ -27,8 +27,9 @@ import net.ideahut.springboot.crud.Condition;
 import net.ideahut.springboot.crud.CrudAction;
 import net.ideahut.springboot.grid.GridAdditional;
 import net.ideahut.springboot.grid.GridOption;
-import net.ideahut.springboot.mapper.DataMapper;
+import net.ideahut.springboot.helper.FrameworkHelper;
 import net.ideahut.springboot.object.Option;
+import net.ideahut.springboot.support.GridAdditionalFromCollector;
 import net.ideahut.springboot.support.GridOptionFromCollector;
 
 public final class GridSupport {
@@ -169,19 +170,16 @@ public final class GridSupport {
 		private StaticAdditional() {}
 		
 		// MONTHS
-		public static final GridAdditional MONTHS = context -> {
+		public static final GridAdditional MONTHS = new GridAdditionalFromCollector(() -> {
 			String str = "[\"January\", \"February\", \"March\", \"April\", \"May\", \"June\", \"July\", \"August\", \"September\", \"October\", \"November\", \"December\", \"Jan\", \"Feb\", \"Mar\", \"Apr\", \"May\", \"Jun\", \"Jul\", \"Aug\", \"Sep\", \"Oct\", \"Nov\", \"Dec\"]";
-			DataMapper mapper = context.getBean(DataMapper.class);
-			return mapper.read(str, ArrayNode.class);
-		};
-		
+			return FrameworkHelper.defaultDataMapper().read(str, ArrayNode.class);
+		});
 		
 		// DAYS
-		public static final GridAdditional DAYS = context -> {
+		public static final GridAdditional DAYS = new GridAdditionalFromCollector(() -> {
 			String str = "[\"Sunday\", \"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"Saturday\", \"Sun\", \"Mon\", \"Tue\", \"Wed\", \"Thu\", \"Fri\", \"Sat\"]";
-			DataMapper mapper = context.getBean(DataMapper.class);
-			return mapper.read(str, ArrayNode.class);
-		};
+			return FrameworkHelper.defaultDataMapper().read(str, ArrayNode.class);
+		});
 		
 	}
 

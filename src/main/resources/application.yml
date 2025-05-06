@@ -282,7 +282,6 @@ config:
             encryptEnabled: true
       service:
          apiName: "TEMPLATE-MVC"
-         defaultDigest: "SHA-256"
          redisExpiry:
             unit: MINUTES
             accessNull: 2
@@ -294,6 +293,8 @@ config:
             appIdEnabled: true
             encryptEnabled: true
       token:
+         consumerTokenStorageIndex: 1
+         useApiTokenInProcessor: true
          processorJwtParam:
             secret: "77ea06ac-808b-4399-895c-a546b033d533"
             digest: "SHA-256"

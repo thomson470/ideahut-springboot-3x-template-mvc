@@ -28,6 +28,9 @@ import net.ideahut.springboot.task.TaskProperties;
 @Getter
 public class AppProperties {
 	
+	// Base URL untuk diakses public
+	private String publicBaseUrl;
+	
 	// Tunggu semua bean selesai saat reconfigure (service status menjadi ready)
 	private Boolean waitAllBeanConfigured;
 	

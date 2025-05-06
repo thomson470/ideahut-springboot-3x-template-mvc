@@ -8,8 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.util.Assert;
 
 import net.ideahut.springboot.api.ApiAccess;
-import net.ideahut.springboot.api.WebMvcApiService;
-import net.ideahut.springboot.context.RequestContext;
+import net.ideahut.springboot.api.ApiService;
 import net.ideahut.springboot.crud.CrudAction;
 import net.ideahut.springboot.crud.CrudHandler;
 import net.ideahut.springboot.crud.CrudHandlerImpl;
@@ -78,7 +77,7 @@ class CrudConfig {
 	CrudResource crudResource(
 		AppProperties appProperties,
 		EntityTrxManager entityTrxManager,
-		WebMvcApiService apiService
+		ApiService apiService
 	) {
 		CrudDefinition crud = ObjectHelper.useOrDefault(
 			appProperties.getCrud(), 
@@ -89,7 +88,7 @@ class CrudConfig {
 			 // - Parameter manager yang didefinisikan di CrudRequest tidak akan digunakan, karena sudah ada di table
 			 // - Parameter name = crudCode
 			return (manager, name) -> {
-				ApiAccess apiAccess = RequestContext.currentContext().getAttribute(ApiAccess.CONTEXT);
+				ApiAccess apiAccess = ApiAccess.fromContext();
 				CrudProperties properties = apiService.getApiCrudProperties(apiAccess, name);
 				Assert.notNull(properties, "CrudProperties is not found: " + name);
 				return properties;

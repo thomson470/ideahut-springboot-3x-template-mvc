@@ -23,11 +23,13 @@ import net.ideahut.springboot.security.SecurityCredential;
 import net.ideahut.springboot.security.WebMvcSecurity;
 import net.ideahut.springboot.template.AppConstants;
 import net.ideahut.springboot.template.Application;
+import net.ideahut.springboot.template.properties.AppProperties;
 
 @Component
 @ComponentScan
 class RequestHandlerInterceptor extends WebMvcHandlerInterceptor {
 	
+	private final AppProperties appProperties;
 	private final AdminHandler adminHandler;
 	private final WebMvcSecurity adminSecurity;
 	private final SecurityCredential adminCredential;
@@ -41,6 +43,7 @@ class RequestHandlerInterceptor extends WebMvcHandlerInterceptor {
 	
 	@Autowired
 	RequestHandlerInterceptor(
+		AppProperties appProperties,
 		AdminHandler adminHandler,
 		@Qualifier(AppConstants.Bean.Security.ADMIN)
 		WebMvcSecurity adminSecurity,
@@ -48,6 +51,7 @@ class RequestHandlerInterceptor extends WebMvcHandlerInterceptor {
 		SecurityCredential adminCredential,
 		WebMvcApiService apiService
 	) {
+		this.appProperties = appProperties;
 		this.adminHandler = adminHandler;
 		this.adminSecurity = adminSecurity;
 		this.adminCredential = adminCredential;
@@ -58,6 +62,11 @@ class RequestHandlerInterceptor extends WebMvcHandlerInterceptor {
 	protected boolean isReady() {
 		return Application.isReady();
 	}
+	
+	@Override
+	protected String publicBaseUrl() {
+		return appProperties.getPublicBaseUrl();
+	}
 
 	@Override
 	protected String publicAuditor() {
@@ -67,11 +76,6 @@ class RequestHandlerInterceptor extends WebMvcHandlerInterceptor {
 	@Override
 	protected String publicApiRole() {
 		return AppConstants.Default.API_ROLE;
-	}
-	
-	@Override
-	protected String publicBaseUrl() {
-		return null;
 	}
 	
 	@Override
@@ -107,9 +111,11 @@ class RequestHandlerInterceptor extends WebMvcHandlerInterceptor {
 			}
 		}
 		String auditor = apiAuditor(apiAccess);
-		AuditInfo.context().setAuditor(auditor);
-		RequestContext.currentContext().setAttribute(ApiAccess.CONTEXT, apiAccess);
+		AuditInfo.fromContext().setAuditor(auditor);
+		RequestContext.currentContext()
+		.setAttribute(ApiRequest.class, apiRequest)
+		.setAttribute(ApiAccess.class, apiAccess);
 		return true;
-	}
+	}	
 	
 }

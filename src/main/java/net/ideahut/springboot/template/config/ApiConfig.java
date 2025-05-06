@@ -7,8 +7,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import net.ideahut.springboot.api.ApiAccessInternalService;
 import net.ideahut.springboot.api.ApiConfigHelper;
-import net.ideahut.springboot.api.ApiConsumerService;
-import net.ideahut.springboot.api.ApiConsumerServiceImpl;
 import net.ideahut.springboot.api.ApiHandler;
 import net.ideahut.springboot.api.ApiHandlerImpl;
 import net.ideahut.springboot.api.ApiTokenService;
@@ -22,6 +20,7 @@ import net.ideahut.springboot.mapper.DataMapper;
 import net.ideahut.springboot.redis.RedisParam;
 import net.ideahut.springboot.rest.RestHandler;
 import net.ideahut.springboot.serializer.BinarySerializer;
+import net.ideahut.springboot.sysparam.SysParamHandler;
 import net.ideahut.springboot.task.TaskHandler;
 import net.ideahut.springboot.template.AppConstants;
 import net.ideahut.springboot.template.properties.AppProperties;
@@ -143,12 +142,6 @@ class ApiConfig {
 		// Serialize & deserialize byte array ke redis
 		.setBinarySerializer(binarySerializer)
 		
-		// index redisTemplate untuk meyimpan consumer token jika menggunakan MultipleRedisTemplate
-		.setConsumerTokenIndex(null)
-		
-		// Default digest jika tidak didefinisikan di konfigurasi consumer & processor
-		.setDefaultDigest(service.getDefaultDigest())
-		
 		// Custom Header name
 		.setHeaderName(null)
 		
@@ -172,7 +165,8 @@ class ApiConfig {
 	@Bean
 	ApiTokenService apiTokenService(
 		AppProperties appProperties,
-		DataMapper dataMapper
+		DataMapper dataMapper,
+		SysParamHandler sysParamHandler
 	) {
 		ApiDefinition.Token token = ObjectHelper.callOrElse(
 			appProperties.getApi() != null && appProperties.getApi().getToken() != null, 
@@ -181,8 +175,14 @@ class ApiConfig {
 		);
 		return new ApiTokenServiceImpl()
 		
+		// Secara default sudah ada, diperlukan untuk mendapatkan ApiToken custom		
+		.setApiTokenRetriever(null)
+		
 		// Default Consumer (komunikasi antar service) secret, digest , & expiry, jika tidak diset di database
 		.setConsumerJwtParam(token.getConsumerJwtParam())
+		
+		// index redisTemplate untuk meyimpan consumer token jika menggunakan MultipleRedisTemplate, default index 1
+		.setConsumerTokenStorageIndex(token.getConsumerTokenStorageIndex())
 		
 		// DataMapper
 		.setDataMapper(dataMapper)
@@ -192,7 +192,14 @@ class ApiConfig {
 		
 		// Batas atas & bawah timestamp signature yang dikirim
 		// Contoh: jika diset 1 menit, berarti signature yang dikirim valid jika timestamp client dalam range -+ 1 menit
-		.setSignatureTimeSpan(token.getSignatureTimeSpan());
+		.setSignatureTimeSpan(token.getSignatureTimeSpan())
+		
+		// Untuk menyimpan ApiToken di SysParam, sysCode = API_TOKEN, paramCode = [ApiName]
+		.setSysParamHandler(sysParamHandler)
+		
+		// Pakai ApiToken di dalam ApiProcessor untuk request ke ApiSource lain, 
+		// jika false atau ApiToken tidak ada, maka akan digunakan Signature (berdasarkan secret dan digest) 
+		.setUseApiTokenInProcessor(token.getUseApiTokenInProcessor());
 	}
 	
 	
@@ -204,29 +211,6 @@ class ApiConfig {
 		AuthService authService
 	) {
 		return authService::getApiAccessForInternal;
-	}
-	
-	
-	/*
-	 * API CONSUMER SERVICE
-	 */
-	@Bean
-	ApiConsumerService apiConsumerService(
-		DataMapper dataMapper,
-		WebMvcApiService apiService
-	) {
-		return new ApiConsumerServiceImpl()
-				
-		// Untuk mendapatkan ApiAccess berdasarkan token ke Api Service lain
-		// Secara default sudah dihandle, fungsi ini diperlukan jika ada custom
-		// contoh jika request menggunakan SSL certificate, atau custom header
-		.setApiConsumerTokenGetter(null)
-		
-		// Api Service
-		.setApiService(apiService)
-		
-		// Data Mapper
-		.setDataMapper(dataMapper);
 	}
 	
 }

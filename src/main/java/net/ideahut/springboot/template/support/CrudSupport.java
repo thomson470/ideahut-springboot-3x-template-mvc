@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.ideahut.springboot.api.ApiAccess;
-import net.ideahut.springboot.api.ApiUser;
-import net.ideahut.springboot.context.RequestContext;
 import net.ideahut.springboot.crud.CrudSpecific;
 
 public class CrudSupport {
@@ -20,7 +18,8 @@ private CrudSupport() {}
 		specifics.put("APP_ID", StaticSpecific.APP_ID);
 		specifics.put("APP_ROLE", StaticSpecific.APP_ROLE);
 		specifics.put("USER_ID", StaticSpecific.USER_ID);
-		specifics.put("USER_ROLE", StaticSpecific.USER_ROLE);
+		specifics.put("USER_NAME", StaticSpecific.USER_NAME);
+		specifics.put("API_ROLE", StaticSpecific.API_ROLE);
 		return specifics;
 	}
 	
@@ -28,40 +27,28 @@ private CrudSupport() {}
 		private StaticSpecific() {}
 		
 		// APP_ID
-		private static final CrudSpecific APP_ID = context -> {
-			ApiAccess access = RequestContext.currentContext().getAttribute(ApiAccess.CONTEXT);
-			if (access != null) {
-				return access.getAttribute(String.class, ApiAccess.Attribute.APP_ID);
-			}
-			return null;
-		};
+		private static final CrudSpecific APP_ID = context ->
+			ApiAccess.fromContext().getAttribute(String.class, ApiAccess.Attribute.APP_ID);
 		
 		// APP_ROLE
-		private static final CrudSpecific APP_ROLE = context -> {
-			ApiAccess access = RequestContext.currentContext().getAttribute(ApiAccess.CONTEXT);
-			if (access != null) {
-				return access.getAttribute(String.class, ApiAccess.Attribute.APP_ROLE);
-			}
-			return null;
-		};
-		
-		// USER ROLE
-		private static final CrudSpecific USER_ROLE = context -> {
-			ApiAccess access = RequestContext.currentContext().getAttribute(ApiAccess.CONTEXT);
-			if (access != null) {
-				return access.getApiUser() != null ? access.getApiUser().getAttribute(String.class, ApiUser.Attribute.ROLE) : null;
-			}
-			return null;
-		};
+		private static final CrudSpecific APP_ROLE = context ->
+			ApiAccess.fromContext().getAttribute(String.class, ApiAccess.Attribute.APP_ROLE);
 		
 		// USER ID
 		private static final CrudSpecific USER_ID = context -> {
-			ApiAccess access = RequestContext.currentContext().getAttribute(ApiAccess.CONTEXT);
-			if (access != null) {
-				return access.getApiUser() != null ? access.getApiUser().getId() : null;
-			}
-			return null;
+			ApiAccess access = ApiAccess.fromContext();
+			return access.getApiUser() != null ? access.getApiUser().getId() : null;
 		};
+		
+		// USER NAME
+		private static final CrudSpecific USER_NAME = context -> {
+			ApiAccess access = ApiAccess.fromContext();
+			return access.getApiUser() != null ? access.getApiUser().getUsername() : null;
+		};
+		
+		// API_ROLE
+		private static final CrudSpecific API_ROLE = context -> ApiAccess.fromContext().getApiRole();
+		
 	}
 	
 }
