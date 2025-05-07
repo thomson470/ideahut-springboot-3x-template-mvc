@@ -17,8 +17,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import net.ideahut.springboot.annotation.Public;
 import net.ideahut.springboot.crud.CrudAction;
 import net.ideahut.springboot.crud.CrudHandler;
+import net.ideahut.springboot.crud.CrudInput;
 import net.ideahut.springboot.crud.CrudPermission;
-import net.ideahut.springboot.helper.ObjectHelper;
+import net.ideahut.springboot.helper.StringHelper;
 import net.ideahut.springboot.helper.WebMvcHelper;
 import net.ideahut.springboot.object.Page;
 import net.ideahut.springboot.object.Result;
@@ -102,14 +103,17 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 	/*
 	 * OBJECT (CrudAction.SINGLE)
 	 */
-	@Override
 	@GetMapping(value = "/rest/{name}/{id}")
 	protected Result object(
 		@PathVariable("name") String name, 
 		@PathVariable("id") String id,
 		@RequestParam(value = "manager", required = false) String manager
 	) {
-		return super.object(manager, name, id);
+		CrudInput input = new CrudInput()
+		.setManager(manager)
+		.setName(name)
+		.setId(id);
+		return super.object(input);
 	}
 	
 	
@@ -127,12 +131,21 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 		@RequestParam(value = "filters", required = false) String filters,
 		@RequestParam(value = "orders", required = false) String orders,
 		@RequestParam(value = "fields", required = false) String fields,
+		@RequestParam(value = "excludes", required = false) String excludes,
 		@RequestParam(value = "loads", required = false) String loads		
 	) {
-		String scount = ObjectHelper.useOrDefault(count, "").trim().toLowerCase();
-		Boolean pcount = "1".equals(scount) || "true".equals(scount);
-		Page page = Page.of(index, size, pcount);
-		return super.collection(manager, name, page, filters, orders, fields, loads);
+		Boolean pgcount = StringHelper.valueOf(Boolean.class, count, Boolean.FALSE);
+		Page page = Page.of(index, size, pgcount);
+		CrudInput input = new CrudInput()
+		.setManager(manager)
+		.setName(name)
+		.setPage(page)
+		.setFilters(filters)
+		.setOrders(orders)
+		.setFields(fields)
+		.setExcludes(excludes)
+		.setLoads(loads);
+		return super.collection(input);
 	}
 	
 	
@@ -148,7 +161,12 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 		HttpServletRequest httpRequest
 	) throws Exception {
 		byte[] data = WebMvcHelper.getBodyAsBytes(httpRequest);
-		return super.create(manager, name, value, data);
+		CrudInput input = new CrudInput()
+		.setManager(manager)
+		.setName(name)
+		.setValue(value)
+		.setData(data);
+		return super.create(input);
 	}
 	
 	
@@ -165,7 +183,13 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 		HttpServletRequest httpRequest
 	) throws Exception {
 		byte[] data = WebMvcHelper.getBodyAsBytes(httpRequest);
-		return super.update(manager, name, id, value, data);
+		CrudInput input = new CrudInput()
+		.setManager(manager)
+		.setName(name)
+		.setId(id)
+		.setValue(value)
+		.setData(data);
+		return super.update(input);
 	}
 	
 	
@@ -174,14 +198,17 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 	/*
 	 * DELETE 
 	 */
-	@Override
 	@DeleteMapping(value = "/rest/{name}/{id}")
 	protected Result delete(
 		@PathVariable("name") String name,
 		@PathVariable("id") String id,
 		@RequestParam(value = "manager", required = false) String manager
 	) {
-		return super.delete(manager, name, id);
+		CrudInput input = new CrudInput()
+		.setManager(manager)
+		.setName(name)
+		.setId(id);
+		return super.delete(input);
 	}
 
 	
