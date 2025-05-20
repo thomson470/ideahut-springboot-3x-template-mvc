@@ -137,7 +137,7 @@ class AuthServiceImpl implements AuthService, BeanConfigure<AuthService> {
 		// set appid
 		.setAttribute(ApiAccess.Attribute.APP_ID, apiService.getApiName());
 		if (isJwtType && isJwtCheck) {
-			apiAccess.setAttribute(ApiAccess.Attribute.CHECK, "true");
+			apiAccess.setAttribute("check", "true");
 		}
 		
 		ApiParameter apiParameter = new ApiParameter()
