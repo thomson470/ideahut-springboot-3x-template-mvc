@@ -1,0 +1,70 @@
+{
+    "app": {
+        "title": "Ideahut"
+    },
+    "error": {
+        "required": "#0# harus diisi",
+        "invalid": "#0# tidak valid valid",
+        "not_available": "#0# tidak tersedia",
+        "fill_required": "Wajib diisi",
+        "fill_email": "Email tidak benar",
+        "fill_with_numbers": "#0# harus diisi dengan angka",
+        "fill_with_email": "#0# harus diisi dengan email",
+        "fill_with_length": "#0# harus diisi #1# karakter",
+        "fill_with_maxlength": "#0# harus diisi maksimum #1# karakter",
+        "fill_with_minlength": "#0# harus diisi minimal #1# karakter",
+        "page_not_found": "Oops. Laman tidak tersedia...",
+        "data_not_available": "Data tidak tersedia"
+    },
+    "confirm": {
+    	"logout": "Anda yakin mau keluar ?",
+        "delete": "Apakah Anda yakin ingin menghapus ?",
+        "continue": "Lanjut ?"
+    },
+    "login": {
+        "title": "Login",
+        "button": "Login",
+        "email": "Email",
+        "password": "Password",
+        "forgot_password": "Lupa Password ?",
+        "passcode": "Kode",
+        "passcode_sent": "Sistem sudah mengirim Kode Lupa Password ke email anda.",
+        "new_password": "Password Baru",
+        "saved_successfully": "Password baru berhasil disimpan."
+    },
+    "menu": {
+        "title": "Menu",
+        "login": "Masuk",
+        "logout": "Keluar",
+        "light_mode": "Mode Terang",
+        "dark_mode": "Mode Gelap",
+        "language": {
+            "label": "Bahasa",
+            "tooltip": "Bahasa"
+        }
+    },
+    "label": {
+        "cancel": "Batal",
+        "continue": "Lanjut",
+        "save": "Simpan",
+        "edit": "Ubah",
+        "new": "Baru",
+        "view": "Lihat",
+        "date": "Tanggal",
+        "time": "Waktu",
+        "ok": "Oke",
+        "search": "Pencarian",
+        "reset": "Reset",
+        "filter": "Filter",
+        "delete": "Hapus",
+        "select": "Pilih",
+        "reload": "Muat Ulang",
+        "success_reload": "#0# berhasil dimuat ulang",
+        "reloading_by_other": "#0# sedang dimuat ulang oleh pengguna lain",
+        "close": "Tutup",
+        "previous": "Sebelumnya",
+        "next": "Berikutnya",
+        "refresh": "Segarkan",
+        "update": "Perbaharui"
+    }
+}

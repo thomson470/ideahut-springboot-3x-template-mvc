@@ -1,0 +1,48 @@
+spring:
+    h2:
+        # http://localhost:5401/h2-console
+        console.enabled: true
+    datasource:
+        driver-class-name: 'org.h2.Driver'
+        jdbc-url: 'jdbc:h2:file:'
+        username: ''
+        password: ''
+    #jpa:
+    #    properties:
+    #        hibernate:
+    #            dialect: 'org.hibernate.dialect.H2Dialect'
+        
+config:
+    audit:
+        datasource:
+            driver-class-name: 'org.h2.Driver'
+            jdbc-url: 'jdbc:h2:file:'
+            username: ''
+            password: ''
+        #jpa:
+        #    properties:
+        #        hibernate:
+        #            dialect: 'org.hibernate.dialect.H2Dialect'
+        
+other:
+    trxManager:
+        second:
+            datasource:
+                driver-class-name: 'org.h2.Driver'
+                jdbc-url: 'jdbc:h2:file:'
+                username: ''
+                password: ''
+            #jpa:
+            #    properties:
+            #        hibernate:
+            #            dialect: 'org.hibernate.dialect.H2Dialect'
+            audit:
+                datasource:
+                    driver-class-name: 'org.h2.Driver'
+                    jdbc-url: 'jdbc:h2:file:'
+                    username: ''
+                    password: ''
+                #jpa:
+                #    properties:
+                #        hibernate:
+                #            dialect: 'org.hibernate.dialect.H2Dialect'
