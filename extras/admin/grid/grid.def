@@ -1,0 +1,36 @@
+###
+### GRID DEFINITION
+### Semua template grid yang di-scan akan dikumpulkan berdasarkan nama foldernya
+### Untuk mengatur tampilan di Web Admin bisa mengedit:
+### - title: judul yang akan ditampilkan
+### - order: urutan di menu Web Admin
+### - disabled: flag untuk tampil atau tidak
+### - excludes: array tempate grid yang tidak ditampilkan 
+###
+parents:
+   -
+      name: api
+      title: Api
+      order: 2
+   -
+      name: explore
+      title: Explore
+      order: 5
+   -
+      name: main
+      title: Main
+      order: 4
+   -
+      name: job
+      title: Job
+      order: 3
+      excludes:
+          - JobTrigger
+   -
+      name: system
+      title: System
+      order: 1
+      #disable: true
+      #excludes:
+      #- "SysParam"
+      #- "SysConfig"

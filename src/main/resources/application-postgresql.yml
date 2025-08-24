@@ -1,0 +1,55 @@
+spring:
+    datasource:
+        driver-class-name: 'org.postgresql.Driver'
+        jdbc-url: 'jdbc:postgresql:'
+        username: ''
+        password: ''
+    jpa:
+        properties:
+            hibernate:
+                #dialect: 'org.hibernate.dialect.PostgreSQLDialect'
+                jdbc:
+                    lob:
+                        non_contextual_creation: true
+config:
+    audit:
+        datasource:
+            driver-class-name: 'org.postgresql.Driver'
+            jdbc-url: 'jdbc:postgresql:'
+            username: ''
+            password: ''
+        jpa:
+            properties:
+                hibernate:
+                    #dialect: 'org.hibernate.dialect.PostgreSQLDialect'
+                    jdbc:
+                        lob:
+                            non_contextual_creation: true
+other:
+    trxManager:
+        second:
+            datasource:
+                driver-class-name: 'org.postgresql.Driver'
+                jdbc-url: 'jdbc:postgresql:'
+                username: ''
+                password: ''
+            jpa:
+                properties:
+                    hibernate:
+                        #dialect: 'org.hibernate.dialect.PostgreSQLDialect'
+                        jdbc:
+                            lob:
+                                non_contextual_creation: true
+            audit:
+                datasource:
+                    driver-class-name: 'org.postgresql.Driver'
+                    jdbc-url: 'jdbc:postgresql:'
+                    username: ''
+                    password: ''
+                    jpa:
+                        properties:
+                            hibernate:
+                                #dialect: 'org.hibernate.dialect.PostgreSQLDialect'
+                                jdbc:
+                                    lob:
+                                        non_contextual_creation: true
