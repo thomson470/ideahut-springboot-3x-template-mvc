@@ -1,0 +1,29 @@
+spring:
+    datasource:
+        driver-class-name: 'com.ibm.db2.jcc.DB2Driver'
+        jdbc-url: 'jdbc:db2:'
+        username: ''
+        password: ''
+
+config:
+    audit:
+        datasource:
+            driver-class-name: 'com.ibm.db2.jcc.DB2Driver'
+            jdbc-url: 'jdbc:db2:'
+            username: ''
+            password: ''
+
+other:
+    trxManager:
+        second:
+            datasource:
+                driver-class-name: 'com.ibm.db2.jcc.DB2Driver'
+                jdbc-url: 'jdbc:db2:'
+                username: ''
+                password: ''
+            audit:
+                datasource:
+                    driver-class-name: 'com.ibm.db2.jcc.DB2Driver'
+                    jdbc-url: 'jdbc:db2:'
+                    username: ''
+                    password: ''

@@ -1,0 +1,37 @@
+
+VIEWER:
+   reload:
+      enable: false
+   redis:
+      flushDb: false
+      flushAll: false
+      items:
+   cache:
+      single:
+         delete: false
+         clear: false
+         items:
+      group:
+         delete: false
+         clear: false
+         items:
+   grid:
+      actions:
+         - PAGE
+      items:
+         #system:
+         #   SysParam:
+         #      - PAGE
+         #      - UPDATE
+   kafka:
+      senderControl: false
+      containerControl: false
+      groupDelete: false
+   scheduler:
+      control: false
+      resetRunning: false
+      resetLocking: false
+      pause: false
+      schedule: false
+      trigger: false
+ 

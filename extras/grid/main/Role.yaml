@@ -1,0 +1,144 @@
+name: Role
+title: Role
+crud:
+    name: Role
+id:
+    type: STANDARD
+    fields:
+        - roleCode
+table:
+    separator: cell
+    selection: single
+    page:
+        options:
+            - 5
+            - 10
+            - 15
+            - 20
+            - 25
+            - 30
+            - 50
+        default: 20
+        count: false
+    order:
+        field: createdOn
+        descending: true
+    filters:
+        -
+            name: roleCode
+            label: Code
+            type: text
+            condition: ANY_LIKE
+        -
+            name: name
+            label: Name
+            type: text
+            condition: ANY_LIKE
+        -
+            name: isAdmin
+            label: IsAdmin
+            type: option
+            option: YES_NO
+            condition: EQUAL
+        -
+            name: isActive
+            label: IsActive
+            type: option
+            option: YES_NO
+            condition: EQUAL
+    visibles:
+        - roleCode
+        - name
+        - isAdmin
+        - isActive
+        - updatedOn
+        - createdOn
+    columns:
+        -
+            name: roleCode
+            label: Code
+            field: roleCode
+            align: left
+            sortable: true
+        -
+            name: name
+            label: Name
+            field: name
+            align: left
+            sortable: true
+        -
+            name: isAdmin
+            label: IsAdmin
+            field: isAdmin
+            align: left
+            sortable: true
+            format: >-
+                function(val, row) { return $h.grid.option(val, row, 'YES_NO'); }
+        -
+            name: isActive
+            label: IsActive
+            field: isActive
+            align: left
+            sortable: true
+            format: >-
+                function(val, row) { return $h.grid.option(val, row, 'YES_NO'); }
+        -
+            name: updatedOn
+            label: UpdatedOn
+            field: updatedOn
+            align: left
+            sortable: true
+            format: 'function(val, row) { return $h.grid.date(val, row); }'
+        -
+            name: createdOn
+            label: CreatedOn
+            field: createdOn
+            align: left
+            sortable: true
+            format: 'function(val, row) { return $h.grid.date(val, row); }'
+fields:
+    -
+        name: roleCode
+        label: Code
+        type: text
+        nullable: false
+        insertable: true
+        editable: false
+        validations:
+            - required
+            - 'maxlength:64'
+    -
+        name: name
+        label: Name
+        type: text
+        nullable: false
+        insertable: true
+        editable: true
+        validations:
+            - required
+            - 'maxlength:255'
+    -
+        name: isAdmin
+        label: IsAdmin
+        type: option
+        option: YES_NO
+        nullable: false
+        insertable: true
+        editable: true
+        validations:
+            - required
+    -
+        name: isActive
+        label: IsActive
+        type: option
+        option: YES_NO
+        nullable: false
+        insertable: true
+        editable: true
+        validations:
+            - required
+options:
+    - YES_NO
+additionals:
+    - MONTHS
+    - DAYS

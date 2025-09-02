@@ -1,0 +1,162 @@
+order: 2
+name: Language
+title: Language
+crud:
+    name: net.ideahut.springboot.message.entity.Language
+id:
+    type: STANDARD
+    fields:
+        - languageCode
+table:
+    separator: cell
+    selection: single
+    page:
+        options: [5, 10, 15, 20, 25, 30, 50]
+        default: 20
+        count: false
+    order:
+        field: createdOn
+        descending: true
+    filters:
+        -
+            name: languageCode
+            label: Code
+            type: text
+            condition: ANY_LIKE
+        -
+            name: name
+            label: Name
+            type: text
+            condition: ANY_LIKE
+        -
+            name: isActive
+            label: Active
+            type: option
+            option: YES_NO
+            condition: EQUAL
+    visibles:
+        - languageCode
+        - name
+        - isActive
+        - seqno
+        - updatedOn
+        - createdOn
+    columns:
+        -
+            name: languageCode
+            label: Code
+            field: languageCode
+            align: left
+            sortable: true
+        -
+            name: name
+            label: Name
+            field: name
+            align: left
+            sortable: true
+        -
+            name: isActive
+            label: Active
+            field: isActive
+            align: left
+            sortable: true
+            format: >-
+                function(val, row) { return $h.grid.option(val, row, 'YES_NO'); }
+        -
+            name: seqno
+            label: SeqNo
+            field: seqno
+            align: right
+            sortable: true
+        -
+            name: icon
+            label: Icon
+            field: icon
+            align: left
+            sortable: true
+        -
+            name: description
+            label: Description
+            field: description
+            align: left
+            sortable: true
+        -
+            name: updatedOn
+            label: UpdatedOn
+            field: updatedOn
+            align: center
+            sortable: true
+            format: >-
+                function(val, row) { return $h.grid.date(val, row); }
+        -
+            name: createdOn
+            label: CreatedOn
+            field: createdOn
+            align: center
+            sortable: true
+            format: >-
+                function(val, row) { return $h.grid.date(val, row); }
+fields:
+    -
+        name: languageCode
+        label: Code
+        type: text
+        nullable: false
+        insertable: true
+        editable: false
+        validations:
+            - required
+            - 'maxlength:8'
+    -
+        name: name
+        label: Name
+        type: text
+        nullable: false
+        insertable: true
+        editable: true
+        validations:
+            - required
+            - 'maxlength:128'
+    -
+        name: isActive
+        label: Active
+        type: option
+        option: YES_NO
+        nullable: false
+        insertable: true
+        editable: true
+        validations:
+            - required
+            - 'maxlength:1'
+    -
+        name: seqno
+        label: SeqNo
+        type: number
+        nullable: true
+        insertable: true
+        editable: true
+        validations:
+            - number
+    -
+        name: icon
+        label: Icon
+        type: text
+        nullable: true
+        insertable: true
+        editable: true
+        validations:
+            - 'maxlength:1024'
+    -
+        name: description
+        label: Description
+        type: words
+        nullable: true
+        insertable: true
+        editable: true
+        validations:
+            - 'maxlength:1024'
+options:
+    - YES_NO
+additionals:
+    - MONTHS
+    - DAYS

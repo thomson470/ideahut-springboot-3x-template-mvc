@@ -1,0 +1,525 @@
+name: Menu
+title: Menu
+crud:
+    name: Menu
+    joins:
+        -
+            name: Menu
+            store: parent
+            match: contain
+            relations:
+                -
+                    source: parent
+                    target: id
+id:
+    type: EMBEDDED
+    fields:
+        - id
+    members:
+        - menuCode
+        - menuType
+table:
+    separator: horizontal
+    selection: single
+    page:
+        options:
+            - 5
+            - 10
+            - 15
+            - 20
+            - 25
+            - 30
+            - 50
+        default: 20
+        count: false
+    order:
+        field: createdOn
+        descending: true
+    filters:
+        -
+            name: id.menuType
+            label: Type
+            type: option
+            option: MENU_TYPE
+            condition: EQUAL
+        -
+            name: id.menuCode
+            label: Code
+            type: text
+            condition: ANY_LIKE
+        -
+            name: title
+            label: Title
+            type: text
+            condition: ANY_LIKE
+        -
+            name: isActive
+            label: IsActive
+            type: option
+            option: YES_NO
+            condition: EQUAL
+    visibles:
+        - id.menuType
+        - id.menuCode
+        - title
+        - link
+        - icon
+        - isActive
+        - seqno
+        - parent
+        - updatedOn
+        - createdOn
+    columns:
+        -
+            name: id.menuType
+            label: Type
+            field: id
+            align: left
+            sortable: true
+            format: >-
+                function(val, row) { return $h.grid.option(val, row, 'MENU_TYPE', 'menuType'); }
+        -
+            name: id.menuCode
+            label: Code
+            field: id
+            align: left
+            sortable: true
+            format: >-
+                function(val, row) { return $h.grid.field(val, 'menuCode'); }
+        -
+            name: title
+            label: Title
+            field: title
+            align: left
+            sortable: true
+        -
+            name: link
+            label: Link
+            field: link
+            align: left
+            sortable: true
+        -
+            name: icon
+            label: Icon
+            field: icon
+            align: left
+            sortable: true
+        -
+            name: isActive
+            label: IsActive
+            field: isActive
+            align: center
+            sortable: true
+            format: >-
+                function(val, row) { return $h.grid.option(val, row, 'YES_NO'); }
+        -
+            name: seqno
+            label: Seqno
+            field: seqno
+            align: right
+            sortable: true
+        -
+            name: parent
+            label: Parent
+            field: parent
+            align: left
+            sortable: true
+            format: >-
+                function(val, row) { try { if(val) { return val.id.menuType + ' - ' + val.id.menuCode } else { return '' }; } catch(e) { return val; } }
+        -
+            name: description
+            label: Description
+            field: description
+            align: left
+            sortable: true
+        -
+            name: updatedOn
+            label: UpdatedOn
+            field: updatedOn
+            align: left
+            sortable: true
+            format: 'function(val, row) { return $h.grid.date(val, row); }'
+        -
+            name: createdOn
+            label: CreatedOn
+            field: createdOn
+            align: left
+            sortable: true
+            format: 'function(val, row) { return $h.grid.date(val, row); }'
+fields:
+    -
+        name: id.menuType
+        label: Type
+        type: option
+        option: MENU_TYPE
+        nullable: false
+        insertable: true
+        editable: false
+        validations:
+            - required
+    -
+        name: id.menuCode
+        label: Code
+        type: text
+        nullable: true
+        insertable: true
+        editable: false
+        validations:
+            - required
+    -
+        name: title
+        label: Title
+        type: text
+        nullable: false
+        insertable: true
+        editable: true
+        validations:
+            - required
+    -
+        name: link
+        label: Link
+        type: text
+        nullable: true
+        insertable: true
+        editable: true
+    -
+        name: icon
+        label: Icon
+        type: text
+        nullable: true
+        insertable: true
+        editable: true
+    -
+        name: isActive
+        label: IsActive
+        type: option
+        option: YES_NO
+        nullable: false
+        insertable: true
+        editable: true
+        validations:
+            - required
+    -
+        name: seqno
+        label: Seqno
+        type: number
+        nullable: false
+        insertable: true
+        editable: true
+        validations:
+            - required
+    -
+        name: description
+        label: Description
+        type: words
+        nullable: true
+        insertable: true
+        editable: true
+    -
+        name: parent
+        label: Parent
+        type: pick
+        pick: parent
+        nullable: true
+        insertable: true
+        editable: true
+        format: >-
+            function(val, row) { try { if(val) { return val.id.menuType + ' - '
+            + val.id.menuCode; } else { return ''; } } catch(e) { return val; }
+            }
+children:
+    -
+        title: Role
+        crud:
+            name: MenuRole
+            joins:
+                -
+                    name: Role
+                    store: role
+                    match: contain
+                    relations:
+                        -
+                            source: id.roleCode
+                            target: roleCode
+                -
+                    name: Menu
+                    store: menu
+                    match: contain
+                    relations:
+                        -
+                            source: id.menuType
+                            target: id.menuType
+                        -
+                            source: id.menuCode
+                            target: id.menuCode
+        id:
+            type: EMBEDDED
+            fields:
+                - id
+            members:
+                - menuCode
+                - menuType
+                - roleCode
+        relations:
+            -
+                target: id.menuType
+                source: id.menuType
+            -
+                target: id.menuCode
+                source: id.menuCode
+        labels:
+            -
+                title: Type
+                value: id.menuType
+            -
+                title: Code
+                value: id.menuCode
+            -
+                title: Title
+                value: title
+        table:
+            separator: vertical
+            selection: single
+            page:
+                options:
+                    - 5
+                    - 10
+                    - 15
+                    - 20
+                    - 25
+                    - 30
+                    - 50
+                default: 20
+                count: false
+            order:
+                field: createdOn
+                descending: true
+            filters:
+                -
+                    name: id.roleCode
+                    label: Role
+                    type: text
+                    condition: ANY_LIKE
+            visibles:
+                - id.roleCode
+                - role.name
+            columns:
+                -
+                    name: id.roleCode
+                    label: Code
+                    field: role
+                    align: left
+                    sortable: true
+                    format: >-
+                        function(val, row) { return $h.grid.field(val, 'roleCode'); }
+                -
+                    name: role.name
+                    label: Name
+                    field: role
+                    align: left
+                    format: >-
+                        function(val, row) { return $h.grid.field(val, 'name'); }
+                -
+                    name: updatedOn
+                    label: UpdatedOn
+                    field: updatedOn
+                    align: left
+                    sortable: true
+                    format: 'function(val, row) { return $h.grid.date(val, row); }'
+                -
+                    name: createdOn
+                    label: CreatedOn
+                    field: createdOn
+                    align: left
+                    sortable: true
+                    format: 'function(val, row) { return $h.grid.date(val, row); }'
+        fields:
+            -
+                name: role
+                label: Role
+                type: pick
+                pick: role
+                nullable: false
+                insertable: true
+                editable: false
+                format: >-
+                    function(val, row) { return $h.grid.field(val, 'roleCode'); }
+                toValue: >-
+                    function(val) { try { return {'id.roleCode': val.roleCode};
+                    } catch(e) { return null; } }
+                validations:
+                    - required
+picks:
+    parent:
+        title: Parent
+        crud:
+            name: Menu
+            filters:
+                -
+                    field: parent
+                    condition: IS_NULL
+        id:
+            type: EMBEDDED
+            fields:
+                - id
+            members:
+                - menuCode
+                - menuType
+        table:
+            separator: horizontal
+            selection: single
+            page:
+                options:
+                    - 5
+                    - 10
+                    - 15
+                    - 20
+                    - 25
+                default: 10
+                count: false
+            order:
+                field: createdOn
+                descending: true
+            filters:
+                -
+                    name: id.menuType
+                    label: Type
+                    type: option
+                    option: MENU_TYPE
+                    condition: EQUAL
+                -
+                    name: id.menuCode
+                    label: Code
+                    type: text
+                    condition: ANY_LIKE
+                -
+                    name: title
+                    label: Title
+                    type: text
+                    condition: ANY_LIKE
+            visibles:
+                - id.menuType
+                - id.menuCode
+                - title
+            columns:
+                -
+                    name: id.menuType
+                    label: Type
+                    field: id
+                    align: left
+                    sortable: true
+                    format: >-
+                       function(val, row) { return $h.grid.option(val, row, 'MENU_TYPE', 'menuType'); }
+                -
+                    name: id.menuCode
+                    label: Code
+                    field: id
+                    align: left
+                    sortable: true
+                    format: >-
+                        function(val, row) { return $h.grid.field(val, 'menuCode'); }
+                -
+                    name: title
+                    label: Title
+                    field: title
+                    align: left
+                    sortable: true
+                -
+                    name: updatedOn
+                    label: UpdatedOn
+                    field: updatedOn
+                    align: left
+                    sortable: true
+                    format: 'function(val, row) { return $h.grid.date(val, row); }'
+                -
+                    name: createdOn
+                    label: CreatedOn
+                    field: createdOn
+                    align: left
+                    sortable: true
+                    format: 'function(val, row) { return $h.grid.date(val, row); }'
+    role:
+        title: Role
+        crud:
+            name: Role
+        id:
+            type: STANDARD
+            fields:
+                - roleCode
+        table:
+            separator: horizontal
+            selection: single
+            page:
+                options:
+                    - 5
+                    - 10
+                    - 15
+                    - 20
+                    - 25
+                default: 10
+                count: false
+            order:
+                field: roleCode
+                descending: false
+            filters:
+                -
+                    name: roleCode
+                    label: Code
+                    type: text
+                    condition: ANY_LIKE
+                -
+                    name: name
+                    label: Name
+                    type: text
+                    condition: ANY_LIKE
+                -
+                    name: isAdmin
+                    label: IsAdmin
+                    type: option
+                    option: YES_NO
+                    condition: EQUAL
+            visibles:
+                - roleCode
+                - name
+                - isAdmin
+            columns:
+                -
+                    name: roleCode
+                    label: Code
+                    field: roleCode
+                    align: left
+                    sortable: true
+                -
+                    name: name
+                    label: Name
+                    field: name
+                    align: left
+                    sortable: true
+                -
+                    name: isAdmin
+                    label: IsAdmin
+                    field: isAdmin
+                    align: center
+                    sortable: true
+                    format: >-
+                        function(val, row) { return $h.grid.option(val, row, 'YES_NO'); }
+                -
+                    name: updatedOn
+                    label: UpdatedOn
+                    field: updatedOn
+                    align: left
+                    sortable: true
+                    format: 'function(val, row) { return $h.grid.date(val, row); }'
+                -
+                    name: createdOn
+                    label: CreatedOn
+                    field: createdOn
+                    align: left
+                    sortable: true
+                    format: 'function(val, row) { return $h.grid.date(val, row); }'
+options:
+    - YES_NO
+    - MENU_TYPE
+additionals:
+    - MONTHS
+    - DAYS

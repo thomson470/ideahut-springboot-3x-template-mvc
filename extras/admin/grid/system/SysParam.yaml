@@ -1,0 +1,125 @@
+order: 1
+name: SysParam
+title: SysParam
+crud:
+    name: net.ideahut.springboot.sysparam.entity.SysParam
+id:
+    type: COMPOSITE
+    fields:
+        - sysCode
+        - paramCode
+table:
+    separator: cell
+    selection: single
+    page:
+        options: [5, 10, 15, 20, 25, 30, 50]
+        default: 20
+        count: false
+    order:
+        field: createdOn
+        descending: true
+    filters:
+        -
+            name: sysCode
+            label: SysCode
+            type: text
+            condition: ANY_LIKE
+        -
+            name: paramCode
+            label: ParamCode
+            type: text
+            condition: ANY_LIKE
+        -
+            name: description
+            label: Description
+            type: text
+            condition: ANY_LIKE
+    visibles:
+        - sysCode
+        - paramCode
+        - value
+        - description
+        - updatedOn
+        - createdOn
+    columns:
+        -
+            name: sysCode
+            label: SysCode
+            field: sysCode
+            align: left
+            sortable: true
+        -
+            name: paramCode
+            label: ParamCode
+            field: paramCode
+            align: left
+            sortable: true
+        -
+            name: value
+            label: Value
+            field: value
+            align: left
+            sortable: true
+        -
+            name: description
+            label: Description
+            field: description
+            align: left
+            sortable: true
+        -
+            name: updatedOn
+            label: UpdatedOn
+            field: updatedOn
+            align: center
+            sortable: true
+            format: >-
+                function(val, row) { return $h.grid.date(val, row); }
+        -
+            name: createdOn
+            label: CreatedOn
+            field: createdOn
+            align: center
+            sortable: true
+            format: >-
+                function(val, row) { return $h.grid.date(val, row); }
+fields:
+    -
+        name: sysCode
+        label: SysCode
+        type: text
+        nullable: false
+        insertable: true
+        editable: false
+        validations:
+            - required
+            - 'maxlength:255'
+    -
+        name: paramCode
+        label: ParamCode
+        type: text
+        nullable: false
+        insertable: true
+        editable: false
+        validations:
+            - required
+            - 'maxlength:255'
+    -
+        name: value
+        label: Value
+        type: words
+        nullable: true
+        nullEmpty: true
+        insertable: true
+        editable: true
+    -
+        name: description
+        label: Description
+        type: words
+        nullable: true
+        insertable: true
+        editable: true
+        validations:
+            - 'maxlength:255'
+additionals:
+    - MONTHS
+    - DAYS

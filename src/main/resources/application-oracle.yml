@@ -1,0 +1,45 @@
+spring:
+    datasource:
+        driver-class-name: 'oracle.jdbc.OracleDriver'
+        jdbc-url: 'jdbc:oracle:thin:'
+        username: ''
+        password: ''
+    #jpa:
+    #    properties:
+    #        hibernate:
+    #            dialect: 'org.hibernate.dialect.Oracle12cDialect'
+
+config:
+    audit:
+        datasource:
+            driver-class-name: 'oracle.jdbc.OracleDriver'
+            jdbc-url: 'jdbc:oracle:thin:'
+            username: ''
+            password: ''
+        #jpa:
+        #    properties:
+        #        hibernate:
+        #            dialect: 'org.hibernate.dialect.Oracle12cDialect'
+
+other:
+    trxManager:
+        second:
+            datasource:
+                driver-class-name: 'oracle.jdbc.OracleDriver'
+                jdbc-url: 'jdbc:oracle:thin:'
+                username: ''
+                password: ''
+            #jpa:
+            #    properties:
+            #        hibernate:
+            #            dialect: 'org.hibernate.dialect.Oracle12cDialect'
+            audit:
+                datasource:
+                    driver-class-name: 'oracle.jdbc.OracleDriver'
+                    jdbc-url: 'jdbc:oracle:thin:'
+                    username: ''
+                    password: ''
+                #jpa:
+                #    properties:
+                #        hibernate:
+                #            dialect: 'org.hibernate.dialect.Oracle12cDialect'

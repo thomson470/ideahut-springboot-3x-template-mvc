@@ -1,0 +1,389 @@
+#
+# SERVER
+#
+server:
+    port: 5402
+debug: false
+
+#
+# SPRING
+#
+spring:
+    application:
+        name: ideahut-springboot-3x-template-mvc
+    quartz:
+        auto-startup: false
+    servlet:
+        multipart:
+            max-file-size: 256MB
+            max-request-size: 256MB
+    main:
+        banner-mode: 'off'
+        
+    #
+    # Ganti profile sesuai dengan database yang digunakan
+    #
+    profiles:
+        #active: "db2"
+        #active: "derby"
+        #active: "h2"
+        #active: "hsql"
+        #active: "mariadb"
+        active: "mysql"
+        #active: "oracle"
+        #active: "postgresql"
+        #active: "sqlserver"
+      
+    datasource:
+        hikari:
+            connection-timeout: '10000'
+            minimum-idle: '10'
+            maximum-pool-size: '10'
+            idle-timeout: '5000'
+            max-lifetime: '1000'
+            auto-commit: 'true'
+    jpa:
+        open-in-view: false
+        properties:
+            hibernate:
+                hbm2ddl:
+                    auto: update
+                show_sql: true
+                generate_statistics: true
+                audit_identifier: spring_sample_main
+                audit_bean_name: mainAuditSessionFactory
+
+#
+# CONFIG
+#
+config:
+    waitAllBeanConfigured: true
+    logAllError: true
+    autoStartScheduler: false
+    messagePath: 'file:{user.dir}/extras/message/'
+    reportPath: 'file:{user.dir}/extras/report/'
+    
+    #
+    # FILTER
+    #
+    filter:
+        traceEnable: true
+        enableTimeResult: true
+        corsHeaders:
+            Access-Control-Allow-Credentials: 'true'
+            Access-Control-Allow-Origin: '*'
+            Access-Control-Allow-Methods: '*'
+            Access-Control-Max-Age: '3600'
+            Access-Control-Allow-Headers: '*'
+            Access-Control-Expose-Headers: '*'
+    
+    #
+    # Model / Entity yang punya annotation @ForeignKeyEntity akan dieksekusi
+    # Beberapa database tidak support "... on update (CASCADE/SET_NULL)"
+    #
+    foreignKey:
+        enableExecution: true
+        dropBeforeCreate: true
+        onUpdateAction: true
+    
+    #
+    # REST
+    #
+    rest:
+        clientDestroyable: true
+        enableExecutionTime: true
+        enableRequestLimit: true
+        defaultRestClient:
+            # set false jika menggunakan proxy
+            noProxy: true
+            proxy:
+                # DIRECT / HTTP / SOCKS
+                type: DIRECT
+                port: null
+                username: null
+                password: null
+                authorization: null
+            followRedirects: true
+            timeout:
+                timeUnit: SECONDS
+                connect: 10
+                call: null
+                read: 30
+                write: null
+    
+    #
+    # AUDIT
+    #
+    audit:
+        useMultiTable: true
+        rejectNonAuditEntity: true
+        jpa:
+            properties:
+                hibernate:
+                    show_sql: true
+                    generate_statistics: true
+        properties:
+            generate:
+                table: true
+            enable:
+                audit: true
+            table:
+                prefix: _a_
+    
+    #
+    # TASK
+    #
+    task:
+        common:
+            threadNamePrefix: TASK-COMMON
+            corePoolSize: 2
+            maxPoolSize: 8
+            waitForJobsToCompleteOnShutdown: true
+            allowCoreThreadTimeOut: true
+        audit:
+            threadNamePrefix: TASK-AUDIT
+            corePoolSize: 2
+            maxPoolSize: 8
+            waitForJobsToCompleteOnShutdown: true
+            allowCoreThreadTimeOut: true
+        rest:
+            threadNamePrefix: TASK-REST
+            corePoolSize: 16
+            maxPoolSize: 1000
+            waitForJobsToCompleteOnShutdown: true
+            allowCoreThreadTimeOut: true
+        webAsync:
+            threadNamePrefix: WEB-ASYNC
+            corePoolSize: 8
+            maxPoolSize: 100
+            waitForJobsToCompleteOnShutdown: true
+            allowCoreThreadTimeOut: true
+    
+    #
+    # REDIS
+    #
+    redis:
+        common:
+            type: 0
+            standalone:
+                host: '<HOST>'
+                port: '<PORT>'
+                password: '<PASSWORD>'
+                database: 0
+    
+    #
+    # CACHE         
+    #
+    cache:
+        useLocalMemory: false
+        redisParam:
+            prefix: CACHE
+            appIdEnabled: true
+            encryptEnabled: true
+        groups:
+            -
+                name: TEST1
+                limit: 20
+                expiry:
+                    unit: SECONDS
+                    value: 3600
+                nullable: true
+            -
+                name: TEST2
+                limit: -1
+                expiry:
+                    unit: SECONDS
+                    value: 0
+                nullable: true
+    
+    #
+    # MAIL
+    #
+    mail:
+        host: smtp.gmail.com
+        port: 587
+        username: '<USERNAME>'
+        password: '<PASSWORD>'
+        properties:
+            mail.smtp.host: smtp.gmail.com
+            mail.smtp.ssl.trust: smtp.gmail.com
+            mail.smtp.port: '587'
+            mail.smtp.auth: 'true'
+            mail.smtp.starttls.enable: 'true'
+            mail.imap.ssl.enable: 'true'
+            mail.transport.protocol: smtp
+            mail.debug: 'true'
+            mail.smtp.ssl.protocols: TLSv1.2
+    
+    #
+    # GRID
+    #
+    grid:
+        useLocalMemory: false
+        storageKeyParam:
+            appIdEnabled: true
+            encryptEnabled: true
+        location: 'file:{user.dir}/extras/grid/**/*.json'
+        #definition: "file:{user.dir}/extras/grid/grid.def"
+    
+    #
+    # ADMIN
+    #    
+    admin:
+        handler:
+            configurationFile: 'file:{user.dir}/extras/admin/configuration.yaml'
+            apiPath: /_/api
+            webPath: /_/web
+            webLocation: 'file:{user.dir}/extras/admin/web/'
+            webEnabled: true
+            storageKeyParam:
+                prefix: ADMIN-HANDLER
+                appIdEnabled: true
+                encryptEnabled: true
+        credential:
+            useLocalMemory: false
+            credentialFile: 'file:{user.dir}/extras/admin/credential.yaml'
+            
+            # LocalMemoryCredential 
+            checkInterval:
+                unit: SECONDS
+                value: 30
+            
+            # RedisMemoryCredential
+            storageKeyParam:
+                prefix: ADMIN-CREDENTIAL
+                appIdEnabled: true
+                encryptEnabled: true
+        security:
+            useBasicAuth: false
+            
+            # Basic Auth
+            realm: Admin
+            
+            # Admin Auth
+            enableRemoteHost: false
+            enableUserAgent: false
+            headerKey: Authorization
+    
+    #
+    # API
+    #
+    api:
+        handler:
+            enableCrud: true
+            enableSync: true
+            enableConsumer: true
+            configureThreads: 2
+            redisParam:
+                prefix: API-HANDLER
+                appIdEnabled: true
+                encryptEnabled: true
+        service:
+            apiName: TEMPLATE-MVC
+            redisExpiry:
+                unit: MINUTES
+                accessNull: 2
+                accessObject: 5
+                consumerNull: 2
+                consumerObject: 10
+            redisParam:
+                prefix: API-SERVICE
+                appIdEnabled: true
+                encryptEnabled: true
+        token:
+            consumerTokenStorageIndex: 1
+            useApiTokenInProcessor: true
+            processorJwtParam:
+                secret: 77ea06ac-808b-4399-895c-a546b033d533
+                digest: SHA-256
+                expiry:
+                    unit: MINUTES
+                    value: 60
+            consumerJwtParam:
+                secret: df7c7d71-ec05-4ad4-9b36-1580b1a6590f
+                digest: SHA-256
+                expiry:
+                    unit: HOURS
+                    value: 24
+            ## toleransi waktu atas/bawah timestamp
+            signatureTimeSpan:
+                unit: SECONDS
+                value: 60
+    
+    #
+    # CRUD
+    # 
+    crud:
+        enableApiService: false
+        enablePermission: false
+        alwaysUseNative: false
+        defaultMaxLimit: 100
+    
+    #
+    # KAFKA
+    #
+    kafka:
+        enable: true
+        configurationFile: 'file:{user.dir}/extras/kafka/localhost.yaml'
+
+#
+# OTHER
+#
+other:
+    trxManager:
+        second:
+            jpa:
+                properties:
+                    hibernate:
+                        hbm2ddl:
+                            auto: update
+                        show_sql: true
+                        generate_statistics: true
+                        audit_identifier: spring_sample_other
+                        audit_bean_name: otherAuditSessionFactory
+            audit:
+                jpa:
+                    properties:
+                        hibernate:
+                            show_sql: true
+                            generate_statistics: true
+                properties:
+                    generate:
+                        table: true
+                    enable:
+                        audit: true
+                    table:
+                        index: false
+
+#
+# LOGGING
+#
+logging:
+    file:
+        name: './logs/ideahut-springboot-3x-template-mvc.log'
+    pattern:
+        console: '%d %p [%X{traceId}] %F\(%M:%L\) : %msg%n'
+        file: '%d %p [%X{traceId}] %F\(%M:%L\) : %msg%n'
+    level:
+        org:
+            hibernate: INFO
+            springframework: INFO
+            apache:
+                fory: 'OFF'
+        redis:
+            clients:
+                jedis:
+                    JedisFactory: 'OFF'
+        com:
+            fasterxml:
+                jackson:
+                    dataformat:
+                        xml: 'OFF'
+            zaxxer:
+                hikari:
+                    pool:
+                        ProxyConnection: ERROR
+        net:
+            ideahut:
+                springboot:
+                    bean: DEBUG

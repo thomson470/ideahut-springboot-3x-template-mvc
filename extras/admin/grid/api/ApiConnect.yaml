@@ -1,0 +1,267 @@
+order: 4
+name: ApiConnect
+title: Connect
+crud:
+    name: net.ideahut.springboot.api.entity.ApiConnect
+id:
+    type: STANDARD
+    fields:
+        - apiConnectCode
+table:
+    separator: cell
+    selection: single
+    page:
+        options: [5, 10, 15, 20, 25, 30, 50]
+        default: 20
+        count: false
+    order:
+        field: createdOn
+        descending: true
+    filters:
+        -
+            name: apiConnectCode
+            label: Code
+            type: text
+            condition: ANY_LIKE
+        -
+            name: description
+            label: Description
+            type: text
+            condition: ANY_LIKE
+        -
+            name: isActive
+            label: Active
+            type: option
+            option: YES_NO
+            condition: EQUAL
+    visibles:
+        - apiConnectCode
+        - isActive
+        - description
+        - updatedOn
+        - createdOn
+    columns:
+        -
+            name: apiConnectCode
+            label: Code
+            field: apiConnectCode
+            align: left
+            sortable: true
+        -
+            name: isActive
+            label: Active
+            field: isActive
+            align: center
+            sortable: true
+            format: >-
+                function(val, row) { return $h.grid.option(val, row, 'YES_NO'); }
+        -
+            name: description
+            label: Description
+            field: description
+            align: left
+            sortable: true
+        -
+            name: updatedOn
+            label: UpdatedOn
+            field: updatedOn
+            align: center
+            sortable: true
+            format: >-
+                function(val, row) { return $h.grid.date(val, row); }
+        -
+            name: createdOn
+            label: CreatedOn
+            field: createdOn
+            align: center
+            sortable: true
+            format: >-
+                function(val, row) { return $h.grid.date(val, row); }
+fields:
+    -
+        name: apiConnectCode
+        label: Code
+        type: text
+        nullable: false
+        insertable: true
+        editable: false
+        validations:
+            - required
+            - 'maxlength:64'
+    -
+        name: isActive
+        label: Active
+        type: option
+        option: YES_NO
+        nullable: false
+        insertable: true
+        editable: true
+        validations:
+            - required
+            - 'maxlength:1'
+    -
+        name: description
+        label: Description
+        type: text
+        nullable: true
+        insertable: true
+        editable: true
+        validations:
+            - 'maxlength:255'
+children:
+    #
+    # ROLE
+    #
+    -
+        title: Role
+        crud:
+            name: net.ideahut.springboot.api.entity.ApiConnectRole   
+        id:
+            type: COMPOSITE
+            fields:
+                - apiConnectCode
+                - apiName
+        relations:
+            -
+                source: apiConnectCode
+                target: apiConnectCode
+        labels:
+            -
+                title: Code
+                value: apiConnectCode
+        table:
+            separator: cell
+            selection: single
+            page:
+                options: [5, 10, 15, 20, 25, 30, 50]
+                default: 20
+                count: false
+            order:
+                field: createdOn
+                descending: true
+            filters:
+                -
+                    name: apiName
+                    label: ApiName
+                    type: text
+                    condition: ANY_LIKE
+                -
+                    name: apiRole
+                    label: ApiRole
+                    type: text
+                    condition: ANY_LIKE
+            visibles:
+                - apiName
+                - apiRoleCode
+                - updatedOn
+                - createdOn
+            columns:
+                -
+                    name: apiName
+                    label: ApiName
+                    field: apiName
+                    align: left
+                    sortable: true
+                -
+                    name: apiRoleCode
+                    label: ApiRole
+                    field: apiRoleCode
+                    align: left
+                    sortable: true
+                -
+                    name: updatedOn
+                    label: UpdatedOn
+                    field: updatedOn
+                    align: center
+                    sortable: true
+                    format: >-
+                        function(val, row) { return $h.grid.date(val, row); }
+                -
+                    name: createdOn
+                    label: CreatedOn
+                    field: createdOn
+                    align: center
+                    sortable: true
+                    format: >-
+                        function(val, row) { return $h.grid.date(val, row); }
+        fields:
+            -
+                name: apiName
+                label: ApiName
+                type: pick
+                pick: provider
+                nullable: false
+                insertable: true
+                editable: false
+                validations:
+                    - required
+                    - 'maxlength:128'
+                format: >-
+                    function(val, row) { try { return $h.isString(val) ? val : val.apiName; } catch(e) { return val; } }
+                toValue: >-
+                    function(val) { try { return {'apiName': $h.isString(val) ? val : val.apiName}; } catch(e) { return null; } }
+            -
+                name: apiRoleCode
+                label: ApiRole
+                type: text
+                nullable: false
+                insertable: true
+                editable: true
+                validations:
+                    - required
+                    - 'maxlength:64'
+picks:
+    #
+    # PROVIDER
+    #
+    provider:
+        title: Provider
+        crud:
+            name: net.ideahut.springboot.api.entity.ApiProvider
+        id:
+            type: STANDARD
+            fields:
+                - apiName
+        table:
+            separator: cell
+            selection: single
+            page:
+                options: [5, 10, 15, 20, 25, 30, 50]
+                default: 20
+                count: false
+            order:
+                field: apiName
+                descending: false
+            filters:
+                -
+                    name: apiName
+                    label: ApiName
+                    type: text
+                    condition: ANY_LIKE
+                -
+                    name: baseUrl
+                    label: BaseUrl
+                    type: text
+                    condition: ANY_LIKE
+            visibles:
+                - apiName
+                - baseUrl
+            columns:
+                -
+                    name: apiName
+                    label: ApiName
+                    field: apiName
+                    align: left
+                    sortable: true
+                -
+                    name: baseUrl
+                    label: BaseUrl
+                    field: baseUrl
+                    align: left
+                    sortable: true
+options:
+    - YES_NO
+    - CRUD_ACTION
+additionals:
+    - MONTHS
+    - DAYS

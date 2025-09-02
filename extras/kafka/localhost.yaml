@@ -1,0 +1,178 @@
+##
+# CLIENT
+# Satu kafka server akan dihandle oleh satu KafkaHandler
+# Untuk server berbeda maka buat properties dan KafkaHandler berbeda
+# bootstrapServers yang disetting di producer & consumer akan sama dengan yang di client
+# jadi tidak akan berpengaruh configs 'bootstrap.servers' di producer & consumer
+#
+client:
+   bootstrapServers: "localhost:9092"
+   requestTimeout:
+      unit: "SECONDS"
+      value: 15
+   connectionMaxIdle:
+      unit: "SECONDS"
+      value: 10
+   
+##
+# TOPIC
+# 
+# Parameter:
+#    forceCreate: untuk membuat topic leader jika tidak tersedia atau partitions beda dengan yang di server, default: false
+#    defaultItem: konfigurasi default untuk semua topic di items, bisa di-replace di items
+#    items: daftar topic, dengan key adalah nama topic
+#
+# Item:
+#    partitions: jumlah partisi topic
+#    replicas: jumlah replica
+#    replicaAssignments:  map partisi id dengan replica id
+#    configs: konfigurasi topic, bisa dilihat di https://kafka.apache.org/documentation/#topicconfigs
+#
+topic:
+   forceCreate: true
+   defaultItem:
+      partitions: 1
+      replicas: 1
+      configs:
+         "retention.bytes": "-1"
+         "file.delete.delay.ms": "60000"
+   items:
+      "topic-test-01":
+         partitions: 2
+      "topic-test-02":
+         configs: 
+            "file.delete.delay.ms": "30000"
+            "max.message.bytes": "1048588"
+      "topic-test-03":
+         partitions: 8
+
+##
+# PRODUCER
+#
+# Parameter:
+#    defaultSender: konfigurasi default untuk semua producer di senders (bisa di-replace)
+#    senders: daftar sender, dengan key adalah nama topic
+#
+# Item:
+#    keyType: tipe data yang digunakan untuk key
+#    valueType: tipe data yang digunakan untuk value 
+#    autoFlush: flush setelah kirim, default false
+#    micrometerEnabled: aktifkan micrometer timer jika tersedia di classpath
+#    micrometerTags: tags tambahan untuk listener micrometer timer
+#    configs: konfigurasi producer, bisa dilihat di https://kafka.apache.org/documentation/#producerconfigs
+#
+# Untuk tipe byte array (byte[]) diisi "[B"
+#
+producer:
+   defaultSender:
+      configs:
+         "buffer.memory": 33554432
+         #"request.timeout.ms": 3000
+         #"connections.max.idle.ms": 5000
+         #"metadata.max.idle.ms": 5000
+         #"metadata.max.age.ms": 10000
+   senders:
+   -
+      keyType: "java.lang.String"
+      valueType: "[B"
+      topics:
+         -
+            name: "SAMPLE.BYTES"
+   -
+      keyType: "java.lang.String"
+      valueType: "java.lang.String"
+      topics:
+         -
+            name: "SAMPLE.STRING"
+         -
+            # kirim request dan tunggu responsenya
+            name: "SAMPLE.REPLY"
+            reply:
+               container:
+                  #isExclusiveReply: true
+                  replyTopic: "SAMPLE.REPLY.RESPONSE"
+                  valueType: "net.ideahut.springboot.sysparam.dto.SysParamDto"
+   
+   
+##
+# CONSUMER
+# 
+# Parameter:
+#    defaultContainer: konfigurasi default untuk semua consumer di containers (bisa di-replace)
+#    containers: daftar container beserta listenernya  
+# 
+# Container:
+#    keyType: tipe data yang digunakan untuk key
+#    valueType: tipe data yang digunakan untuk value 
+#    groupId: nama group
+#    concurrency: jumlah container yang jalan
+#    autoStartup: jalankan container setelah inisialisasi, default: true, (start / stop / pause / resume bisa dijalankan lewat admin)
+#    topicCheckTimeout: waktu tunggu sampai 'result futures' selesai, menggunakan TimeValue{unit,value}
+#    commitRetries: jumlah percobaan ulang jika gagal commit
+#    idleBetweenPolls: interval waktu antar poll / penarikan data, menggunakan TimeValue{unit,value}, default: 0
+#    idleEventInterval: interval waktu jika saat penarikan tidak ada data, smenggunakan TimeValue{unit,value}, default: 0 (konsisten melakukan penarikan tanpa delay)
+#    idlePartitionEventInterval: interval waktu jika saat penarikan tidak ada data pada partisi tertentu, menggunakan TimeValue{unit,value}
+#    micrometerEnabled: aktifkan micrometer timer jika tersedia di classpath
+#    micrometerTags: tags tambahan untuk listener micrometer timer
+#    missingTopicsFatal: untuk mencegah container dijalankan jika ada topic tidak tersedia di broker/server, default: false
+#    monitorInterval: interval pengecekan consumer yang non-responsive, menggunakan TimeValue{unit,value}, default: 30 detik
+#    pollTimeout: timeout poll / penarikan data, menggunakan TimeValue{unit,value}, default: 5 detik
+#    shutdownTimeout: timeout saat mematikan container, menggunakan TimeValue{unit,value}: default: 10 detik
+#    configs: konfigurasi consumer, bisa dilihat di https://kafka.apache.org/documentation/#consumerconfigs
+#
+consumer:
+   defaultContainer:
+      autoStartup: true
+      concurrency: 1
+      topicCheckTimeout: 
+         unit: "SECONDS"
+         value: 30
+      configs:
+         "auto.commit.interval.ms": 1000
+   containers:
+   -
+      groupId: "SAMPLE.GROUP.01"
+      keyType: "java.lang.String"
+      valueType: "java.lang.String"
+      listeners:
+      -
+         topic: 
+            name: "SAMPLE.REPLY"
+         classType: "net.ideahut.springboot.template.listener.kafka.SampleReplyMessageListener"
+         methodName: "listen07"
+         reply:
+            keyType: "java.lang.String"
+            valueType: "net.ideahut.springboot.sysparam.dto.SysParamDto"
+      -
+         topic:
+            name: "SAMPLE.STRING"
+            #partitions:
+            #   - 0
+            #   - 2
+         #beanName: "sampleStringBeanNameMessageListener"  
+         beanName: "sampleStringBeanMethodMessageListener"
+         methodName: "message"
+              
+   -
+      groupId: "SAMPLE.GROUP.02"
+      keyType: "java.lang.String"
+      valueType: "[B"
+      listeners:
+      -
+         topic:
+            name: "SAMPLE.BYTES"
+            #partitions:
+            #   - 0
+            #   - 2
+         classType: "net.ideahut.springboot.template.listener.kafka.SampleBytesClassMessageListener"
+         methodName: "staticListener"
+         
+      #   beanName: "sampleStringBeanNameMessageListener"
+      #-
+      #   beanName: "TestCase02"
+      #   methodName: "message"
+      #-
+      #   beanType: "net.ideahut.springboot.template.kafka.TestCase04Listener"
+      #   methodName: "listener"
+      
+

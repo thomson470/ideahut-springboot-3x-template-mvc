@@ -1,0 +1,61 @@
+waitForJobsToCompleteWhenStopScheduler: false
+collectDatabaseMetadata: true
+showOnlyExecutableRedis: true
+
+central:
+   webEndpoint: "https://central.ideahut.net/sync/web"
+   tokenEndpoint: "https://central.ideahut.net/sync/token"
+
+api:
+   timeout: 30
+   debug: true
+
+web:
+   title: "Template WebMvc"
+   indexFile: "index.html"
+   alwaysToIndex: true
+   color:
+      ## css color
+      header: ""
+      title: ""
+      primary: ""
+      secondary: ""
+      accent: ""
+      dark: ""
+      positive: ""
+      negative: ""
+      info: ""
+      warning: ""
+   allowedPaths:
+      ## path yang diizinkan untuk diakses
+      - "assets"
+      - "icons"
+      - "favicon.ico"
+      - "index.html"
+
+grid:
+   enable: true
+   location: "file:{user.dir}/extras/admin/grid/**/*.yaml"
+   definition: "file:{user.dir}/extras/admin/grid/grid.def"
+
+crud:
+   maxLimit: 200
+   useNative: false
+
+role:
+   definitionFile: "file:{user.dir}/extras/admin/roles.yaml"
+
+modules:
+   reload:
+      #title:
+      #enable:
+      #order:
+      #path:
+   cache: null
+   redis: null
+   grid: null
+   audit: null
+   entity: null
+   scheduler: null
+   task: null
+   request: null

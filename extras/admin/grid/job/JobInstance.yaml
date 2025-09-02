@@ -1,0 +1,140 @@
+order: 1
+name: JobInstance
+title: Instance
+crud:
+    name: net.ideahut.springboot.job.entity.JobInstance
+id:
+    type: STANDARD
+    fields:
+        - instanceId
+table:
+    separator: cell
+    selection: single
+    page:
+        options: [5, 10, 15, 20, 25, 30, 50]
+        default: 20
+        count: false
+    order:
+        field: createdOn
+        descending: true
+    filters:
+        -
+            name: instanceId
+            label: InstanceId
+            type: text
+            condition: ANY_LIKE
+        -
+            name: name
+            label: Name
+            type: text
+            condition: ANY_LIKE
+        -
+            name: description
+            label: Description
+            type: text
+            condition: ANY_LIKE
+    visibles:
+        - instanceId
+        - name
+        - baseUrl
+        - description
+        - updatedOn
+        - createdOn
+    columns:
+        -
+            name: instanceId
+            label: InstanceId
+            field: instanceId
+            align: left
+            sortable: true
+        -
+            name: name
+            label: Name
+            field: name
+            align: left
+            sortable: true
+        -
+            name: baseUrl
+            label: BaseUrl
+            field: baseUrl
+            align: left
+            sortable: true
+        -
+            name: authHeader
+            label: AuthHeader
+            field: authHeader
+            align: left
+            sortable: true
+        -
+            name: description
+            label: Description
+            field: description
+            align: left
+            sortable: true
+        -
+            name: updatedOn
+            label: UpdatedOn
+            field: updatedOn
+            align: center
+            sortable: true
+            format: >-
+                function(val, row) { return $h.grid.date(val, row); }
+        -
+            name: createdOn
+            label: CreatedOn
+            field: createdOn
+            align: center
+            sortable: true
+            format: >-
+                function(val, row) { return $h.grid.date(val, row); }
+fields:
+    -
+        name: instanceId
+        label: InstanceId
+        type: text
+        nullable: false
+        insertable: true
+        editable: false
+        validations:
+            - required
+            - 'maxlength:100'
+    -
+        name: name
+        label: Name
+        type: text
+        nullable: false
+        insertable: true
+        editable: true
+        validations:
+            - required
+            - 'maxlength:100'
+    -
+        name: baseUrl
+        label: BaseUrl
+        type: text
+        nullable: true
+        insertable: true
+        editable: true
+        validations:
+            - 'maxlength:255'
+    -
+        name: authHeader
+        label: AuthHeader
+        type: words
+        nullable: true
+        insertable: true
+        editable: true
+        validations:
+            - 'maxlength:255'
+    -
+        name: description
+        label: Description
+        type: words
+        nullable: true
+        insertable: true
+        editable: true
+        validations:
+            - 'maxlength:255'
+additionals:
+    - MONTHS
+    - DAYS

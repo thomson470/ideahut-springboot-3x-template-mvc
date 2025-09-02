@@ -1,0 +1,150 @@
+order: 3
+name: Message
+title: Message
+crud:
+    name: net.ideahut.springboot.message.entity.Message
+    joins:
+        -
+            name: net.ideahut.springboot.message.entity.Language
+            store: language
+            match: contain
+            relations:
+                -
+                    source: languageCode
+                    target: languageCode
+id:
+    type: COMPOSITE
+    fields:
+        - languageCode
+        - messageType
+        - messageCode
+table:
+    separator: cell
+    selection: single
+    page:
+        options: [5, 10, 15, 20, 25, 30, 50]
+        default: 20
+        count: false
+    order:
+        field: createdOn
+        descending: true
+    filters:
+        -
+            name: languageCode
+            label: Language
+            type: option
+            option: LANGUAGE
+            condition: EQUAL
+        -
+            name: messageType
+            label: Type
+            type: option
+            option: MESSAGE_TYPE
+            condition: EQUAL
+        -
+            name: messageCode
+            label: Code
+            type: text
+            condition: ANY_LIKE
+        -
+            name: content
+            label: Content
+            type: text
+            condition: ANY_LIKE
+    visibles:
+        - languageCode
+        - messageType
+        - messageCode
+        - content
+        - updatedOn
+        - createdOn
+    columns:
+        -
+            name: languageCode
+            label: Language
+            field: languageCode
+            align: left
+            sortable: true
+            format: >-
+                function(val, row) { return $h.grid.option(val, row, 'LANGUAGE'); }
+        -
+            name: messageType
+            label: Type
+            field: messageType
+            align: left
+            sortable: true
+            format: >-
+                function(val, row) { return $h.grid.option(val, row, 'MESSAGE_TYPE'); }
+        -
+            name: messageCode
+            label: Code
+            field: messageCode
+            align: left
+            sortable: true
+        -
+            name: content
+            label: Content
+            field: content
+            align: left
+            sortable: true
+        -
+            name: updatedOn
+            label: UpdatedOn
+            field: updatedOn
+            align: center
+            sortable: true
+            format: >-
+                function(val, row) { return $h.grid.date(val, row); }
+        -
+            name: createdOn
+            label: CreatedOn
+            field: createdOn
+            align: center
+            sortable: true
+            format: >-
+                function(val, row) { return $h.grid.date(val, row); }
+fields:
+    -
+        name: languageCode
+        label: Language
+        type: option
+        option: LANGUAGE
+        nullable: false
+        insertable: true
+        editable: false
+        validations:
+            - required
+    -
+        name: messageType
+        label: Type
+        type: option
+        option: MESSAGE_TYPE
+        nullable: false
+        insertable: true
+        editable: false
+        validations:
+            - required
+    -
+        name: messageCode
+        label: Code
+        type: text
+        nullable: false
+        insertable: true
+        editable: false
+        validations:
+            - required
+            - 'maxlength:255'
+    -
+        name: content
+        label: Content
+        type: words
+        nullable: true
+        insertable: true
+        editable: true
+options:
+    - YES_NO
+    - MESSAGE_TYPE
+    - LANGUAGE
+additionals:
+    - MONTHS
+    - DAYS

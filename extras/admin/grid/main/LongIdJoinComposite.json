@@ -1,0 +1,311 @@
+{
+    "name": "LongIdJoinComposite",
+    "title": "LongIdJoinComposite",
+    "crud": {
+        "name": "net.ideahut.springboot.template.entity.app.LongIdJoinComposite",
+        "joins": [
+            {
+                "name": "net.ideahut.springboot.template.entity.app.CompositeHardDel",
+                "store": "composite",
+                "match": "contain",
+                "relations": [
+                    {
+                        "source": "composite.type",
+                        "target": "type"
+                    },
+                    {
+                        "source": "composite.code",
+                        "target": "code"
+                    }
+                ]
+            }
+        ]
+    },
+    "id": {
+        "type": "STANDARD",
+        "fields": [
+            "id"
+        ]
+    },
+    "table": {
+        "separator": "none",
+        "selection": "single",
+        "page": {
+            "options": [
+                5,
+                10,
+                15,
+                20,
+                25,
+                30,
+                50
+            ],
+            "default": 20,
+            "count": false
+        },
+        "order": {
+            "field": "createdOn",
+            "descending": true
+        },
+        "filters": [
+            {
+                "name": "composite.code",
+                "label": "Composite Code",
+                "type": "text",
+                "condition": "ANY_LIKE"
+            },
+            {
+                "name": "name",
+                "label": "Name",
+                "type": "text",
+                "condition": "ANY_LIKE"
+            },
+            {
+                "name": "description",
+                "label": "Description",
+                "type": "text",
+                "condition": "ANY_LIKE"
+            },
+            {
+                "name": "isActive",
+                "label": "IsActive",
+                "type": "option",
+                "option": "YES_NO",
+                "condition": "EQUAL"
+            }
+        ],
+        "visibles": [
+            "composite",
+            "name",
+            "isActive",
+            "description",
+            "updatedOn",
+            "createdOn"
+        ],
+        "columns": [
+            {
+                "name": "composite",
+                "label": "Composite",
+                "field": "composite",
+                "align": "left",
+                "sortable": true,
+                "format": "function(val, row) { try { if(val) { return val.type + ' - ' + val.code } else { return '' }; } catch(e) { return val; } }"
+            },
+            {
+                "name": "name",
+                "label": "Name",
+                "field": "name",
+                "align": "left",
+                "sortable": true
+            },
+            {
+                "name": "isActive",
+                "label": "IsActive",
+                "field": "isActive",
+                "align": "left",
+                "sortable": true,
+                "format": "function(val, row) { return $h.grid.option(val, row, 'YES_NO'); }"
+            },
+            {
+                "name": "description",
+                "label": "Description",
+                "field": "description",
+                "align": "left",
+                "sortable": true
+            },
+            {
+                "name": "updatedOn",
+                "label": "UpdatedOn",
+                "field": "updatedOn",
+                "align": "left",
+                "sortable": true,
+                "format": "function(val, row) { return $h.grid.date(val, row); }"
+            },
+            {
+                "name": "createdOn",
+                "label": "CreatedOn",
+                "field": "createdOn",
+                "align": "left",
+                "sortable": true,
+                "format": "function(val, row) { return $h.grid.date(val, row); }"
+            }
+        ]
+    },
+    "fields": [
+        {
+            "name": "composite",
+            "label": "Composite",
+            "type": "pick",
+            "nullable": true,
+            "insertable": true,
+            "editable": true,
+            "pick": "composite",
+            "format": "function(val, row) { try { if(val) { return val.type + ' - ' + val.code } else { return '' }; } catch(e) { return val; } }"
+        },
+        {
+            "name": "name",
+            "label": "Name",
+            "type": "text",
+            "nullable": false,
+            "insertable": true,
+            "editable": true,
+            "validations": [
+                "required",
+                "maxlength:128"
+            ]
+        },
+        {
+            "name": "isActive",
+            "label": "IsActive",
+            "type": "option",
+            "option": "YES_NO",
+            "nullable": false,
+            "insertable": true,
+            "editable": true,
+            "validations": [
+                "required"
+            ]
+        },
+        {
+            "name": "description",
+            "label": "Description",
+            "type": "words",
+            "nullable": true,
+            "insertable": true,
+            "editable": true,
+            "validations": [
+                "maxlength:255"
+            ]
+        }
+    ],
+    "picks": {
+        "composite": {
+            "title": "CompositeHardDel",
+            "crud": {
+                "name": "net.ideahut.springboot.template.entity.app.CompositeHardDel"
+            },
+            "id": {
+                "type": "COMPOSITE",
+                "fields": [
+                    "code",
+                    "type"
+                ]
+            },
+            "table": {
+                "separator": "none",
+                "selection": "single",
+                "page": {
+                    "options": [
+                        5,
+                        10,
+                        15,
+                        20,
+                        25,
+                        30,
+                        50
+                    ],
+                    "default": 20,
+                    "count": false
+                },
+                "order": {
+                    "field": "createdOn",
+                    "descending": true
+                },
+                "filters": [
+                    {
+                        "name": "type",
+                        "label": "Type",
+                        "type": "number",
+                        "condition": "EQUAL"
+                    },
+                    {
+                        "name": "code",
+                        "label": "Code",
+                        "type": "text",
+                        "condition": "ANY_LIKE"
+                    },
+                    {
+                        "name": "name",
+                        "label": "Name",
+                        "type": "text",
+                        "condition": "ANY_LIKE"
+                    },
+                    {
+                        "name": "isActive",
+                        "label": "IsActive",
+                        "type": "option",
+                        "option": "YES_NO",
+                        "condition": "EQUAL"
+                    }
+                ],
+                "visibles": [
+                    "type",
+                    "code",
+                    "name",
+                    "isActive"
+                ],
+                "columns": [
+                    {
+                        "name": "type",
+                        "label": "Type",
+                        "field": "type",
+                        "align": "right",
+                        "sortable": true
+                    },
+                    {
+                        "name": "code",
+                        "label": "Code",
+                        "field": "code",
+                        "align": "left",
+                        "sortable": true
+                    },
+                    {
+                        "name": "name",
+                        "label": "Name",
+                        "field": "name",
+                        "align": "left",
+                        "sortable": true
+                    },
+                    {
+                        "name": "isActive",
+                        "label": "IsActive",
+                        "field": "isActive",
+                        "align": "center",
+                        "sortable": true,
+                        "format": "function(val, row) { return $h.grid.option(val, row, 'YES_NO'); }"
+                    },
+                    {
+                        "name": "description",
+                        "label": "Description",
+                        "field": "description",
+                        "align": "left",
+                        "sortable": true
+                    },
+                    {
+                        "name": "updatedOn",
+                        "label": "UpdatedOn",
+                        "field": "updatedOn",
+                        "align": "left",
+                        "sortable": true,
+                        "format": "function(val, row) { return $h.grid.date(val, row); }"
+                    },
+                    {
+                        "name": "createdOn",
+                        "label": "CreatedOn",
+                        "field": "createdOn",
+                        "align": "left",
+                        "sortable": true,
+                        "format": "function(val, row) { return $h.grid.date(val, row); }"
+                    }
+                ]
+            }
+        }
+    },
+    "options": [
+        "YES_NO"
+    ],
+    "additionals": [
+        "MONTHS",
+        "DAYS"
+    ]
+}

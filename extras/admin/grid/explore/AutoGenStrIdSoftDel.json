@@ -1,0 +1,146 @@
+{
+    "name": "AutoGenStrIdSoftDel",
+    "title": "AutoGenStrIdSoftDel",
+    "crud": {
+        "name": "net.ideahut.springboot.template.entity.app.AutoGenStrIdSoftDel"
+    },
+    "id": {
+        "type": "STANDARD",
+        "fields": [
+            "id"
+        ]
+    },
+    "table": {
+        "separator": "none",
+        "selection": "single",
+        "page": {
+            "options": [
+                5,
+                10,
+                15,
+                20,
+                25,
+                30,
+                50
+            ],
+            "default": 20,
+            "count": false
+        },
+        "order": {
+            "field": "createdOn",
+            "descending": true
+        },
+        "filters": [
+            {
+                "name": "name",
+                "label": "Name",
+                "type": "text",
+                "condition": "ANY_LIKE"
+            },
+            {
+                "name": "description",
+                "label": "Description",
+                "type": "text",
+                "condition": "ANY_LIKE"
+            },
+            {
+                "name": "isActive",
+                "label": "IsActive",
+                "type": "option",
+                "option": "YES_NO",
+                "condition": "EQUAL"
+            }
+        ],
+        "visibles": [
+            "name",
+            "isActive",
+            "description",
+            "updatedOn",
+            "createdOn"
+        ],
+        "columns": [
+            {
+                "name": "name",
+                "label": "Name",
+                "field": "name",
+                "align": "left",
+                "sortable": true
+            },
+            {
+                "name": "isActive",
+                "label": "IsActive",
+                "field": "isActive",
+                "align": "center",
+                "sortable": true,
+                "format": "function(val, row) { return $h.grid.option(val, row, 'YES_NO'); }"
+            },
+            {
+                "name": "description",
+                "label": "Description",
+                "field": "description",
+                "align": "left",
+                "sortable": true
+            },
+            {
+                "name": "updatedOn",
+                "label": "UpdatedOn",
+                "field": "updatedOn",
+                "align": "center",
+                "sortable": true,
+                "format": "function(val, row) { return $h.grid.date(val, row); }"
+            },
+            {
+                "name": "createdOn",
+                "label": "CreatedOn",
+                "field": "createdOn",
+                "align": "center",
+                "sortable": true,
+                "format": "function(val, row) { return $h.grid.date(val, row); }"
+            }
+        ]
+    },
+    "fields": [
+        {
+            "name": "name",
+            "label": "Name",
+            "type": "text",
+            "nullable": false,
+            "insertable": true,
+            "editable": true,
+            "validations": [
+                "required",
+                "maxlength:128"
+            ]
+        },
+        {
+            "name": "isActive",
+            "label": "IsActive",
+            "type": "option",
+            "option": "YES_NO",
+            "nullable": false,
+            "insertable": true,
+            "editable": true,
+            "validations": [
+                "required"
+            ]
+        },
+        {
+            "name": "description",
+            "label": "Description",
+            "type": "words",
+            "nullable": true,
+            "insertable": true,
+            "editable": true,
+            "validations": [
+                "maxlength:255"
+            ]
+        }
+    ],
+    "options": [
+        "YES_NO"
+    ],
+    "additionals": [
+        "MONTHS",
+        "DAYS"
+    ]
+}

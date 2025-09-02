@@ -1,0 +1,45 @@
+spring:
+    datasource:
+        driver-class-name: 'org.mariadb.jdbc.Driver'
+        jdbc-url: 'jdbc:mariadb:'
+        username: ''
+        password: ''
+    #jpa:
+    #    properties:
+    #        hibernate:
+    #            dialect: 'org.hibernate.dialect.MariaDBDialect'
+
+config:
+    audit:
+        datasource:
+            driver-class-name: 'org.mariadb.jdbc.Driver'
+            jdbc-url: 'jdbc:mariadb:'
+            username: ''
+            password: ''
+        #jpa:
+        #    properties:
+        #        hibernate:
+        #            dialect: 'org.hibernate.dialect.MariaDBDialect'    
+
+other:
+    trxManager:
+        second:
+            datasource:
+                driver-class-name: 'org.mariadb.jdbc.Driver'
+                jdbc-url: 'jdbc:mariadb:'
+                username: ''
+                password: ''
+            #jpa:
+            #    properties:
+            #        hibernate:
+            #            dialect: 'org.hibernate.dialect.MariaDBDialect'
+            audit:
+                datasource:
+                    driver-class-name: 'org.mariadb.jdbc.Driver'
+                    jdbc-url: 'jdbc:mariadb:'
+                    username: ''
+                    password: ''
+                #jpa:
+                #    properties:
+                #        hibernate:
+                #            dialect: 'org.hibernate.dialect.MariaDBDialect'

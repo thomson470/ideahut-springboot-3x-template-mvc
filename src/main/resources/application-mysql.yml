@@ -1,0 +1,45 @@
+spring:
+    datasource:
+        driver-class-name: 'com.mysql.cj.jdbc.Driver'
+        jdbc-url: 'jdbc:mysql:'
+        username: ''
+        password: ''
+    #jpa:
+    #    properties:
+    #        hibernate:
+    #            dialect: 'org.hibernate.dialect.MySQL8Dialect'
+
+config:
+    audit:
+        datasource:
+            driver-class-name: 'com.mysql.cj.jdbc.Driver'
+            jdbc-url: 'jdbc:mysql:'
+            username: ''
+            password: ''
+        #jpa:
+        #    properties:
+        #        hibernate:
+        #            dialect: 'org.hibernate.dialect.MySQL8Dialect'
+
+other:
+    trxManager:
+        second:
+            datasource:
+                driver-class-name: 'com.mysql.cj.jdbc.Driver'
+                jdbc-url: 'jdbc:mysql:'
+                username: ''
+                password: ''
+            #jpa:
+            #    properties:
+            #        hibernate:
+            #            dialect: 'org.hibernate.dialect.MySQL8Dialect'
+            audit:
+                datasource:
+                    driver-class-name: 'com.mysql.cj.jdbc.Driver'
+                    jdbc-url: 'jdbc:mysql:'
+                    username: ''
+                    password: ''
+                #jpa:
+                #    properties:
+                #        hibernate:
+                #            dialect: 'org.hibernate.dialect.MySQL8Dialect'

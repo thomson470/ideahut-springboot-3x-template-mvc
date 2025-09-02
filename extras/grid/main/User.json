@@ -1,0 +1,195 @@
+{
+    "name": "User",
+    "title": "User",
+    "crud": {
+        "name": "User"
+    },
+    "id": {
+        "type": "STANDARD",
+        "fields": [
+            "userId"
+        ]
+    },
+    "table": {
+        "separator": "none",
+        "selection": "single",
+        "page": {
+            "options": [
+                5,
+                10,
+                15,
+                20,
+                25,
+                30,
+                50
+            ],
+            "default": 20,
+            "count": false
+        },
+        "order": {
+            "field": "createdOn",
+            "descending": true
+        },
+        "filters": [
+            {
+                "name": "username",
+                "label": "Username",
+                "type": "text",
+                "condition": "ANY_LIKE"
+            },
+            {
+                "name": "status",
+                "label": "Status",
+                "type": "option",
+                "option": "USER_STATUS",
+                "condition": "EQUAL"
+            },
+            {
+                "name": "description",
+                "label": "Description",
+                "type": "text",
+                "condition": "ANY_LIKE"
+            }
+        ],
+        "visibles": [
+            "username",
+            "status",
+            "description",
+            "updatedOn",
+            "createdOn"
+        ],
+        "columns": [
+            {
+                "name": "username",
+                "label": "Username",
+                "field": "username",
+                "align": "left",
+                "sortable": true
+            },
+            {
+                "name": "status",
+                "label": "Status",
+                "field": "status",
+                "align": "center",
+                "sortable": true,
+                "format": "function(val, row) { return $h.grid.option(val, row, 'USER_STATUS'); }"
+            },
+            {
+                "name": "description",
+                "label": "Description",
+                "field": "description",
+                "align": "left",
+                "sortable": true
+            },
+            {
+                "name": "updatedOn",
+                "label": "UpdatedOn",
+                "field": "updatedOn",
+                "align": "center",
+                "sortable": true,
+                "format": "function(val, row) { return $h.grid.date(val, row); }"
+            },
+            {
+                "name": "createdOn",
+                "label": "CreatedOn",
+                "field": "createdOn",
+                "align": "center",
+                "sortable": true,
+                "format": "function(val, row) { return $h.grid.date(val, row); }"
+            }
+        ]
+    },
+    "fields": [
+        {
+            "name": "username",
+            "label": "Username",
+            "type": "text",
+            "nullable": false,
+            "insertable": true,
+            "editable": true,
+            "validations": [
+                "required"
+            ]
+        },
+        {
+            "name": "status",
+            "label": "Status",
+            "type": "option",
+            "option": "USER_STATUS",
+            "nullable": true,
+            "insertable": true,
+            "editable": true
+        },
+        {
+            "name": "description",
+            "label": "Description",
+            "type": "text",
+            "nullable": true,
+            "insertable": true,
+            "editable": true
+        }
+    ],
+    "forms": [
+        {
+            "title": "UserDetail",
+            "crud": {
+                "name": "UserDetail"
+            },
+            "id": {
+                "type": "STANDARD",
+                "fields": [
+                    "userId"
+                ]
+            },
+            "relations": [
+                {
+                    "target": "userId",
+                    "source": "userId"
+                }
+            ],
+            "fields": [
+                {
+                    "name": "fullname",
+                    "label": "Fullname",
+                    "type": "text",
+                    "insertable": true,
+                    "editable": true
+                },
+                {
+                    "name": "gender",
+                    "label": "Gender",
+                    "type": "option",
+                    "option": "GENDER",
+                    "insertable": true,
+                    "editable": true,
+                    "format": "function(val, row) { return $h.grid.option(val, row, 'GENDER'); }"
+                },
+                {
+                    "name": "description",
+                    "label": "Description",
+                    "type": "words",
+                    "insertable": true,
+                    "editable": true
+                },
+                {
+                    "name": "createdOn",
+                    "label": "CreatedOn",
+                    "format": "function(val, row) { return $h.grid.date(val, row); }"
+                },
+                {
+                    "name": "updatedOn",
+                    "label": "UpdatedOn",
+                    "format": "function(val, row) { return $h.grid.date(val, row); }"
+                }
+            ]
+        }
+    ],
+    "options": [
+        "USER_STATUS",
+        "GENDER"
+    ],
+    "additionals": [
+        "MONTHS",
+        "DAYS"
+    ]
+}

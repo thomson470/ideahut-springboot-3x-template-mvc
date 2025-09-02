@@ -1,0 +1,966 @@
+order: 3
+name: ApiProvider
+title: Provider
+crud:
+    name: net.ideahut.springboot.api.entity.ApiProvider
+id:
+    type: STANDARD
+    fields:
+        - apiName
+table:
+    separator: cell
+    selection: single
+    page:
+        options: [5, 10, 15, 20, 25, 30, 50]
+        default: 20
+        count: false
+    order:
+        field: createdOn
+        descending: true
+    filters:
+        -
+            name: apiName
+            label: ApiName
+            type: text
+            condition: ANY_LIKE
+        -
+            name: isActive
+            label: Active
+            type: option
+            option: YES_NO
+            condition: EQUAL
+        -
+            name: digest
+            label: Digest
+            type: option
+            option: DIGEST
+            condition: EQUAL
+        -
+            name: baseUrl
+            label: Base Url
+            type: text
+            condition: ANY_LIKE
+    visibles:
+        - apiName
+        - isActive
+        - digest
+        - baseUrl
+        - accessUrl
+        - tokenUrl
+        - updatedOn
+        - createdOn
+    columns:
+        -
+            name: apiName
+            label: ApiName
+            field: apiName
+            align: left
+            sortable: true
+        -
+            name: isActive
+            label: Active
+            field: isActive
+            align: center
+            sortable: true
+            format: >-
+                function(val, row) { return $h.grid.option(val, row, 'YES_NO'); }
+        -
+            name: digest
+            label: Digest
+            field: digest
+            align: left
+            sortable: true
+            format: >-
+                function(val, row) { return $h.grid.option(val, row, 'DIGEST'); }
+        -
+            name: secret
+            label: Secret
+            field: secret
+            align: left
+            sortable: true
+        -
+            name: baseUrl
+            label: BaseUrl
+            field: baseUrl
+            align: left
+            sortable: true
+        -
+            name: accessUrl
+            label: AccessUrl
+            field: accessUrl
+            align: left
+            sortable: true
+        -
+            name: tokenUrl
+            label: TokenUrl
+            field: tokenUrl
+            align: left
+            sortable: true
+        -
+            name: updatedOn
+            label: UpdatedOn
+            field: updatedOn
+            align: center
+            sortable: true
+            format: >-
+                function(val, row) { return $h.grid.date(val, row); }
+        -
+            name: createdOn
+            label: CreatedOn
+            field: createdOn
+            align: center
+            sortable: true
+            format: >-
+                function(val, row) { return $h.grid.date(val, row); }
+fields:
+    -
+        name: apiName
+        label: ApiName
+        type: text
+        nullable: false
+        insertable: true
+        editable: false
+        validations:
+            - required
+            - 'maxlength:128'
+    -
+        name: isActive
+        label: Active
+        type: option
+        option: YES_NO
+        nullable: false
+        insertable: true
+        editable: true
+        validations:
+            - required
+            - 'maxlength:1'
+    -
+        name: digest
+        label: Digest
+        type: option
+        option: DIGEST
+        nullable: true
+        insertable: true
+        editable: true
+        validations:
+            - 'maxlength:16'
+    -
+        name: secret
+        label: Secret
+        type: text
+        nullable: false
+        insertable: true
+        editable: true
+        validations:
+            - 'maxlength:255'
+    -
+        name: baseUrl
+        label: BaseUrl
+        type: words
+        nullable: true
+        insertable: true
+        editable: true
+        validations:
+            - 'maxlength:1024'
+    -
+        name: accessUrl
+        label: AccessUrl
+        type: words
+        nullable: true
+        insertable: true
+        editable: true
+        validations:
+            - 'maxlength:1024'
+    -
+        name: tokenUrl
+        label: TokenUrl
+        type: words
+        nullable: true
+        insertable: true
+        editable: true
+        validations:
+            - 'maxlength:1024'
+children:
+    #
+    # CONFIGURAION
+    #
+    -
+        title: Configuration
+        crud:
+            name: net.ideahut.springboot.api.entity.ApiProviderConfig
+        id:
+            type: COMPOSITE
+            fields:
+                - apiName
+                - configName
+        copy: false
+        action:
+            exclude:
+                - PAGE
+        relations:
+            -
+                source: apiName
+                target: apiName
+        labels:
+            -
+                title: ApiName
+                value: apiName
+            -
+                title: BaseUrl
+                value: baseUrl
+        table:
+            separator: cell
+            selection: single
+            page:
+                options: [5, 10, 15, 20, 25, 30, 50]
+                default: 20
+                count: false
+            order:
+                field: configName
+                descending: false
+            filters:
+                -
+                    name: configName
+                    label: Name
+                    type: text
+                    condition: ANY_LIKE
+            visibles:
+                - configName
+                - configValue
+            columns:
+                -
+                    name: configName
+                    label: Name
+                    field: configName
+                    align: left
+                    sortable: true
+                -
+                    name: configValue
+                    label: Value
+                    field: configValue
+                    align: left
+                    sortable: true
+        fields:
+            -
+                name: configName
+                label: Name
+                type: text
+                nullable: false
+                insertable: true
+                editable: false
+                validations:
+                    - required
+                    - 'maxlength:128'
+            -
+                name: configValue
+                label: Value
+                type: text
+                nullable: true
+                insertable: true
+                editable: true
+    #
+    # HOST
+    #            
+    -
+        title: Host
+        crud:
+            name: net.ideahut.springboot.api.entity.ApiProviderHost
+        id:
+            type: COMPOSITE
+            fields:
+                - apiName
+                - host
+        copy: false
+        action:
+            exclude:
+                - UPDATE
+                - PAGE
+        relations:
+            -
+                source: apiName
+                target: apiName
+        labels:
+            -
+                title: ApiName
+                value: apiName
+            -
+                title: BaseUrl
+                value: baseUrl
+        table:
+            separator: cell
+            selection: single
+            page:
+                options: [5, 10, 15, 20, 25, 30, 50]
+                default: 20
+                count: false
+            order:
+                field: host
+                descending: false
+            filters:
+                -
+                    name: host
+                    label: Host
+                    type: text
+                    condition: ANY_LIKE
+            visibles:
+                - host
+            columns:
+                -
+                    name: host
+                    label: Host
+                    field: host
+                    align: left
+                    sortable: true
+        fields:
+            -
+                name: host
+                label: Host
+                type: text
+                nullable: false
+                insertable: true
+                editable: false
+                validations:
+                    - required
+                    - 'maxlength:128'
+    #
+    # CRUD
+    #
+    -
+        title: CRUD
+        crud:
+            name: net.ideahut.springboot.api.entity.ApiProviderCrud
+            joins:
+                -
+                    name: net.ideahut.springboot.api.entity.ApiCrud
+                    alias: ApiCrud
+                    store: apiCrud
+                    match: contain
+                    relations:
+                    -
+                        source: apiCrudCode
+                        target: apiCrudCode    
+        id:
+            type: COMPOSITE
+            fields:
+                - apiName
+                - apiCrudCode
+        relations:
+            -
+                source: apiName
+                target: apiName
+        labels:
+            -
+                title: ApiName
+                value: apiName
+            -
+                title: BaseUrl
+                value: baseUrl       
+        copy: false
+        table:
+            separator: cell
+            selection: single
+            page:
+                options: [5, 10, 15, 20, 25, 30, 50]
+                default: 20
+                count: false
+            order:
+                field: apiCrudCode
+                descending: false
+            filters:
+                -
+                    name: apiCrudCode
+                    label: Code
+                    type: text
+                    condition: ANY_LIKE
+                -
+                    name: ApiCrud.className
+                    label: Class
+                    type: text
+                    condition: ANY_LIKE
+                -
+                    name: ApiCrud.packageName
+                    label: Package
+                    type: text
+                    condition: ANY_LIKE
+                -
+                    name: ApiCrud.manager
+                    label: Manager
+                    type: text
+                    condition: ANY_LIKE
+            visibles:
+                - apiCrudCode
+                - apiCrud.className
+                - apiCrud.packageName
+                - apiCrud.manager
+                - updatedOn
+                - createdOn
+            columns:
+                -
+                    name: apiCrudCode
+                    label: Code
+                    field: apiCrudCode
+                    align: left
+                    sortable: true
+                -
+                    name: apiCrud.className
+                    label: Class
+                    field: apiCrud
+                    align: left
+                    sortable: true
+                    format: >-
+                        function(val, row) { return $h.grid.field(val, 'className'); }
+                -
+                    name: apiCrud.packageName
+                    label: Package
+                    field: apiCrud
+                    align: left
+                    sortable: true
+                    format: >-
+                        function(val, row) { return $h.grid.field(val, 'packageName'); }
+                -
+                    name: apiCrud.manager
+                    label: Manager
+                    field: apiCrud
+                    align: left
+                    sortable: true
+                    format: >-
+                        function(val, row) { return $h.grid.field(val, 'manager'); }
+                -
+                    name: updatedOn
+                    label: UpdatedOn
+                    field: updatedOn
+                    align: center
+                    sortable: true
+                    format: >-
+                        function(val, row) { return $h.grid.date(val, row); }
+                -
+                    name: createdOn
+                    label: CreatedOn
+                    field: createdOn
+                    align: center
+                    sortable: true
+                    format: >-
+                        function(val, row) { return $h.grid.date(val, row); }
+        fields:
+            -
+                name: apiCrud
+                label: CRUD Resource
+                type: pick
+                pick: crud
+                nullable: false
+                insertable: true
+                editable: false
+                validations:
+                    - required
+                format: >-
+                    function(val, row) { try { let o = val || row; return o.apiCrudCode; } catch(e) { return val; } }
+                toValue: >-
+                    function(val) { try { return {'apiCrudCode': val.apiCrudCode}; } catch(e) { return null; } }
+        children:
+            #
+            # ACTION
+            #
+            -
+                title: Action
+                crud:
+                    name: net.ideahut.springboot.api.entity.ApiProviderCrudAction
+                id:
+                    type: COMPOSITE
+                    fields:
+                        - apiName
+                        - apiCrudCode
+                        - action
+                copy: false
+                action:
+                    exclude:
+                        - UPDATE
+                        - PAGE
+                relations:
+                    -
+                        source: apiName
+                        target: apiName
+                    -
+                        source: apiCrudCode
+                        target: apiCrudCode
+                labels:
+                    -
+                        title: ApiName
+                        value: apiName
+                    -
+                        title: CRUD
+                        value: apiCrudCode
+                table:
+                    separator: cell
+                    selection: multiple
+                    page:
+                        options: [5, 10, 15, 20, 25, 30, 50]
+                        default: 20
+                        count: false
+                    order:
+                        field: action
+                        descending: false
+                    visibles:
+                        - action
+                    columns:
+                        -
+                            name: action
+                            label: Action
+                            field: action
+                            align: left
+                            sortable: true
+                            format: >-
+                                function(val, row) { return $h.grid.option(val, row, 'CRUD_ACTION'); }
+                fields:
+                    -
+                        name: action
+                        label: Action
+                        type: option
+                        option: CRUD_ACTION
+                        nullable: false
+                        insertable: true
+                        editable: false
+                        validations:
+                            - required
+            #
+            # FILTER
+            #
+            -
+                title: Filter
+                crud:
+                    name: net.ideahut.springboot.api.entity.ApiProviderCrudFilter
+                id:
+                    type: STANDARD
+                    fields:
+                        - filterId
+                relations:
+                    -
+                        source: apiName
+                        target: apiName
+                    -
+                        source: apiCrudCode
+                        target: apiCrudCode
+                labels:
+                    -
+                        title: ApiName
+                        value: apiName
+                    -
+                        title: CRUD
+                        value: apiCrudCode
+                table:
+                    separator: cell
+                    selection: single
+                    page:
+                        options: [5, 10, 15, 20, 25, 30, 50]
+                        default: 20
+                        count: false
+                    order:
+                        field: fieldName
+                        descending: false
+                    filters:
+                        -
+                            name: fieldName
+                            label: Field
+                            type: text
+                            condition: ANY_LIKE
+                        -
+                            name: filterCondition
+                            label: Condition
+                            type: option
+                            option: SPECIFIC_CONDITION
+                            condition: EQUAL
+                        -
+                            name: isPlainValue
+                            label: Plain
+                            type: option
+                            option: YES_NO
+                            condition: EQUAL
+                    visibles:
+                        - fieldName
+                        - filterCondition
+                        - filterValue
+                        - isPlainValue
+                    columns:
+                        -
+                            name: fieldName
+                            label: Field
+                            field: fieldName
+                            align: left
+                            sortable: true
+                        -
+                            name: filterCondition
+                            label: Condition
+                            field: filterCondition
+                            align: center
+                            sortable: true
+                            format: >-
+                                function(val, row) { return $h.grid.option(val, row, 'SPECIFIC_CONDITION'); }
+                        -
+                            name: filterValue
+                            label: Value
+                            field: filterValue
+                            align: left
+                            sortable: true    
+                        -
+                            name: isPlainValue
+                            label: Plain
+                            field: isPlainValue
+                            align: center
+                            sortable: true
+                            format: >-
+                                function(val, row) { return $h.grid.option(val, row, 'YES_NO'); }
+                fields:
+                    -
+                        name: fieldName
+                        label: Field
+                        type: text
+                        nullable: false
+                        insertable: true
+                        editable: true
+                        validations:
+                            - required
+                            - 'maxlength:128'
+                    -
+                        name: filterCondition
+                        label: Condition
+                        type: option
+                        option: SPECIFIC_CONDITION
+                        nullable: false
+                        insertable: true
+                        editable: true
+                        validations:
+                            - required
+                            - 'maxlength:16'
+                    -
+                        name: filterValue
+                        label: Value
+                        type: words
+                        nullable: true
+                        insertable: true
+                        editable: true
+                        validations:
+                            - 'maxlength:1024'
+                    -
+                        name: isPlainValue
+                        label: Plain
+                        type: option
+                        option: YES_NO
+                        nullable: true
+                        insertable: true
+                        editable: true
+                        validations:
+                            - 'maxlength:1'    
+    #
+    # REQUEST
+    #
+    -
+        title: Request
+        crud:
+            name: net.ideahut.springboot.api.entity.ApiProviderRequest 
+        id:
+            type: COMPOSITE
+            fields:
+                - apiName
+                - packageName
+                - className
+                - functionName
+                - parameterCount
+        relations:
+            -
+                source: apiName
+                target: apiName
+        labels:
+            -
+                title: ApiName
+                value: apiName
+            -
+                title: BaseUrl
+                value: baseUrl
+        action:
+            exclude:
+                - UPDATE        
+        table:
+            separator: cell
+            selection: single
+            page:
+                options: [5, 10, 15, 20, 25, 30, 50]
+                default: 20
+                count: false
+            order:
+                field: patterns
+                descending: false
+            filters:
+                -
+                    name: patterns
+                    label: Pattern
+                    type: text
+                    condition: ANY_LIKE
+                -
+                    name: methods
+                    label: Method
+                    type: text
+                    condition: ANY_LIKE    
+                -
+                    name: packageName
+                    label: Package
+                    type: text
+                    condition: ANY_LIKE
+                -
+                    name: className
+                    label: Class
+                    type: text
+                    condition: ANY_LIKE
+                -
+                    name: functionName
+                    label: Function
+                    type: text
+                    condition: ANY_LIKE
+            visibles:
+                - patterns
+                - methods
+                - packageName
+                - className
+                - functionName
+                - updatedOn
+                - createdOn
+            columns:
+                -
+                    name: patterns
+                    label: Pattern
+                    field: patterns
+                    align: left
+                    sortable: true
+                -
+                    name: methods
+                    label: Method
+                    field: methods
+                    align: left
+                    sortable: true
+                -
+                    name: packageName
+                    label: Package
+                    field: packageName
+                    align: left
+                    sortable: true
+                -
+                    name: className
+                    label: Class
+                    field: className
+                    align: left
+                    sortable: true
+                -
+                    name: functionName
+                    label: Function
+                    field: functionName
+                    align: left
+                    sortable: true
+                    format: >-
+                        function(val, row) { try { return row.functionName + " (" + row.parameterCount + ")"; } catch(e) { return val; } }
+                -
+                    name: updatedOn
+                    label: UpdatedOn
+                    field: updatedOn
+                    align: center
+                    sortable: true
+                    format: >-
+                        function(val, row) { return $h.grid.date(val, row); }
+                -
+                    name: createdOn
+                    label: CreatedOn
+                    field: createdOn
+                    align: center
+                    sortable: true
+                    format: >-
+                        function(val, row) { return $h.grid.date(val, row); }
+        fields:
+            -
+                name: request
+                label: Request Resource
+                type: pick
+                pick: request
+                nullable: false
+                insertable: true
+                editable: false
+                validations:
+                    - required
+                #rowToValue: >-
+                #     function(row) { try { return { 'packageName': row.packageName,
+                #     'className': row.className, 'functionName': row.functionName,
+                #     'parameterCount': row.parameterCount, 'methods': row.methods,
+                #     'patterns': row.patterns, 'consumes': row.consumes, 'produces':
+                #     row.produces }; } catch(e) { return null; } }
+                format: >-
+                    function(val, row) { try { let o = val || row; return o.patterns; }
+                    catch(e) { return val; } }
+                toValue: >-
+                    function(val) { try { return {'packageName': val.packageName,
+                    'className': val.className, 'functionName': val.functionName,
+                    'parameterCount': val.parameterCount, 'methods': val.methods,
+                    'patterns': val.patterns, 'consumes': val.consumes, 'produces':
+                    val.produces }; } catch(e) { return null; } }  
+picks:
+    #
+    # CRUD
+    #
+    crud:
+        title: CRUD Resource
+        crud:
+            name: net.ideahut.springboot.api.entity.ApiCrud
+        id:
+            type: STANDARD
+            fields:
+                - apiCrudCode
+        table:
+            separator: cell
+            selection: single
+            page:
+                options: [5, 10, 15, 20, 25, 30, 50]
+                default: 20
+                count: false
+            order:
+                field: createdOn
+                descending: true
+            filters:
+                -
+                    name: apiCrudCode
+                    label: Code
+                    type: text
+                    condition: ANY_LIKE
+                -
+                    name: className
+                    label: Class
+                    type: text
+                    condition: ANY_LIKE
+                -
+                    name: packageName
+                    label: Package
+                    type: text
+                    condition: ANY_LIKE
+                -
+                    name: manager
+                    label: Manager
+                    type: text
+                    condition: ANY_LIKE
+            visibles:
+                - apiCrudCode
+                - className
+                - packageName
+                - manager
+            columns:
+                -
+                    name: apiCrudCode
+                    label: Code
+                    field: apiCrudCode
+                    align: left
+                    sortable: true
+                -
+                    name: className
+                    label: Class
+                    field: className
+                    align: left
+                    sortable: true
+                -
+                    name: packageName
+                    label: Package
+                    field: packageName
+                    align: left
+                    sortable: true
+                -
+                    name: manager
+                    label: Manager
+                    field: manager
+                    align: left
+                    sortable: true
+    #
+    # REQUEST
+    #
+    request:
+        title: Request Resource
+        crud:
+            name: net.ideahut.springboot.api.entity.ApiItemRequest
+        id:
+            type: STANDARD
+            fields:
+                - itemId
+        table:
+            separator: cell
+            selection: single
+            page:
+                options: [5, 10, 15, 20, 25, 30, 50]
+                default: 20
+                count: false
+            order:
+                field: patterns
+                descending: false
+            filters:
+                -
+                    name: patterns
+                    label: Pattern
+                    type: text
+                    condition: ANY_LIKE
+                -
+                    name: methods
+                    label: Method
+                    type: text
+                    condition: ANY_LIKE
+                -
+                    name: packageName
+                    label: Package
+                    type: text
+                    condition: ANY_LIKE
+                -
+                    name: className
+                    label: Class
+                    type: text
+                    condition: ANY_LIKE
+                -
+                    name: functionName
+                    label: Function
+                    type: text
+                    condition: ANY_LIKE
+            visibles:
+                - patterns
+                - methods
+                - packageName
+                - className
+                - functionName
+            columns:
+                -
+                    name: patterns
+                    label: Pattern
+                    field: patterns
+                    align: left
+                    sortable: true
+                -
+                    name: methods
+                    label: Method
+                    field: methods
+                    align: left
+                    sortable: true
+                -
+                    name: packageName
+                    label: Package
+                    field: packageName
+                    align: left
+                    sortable: true
+                -
+                    name: className
+                    label: Class
+                    field: className
+                    align: left
+                    sortable: true
+                -
+                    name: functionName
+                    label: Function
+                    field: functionName
+                    align: left
+                    sortable: true
+                    format: >-
+                        function(val, row) { try { return row.functionName + "(" + row.parameterCount + ")"; } catch(e) { return val; } }        
+options:
+    - YES_NO
+    - DIGEST
+    - CRUD_ACTION
+    - SPECIFIC_CONDITION
+additionals:
+    - MONTHS
+    - DAYS

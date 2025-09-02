@@ -1,0 +1,45 @@
+spring:
+    datasource:
+        driver-class-name: 'org.hsqldb.jdbc.JDBCDriver'
+        jdbc-url: 'jdbc:hsqldb:hsql:'
+        username: ''
+        password: ''
+    #jpa:
+    #    properties:
+    #        hibernate:
+    #            dialect: 'org.hibernate.dialect.HSQLDialect'
+           
+config:
+    audit:
+        datasource:
+            driver-class-name: 'org.hsqldb.jdbc.JDBCDriver'
+            jdbc-url: 'jdbc:hsqldb:hsql:'
+            username: ''
+            password: ''
+        #jpa:
+        #    properties:
+        #        hibernate:
+        #            dialect: 'org.hibernate.dialect.HSQLDialect'
+            
+other:
+    trxManager:
+        second:
+            datasource:
+                driver-class-name: 'org.hsqldb.jdbc.JDBCDriver'
+                jdbc-url: 'jdbc:hsqldb:hsql:'
+                username: ''
+                password: ''
+            #jpa:
+            #    properties:
+            #        hibernate:
+            #            dialect: 'org.hibernate.dialect.HSQLDialect'  
+            audit:
+                datasource:
+                    driver-class-name: 'org.hsqldb.jdbc.JDBCDriver'
+                    jdbc-url: 'jdbc:hsqldb:hsql:'
+                    username: ''
+                    password: ''
+                #jpa:
+                #    properties:
+                #        hibernate:
+                #            dialect: 'org.hibernate.dialect.HSQLDialect'

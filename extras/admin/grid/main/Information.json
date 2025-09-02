@@ -1,0 +1,405 @@
+{
+    "name": "Information",
+    "title": "Information",
+    "replicas": [
+        1,
+        2
+    ],
+    "crud": {
+        "name": "net.ideahut.springboot.template.entity.app.Information"
+    },
+    "id": {
+        "type": "STANDARD",
+        "fields": [
+            "informationId"
+        ]
+    },
+    "table": {
+        "separator": "vertical",
+        "selection": "multiple",
+        "page": {
+            "options": [
+                5,
+                10,
+                15,
+                20,
+                25,
+                30,
+                50
+            ],
+            "default": 20,
+            "count": false
+        },
+        "order": {
+            "field": "createdOn",
+            "descending": true
+        },
+        "filters": [
+            {
+                "name": "title",
+                "label": "Title",
+                "type": "text",
+                "condition": "ANY_LIKE"
+            },
+            {
+                "name": "isActive",
+                "label": "IsActive",
+                "type": "option",
+                "option": "YES_NO",
+                "condition": "EQUAL"
+            },
+            {
+                "name": "description",
+                "label": "Description",
+                "type": "text",
+                "condition": "ANY_LIKE"
+            }
+        ],
+        "visibles": [
+            "title",
+            "description",
+            "image",
+            "isActive",
+            "isExternal",
+            "updatedOn",
+            "createdOn"
+        ],
+        "columns": [
+            {
+                "name": "title",
+                "label": "Title",
+                "field": "title",
+                "align": "left",
+                "sortable": true
+            },
+            {
+                "name": "description",
+                "label": "Description",
+                "field": "description",
+                "align": "left",
+                "sortable": true
+            },
+            {
+                "name": "image",
+                "label": "Image",
+                "field": "image",
+                "align": "left",
+                "sortable": true
+            },
+            {
+                "name": "isActive",
+                "label": "IsActive",
+                "field": "isActive",
+                "align": "center",
+                "sortable": true,
+                "format": "function(val, row) { return $h.grid.option(val, row, 'YES_NO'); }"
+            },
+            {
+                "name": "isExternal",
+                "label": "IsExternal",
+                "field": "isExternal",
+                "align": "center",
+                "sortable": true,
+                "format": "function(val, row) { return $h.grid.option(val, row, 'YES_NO'); }"
+            },
+            {
+                "name": "seqno",
+                "label": "Seqno",
+                "field": "seqno",
+                "align": "left",
+                "sortable": true
+            },
+            {
+                "name": "url",
+                "label": "Url",
+                "field": "url",
+                "align": "left",
+                "sortable": true
+            },
+            {
+                "name": "content",
+                "label": "Content",
+                "field": "content",
+                "align": "left",
+                "sortable": true
+            },
+            {
+                "name": "updatedOn",
+                "label": "UpdatedOn",
+                "field": "updatedOn",
+                "align": "center",
+                "sortable": true,
+                "format": "function(val, row) { return $h.grid.date(val, row); }"
+            },
+            {
+                "name": "createdOn",
+                "label": "CreatedOn",
+                "field": "createdOn",
+                "align": "center",
+                "sortable": true,
+                "format": "function(val, row) { return $h.grid.date(val, row); }"
+            }
+        ]
+    },
+    "fields": [
+        {
+            "name": "title",
+            "label": "Title",
+            "type": "text",
+            "nullable": false,
+            "insertable": true,
+            "editable": true,
+            "validations": [
+                "required"
+            ]
+        },
+        {
+            "name": "description",
+            "label": "Description",
+            "type": "text",
+            "nullable": true,
+            "insertable": true,
+            "editable": true
+        },
+        {
+            "name": "image",
+            "label": "Image",
+            "type": "text",
+            "nullable": false,
+            "insertable": true,
+            "editable": true
+        },
+        {
+            "name": "isActive",
+            "label": "IsActive",
+            "type": "option",
+            "option": "YES_NO",
+            "nullable": false,
+            "insertable": true,
+            "editable": true,
+            "validations": [
+                "required"
+            ]
+        },
+        {
+            "name": "isExternal",
+            "label": "IsExternal",
+            "type": "option",
+            "option": "YES_NO",
+            "nullable": false,
+            "insertable": true,
+            "editable": true,
+            "validations": [
+                "required"
+            ]
+        },
+        {
+            "name": "seqno",
+            "label": "Seqno",
+            "type": "number",
+            "nullable": false,
+            "insertable": true,
+            "editable": true,
+            "validations": [
+                "required",
+                "number"
+            ]
+        },
+        {
+            "name": "url",
+            "label": "Url",
+            "type": "text",
+            "nullable": true,
+            "insertable": true,
+            "editable": true
+        },
+        {
+            "name": "content",
+            "label": "Content",
+            "type": "words",
+            "nullable": true,
+            "insertable": true,
+            "editable": true
+        }
+    ],
+    "children": [
+        {
+            "title": "Link",
+            "crud": {
+                "name": "net.ideahut.springboot.template.entity.app.InformationLink"
+            },
+            "id": {
+                "type": "STANDARD",
+                "fields": [
+                    "linkId"
+                ]
+            },
+            "relations": [
+                {
+                    "target": "information.informationId",
+                    "source": "informationId"
+                }
+            ],
+            "labels": [
+                {
+                    "title": "ID",
+                    "value": "informationId"
+                },
+                {
+                    "title": "Title",
+                    "value": "title"
+                }
+            ],
+            "enableReplica": true,
+            "table": {
+                "separator": "vertical",
+                "selection": "single",
+                "page": {
+                    "options": [
+                        5,
+                        10,
+                        15,
+                        20,
+                        25,
+                        30,
+                        50
+                    ],
+                    "default": 20,
+                    "count": false
+                },
+                "order": {
+                    "field": "createdOn",
+                    "descending": true
+                },
+                "filters": [
+                    {
+                        "name": "code",
+                        "label": "Code",
+                        "type": "text",
+                        "condition": "ANY_LIKE"
+                    },
+                    {
+                        "name": "label",
+                        "label": "Label",
+                        "type": "text",
+                        "condition": "ANY_LIKE"
+                    },
+                    {
+                        "name": "target",
+                        "label": "Target",
+                        "type": "text",
+                        "condition": "ANY_LIKE"
+                    }
+                ],
+                "visibles": [
+                    "code",
+                    "label",
+                    "target",
+                    "seqno",
+                    "updatedOn",
+                    "createdOn"
+                ],
+                "columns": [
+                    {
+                        "name": "code",
+                        "label": "Code",
+                        "field": "code",
+                        "align": "left",
+                        "sortable": true
+                    },
+                    {
+                        "name": "label",
+                        "label": "Label",
+                        "field": "label",
+                        "align": "left",
+                        "sortable": true
+                    },
+                    {
+                        "name": "target",
+                        "label": "Target",
+                        "field": "target",
+                        "align": "left",
+                        "sortable": true,
+                        "format": ""
+                    },
+                    {
+                        "name": "seqno",
+                        "label": "Seqno",
+                        "field": "seqno",
+                        "align": "left",
+                        "sortable": true
+                    },
+                    {
+                        "name": "updatedOn",
+                        "label": "UpdatedOn",
+                        "field": "updatedOn",
+                        "align": "left",
+                        "sortable": true,
+                        "format": "function(val, row) { return $h.grid.date(val, row); }"
+                    },
+                    {
+                        "name": "createdOn",
+                        "label": "CreatedOn",
+                        "field": "createdOn",
+                        "align": "left",
+                        "sortable": true,
+                        "format": "function(val, row) { return $h.grid.date(val, row); }"
+                    }
+                ]
+            },
+            "fields": [
+                {
+                    "name": "code",
+                    "label": "Code",
+                    "type": "text",
+                    "nullable": false,
+                    "insertable": true,
+                    "editable": true,
+                    "validations": [
+                        "required"
+                    ]
+                },
+                {
+                    "name": "label",
+                    "label": "Label",
+                    "type": "text",
+                    "nullable": false,
+                    "insertable": true,
+                    "editable": true,
+                    "validations": [
+                        "required"
+                    ]
+                },
+                {
+                    "name": "target",
+                    "label": "Target",
+                    "type": "text",
+                    "nullable": false,
+                    "insertable": true,
+                    "editable": true,
+                    "validations": [
+                        "required"
+                    ]
+                },
+                {
+                    "name": "seqno",
+                    "label": "Seqno",
+                    "type": "number",
+                    "nullable": false,
+                    "insertable": true,
+                    "editable": true,
+                    "validations": [
+                        "required"
+                    ]
+                }
+            ]
+        }
+    ],
+    "options": [
+        "YES_NO"
+    ],
+    "additionals": [
+        "MONTHS",
+        "DAYS"
+    ]
+}

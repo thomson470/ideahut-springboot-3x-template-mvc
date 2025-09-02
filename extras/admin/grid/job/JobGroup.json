@@ -1,0 +1,933 @@
+{
+    "order": 3,
+    "name": "JobGroup",
+    "title": "Group",
+    "crud": {
+        "name": "net.ideahut.springboot.job.entity.JobGroup"
+    },
+    "id": {
+        "type": "STANDARD",
+        "fields": [
+            "groupId"
+        ]
+    },
+    "table": {
+        "separator": "cell",
+        "selection": "single",
+        "page": {
+            "options": [
+                5,
+                10,
+                15,
+                20,
+                25,
+                30,
+                50
+            ],
+            "default": 20,
+            "count": false
+        },
+        "order": {
+            "field": "createdOn",
+            "descending": true
+        },
+        "filters": [
+            {
+                "name": "groupId",
+                "label": "GroupId",
+                "type": "text",
+                "condition": "ANY_LIKE"
+            },
+            {
+                "name": "name",
+                "label": "Name",
+                "type": "text",
+                "condition": "ANY_LIKE"
+            },
+            {
+                "name": "description",
+                "label": "Description",
+                "type": "text",
+                "condition": "ANY_LIKE"
+            },
+            {
+                "name": "isActive",
+                "label": "IsActive",
+                "type": "option",
+                "option": "YES_NO",
+                "condition": "EQUAL"
+            }
+        ],
+        "visibles": [
+            "name",
+            "isActive",
+            "zoneOffsetSeconds",
+            "description",
+            "updatedOn",
+            "createdOn"
+        ],
+        "columns": [
+            {
+                "name": "name",
+                "label": "Name",
+                "field": "name",
+                "align": "left",
+                "sortable": true
+            },
+            {
+                "name": "isActive",
+                "label": "IsActive",
+                "field": "isActive",
+                "align": "center",
+                "sortable": true,
+                "format": "function(val, row) { return $h.grid.option(val, row, 'YES_NO'); }"
+            },
+            {
+                "name": "zoneOffsetSeconds",
+                "label": "ZoneOffsetSeconds",
+                "field": "zoneOffsetSeconds",
+                "align": "right",
+                "sortable": true
+            },
+            {
+                "name": "description",
+                "label": "Description",
+                "field": "description",
+                "align": "left",
+                "sortable": true
+            },
+            {
+                "name": "updatedOn",
+                "label": "UpdatedOn",
+                "field": "updatedOn",
+                "align": "center",
+                "sortable": true,
+                "format": "function(val, row) { return $h.grid.date(val, row); }"
+            },
+            {
+                "name": "createdOn",
+                "label": "CreatedOn",
+                "field": "createdOn",
+                "align": "center",
+                "sortable": true,
+                "format": "function(val, row) { return $h.grid.date(val, row); }"
+            }
+        ]
+    },
+    "fields": [
+        {
+            "name": "name",
+            "label": "Name",
+            "type": "text",
+            "nullable": false,
+            "insertable": true,
+            "editable": true,
+            "validations": [
+                "required",
+                "maxlength:100"
+            ]
+        },
+        {
+            "name": "isActive",
+            "label": "IsActive",
+            "type": "option",
+            "option": "YES_NO",
+            "nullable": false,
+            "insertable": true,
+            "editable": true,
+            "validations": [
+                "required",
+                "maxlength:1"
+            ]
+        },
+        {
+            "name": "zoneOffsetSeconds",
+            "label": "ZoneOffsetSeconds",
+            "type": "number",
+            "nullable": false,
+            "insertable": true,
+            "editable": true,
+            "validations": [
+                "required",
+                "number"
+            ]
+        },
+        {
+            "name": "description",
+            "label": "Description",
+            "type": "words",
+            "nullable": true,
+            "insertable": true,
+            "editable": true,
+            "validations": [
+                "maxlength:255"
+            ]
+        }
+    ],
+    "picks": {
+        "instance": {
+            "title": "Instance",
+            "crud": {
+                "name": "net.ideahut.springboot.job.entity.JobInstance"
+            },
+            "id": {
+                "type": "STANDARD",
+                "fields": [
+                    "instanceId"
+                ]
+            },
+            "table": {
+                "separator": "cell",
+                "selection": "single",
+                "page": {
+                    "options": [
+                        5,
+                        10,
+                        15,
+                        20,
+                        25,
+                        30,
+                        50
+                    ],
+                    "default": 20,
+                    "count": false
+                },
+                "order": {
+                    "field": "createdOn",
+                    "descending": true
+                },
+                "filters": [
+                    {
+                        "name": "instanceId",
+                        "label": "InstanceId",
+                        "type": "text",
+                        "condition": "ANY_LIKE"
+                    },
+                    {
+                        "name": "name",
+                        "label": "Name",
+                        "type": "text",
+                        "condition": "ANY_LIKE"
+                    },
+                    {
+                        "name": "description",
+                        "label": "Description",
+                        "type": "text",
+                        "condition": "ANY_LIKE"
+                    }
+                ],
+                "visibles": [
+                    "instanceId",
+                    "name",
+                    "description"
+                ],
+                "columns": [
+                    {
+                        "name": "instanceId",
+                        "label": "InstanceId",
+                        "field": "instanceId",
+                        "align": "left",
+                        "sortable": true
+                    },
+                    {
+                        "name": "name",
+                        "label": "Name",
+                        "field": "name",
+                        "align": "left",
+                        "sortable": true
+                    },
+                    {
+                        "name": "description",
+                        "label": "Description",
+                        "field": "description",
+                        "align": "left",
+                        "sortable": true
+                    }
+                ]
+            }
+        },
+        "type": {
+            "title": "Type",
+            "crud": {
+                "name": "net.ideahut.springboot.job.entity.JobType"
+            },
+            "id": {
+                "type": "STANDARD",
+                "fields": [
+                    "typeId"
+                ]
+            },
+            "table": {
+                "separator": "cell",
+                "selection": "single",
+                "page": {
+                    "options": [
+                        5,
+                        10,
+                        15,
+                        20,
+                        25,
+                        30,
+                        50
+                    ],
+                    "default": 20,
+                    "count": false
+                },
+                "order": {
+                    "field": "createdOn",
+                    "descending": true
+                },
+                "filters": [
+                    {
+                        "name": "typeId",
+                        "label": "TypeId",
+                        "type": "text",
+                        "condition": "ANY_LIKE"
+                    },
+                    {
+                        "name": "name",
+                        "label": "Name",
+                        "type": "text",
+                        "condition": "ANY_LIKE"
+                    },
+                    {
+                        "name": "classname",
+                        "label": "Classname",
+                        "type": "text",
+                        "condition": "ANY_LIKE"
+                    },
+                    {
+                        "name": "description",
+                        "label": "Description",
+                        "type": "text",
+                        "condition": "ANY_LIKE"
+                    }
+                ],
+                "visibles": [
+                    "name",
+                    "classname",
+                    "description"
+                ],
+                "columns": [
+                    {
+                        "name": "name",
+                        "label": "Name",
+                        "field": "name",
+                        "align": "left",
+                        "sortable": true
+                    },
+                    {
+                        "name": "classname",
+                        "label": "Classname",
+                        "field": "classname",
+                        "align": "left",
+                        "sortable": true
+                    },
+                    {
+                        "name": "description",
+                        "label": "Description",
+                        "field": "description",
+                        "align": "left",
+                        "sortable": true
+                    }
+                ]
+            }
+        },
+        "parameter": {
+            "title": "Parameter",
+            "crud": {
+                "name": "net.ideahut.springboot.job.entity.JobTypeParam"
+            },
+            "id": {
+                "type": "COMPOSITE",
+                "fields": [
+                    "typeId",
+                    "name"
+                ]
+            },
+            "relations": [
+                {
+                    "source": "type.typeId",
+                    "target": "typeId"
+                }
+            ],
+            "table": {
+                "separator": "cell",
+                "selection": "single",
+                "page": {
+                    "options": [
+                        5,
+                        10,
+                        15,
+                        20,
+                        25,
+                        30,
+                        50
+                    ],
+                    "default": 20,
+                    "count": false
+                },
+                "order": {
+                    "field": "name",
+                    "descending": false
+                },
+                "filters": [
+                    {
+                        "name": "name",
+                        "label": "Name",
+                        "type": "text",
+                        "condition": "ANY_LIKE"
+                    },
+                    {
+                        "name": "description",
+                        "label": "Description",
+                        "type": "text",
+                        "condition": "ANY_LIKE"
+                    }
+                ],
+                "visibles": [
+                    "name",
+                    "description"
+                ],
+                "columns": [
+                    {
+                        "name": "name",
+                        "label": "Name",
+                        "field": "name",
+                        "align": "left",
+                        "sortable": true
+                    },
+                    {
+                        "name": "description",
+                        "label": "Description",
+                        "field": "description",
+                        "align": "left",
+                        "sortable": true
+                    }
+                ]
+            }
+        }
+    },
+    "children": [
+        {
+            "title": "Trigger",
+            "crud": {
+                "name": "net.ideahut.springboot.job.entity.JobTrigger",
+                "joins": [
+                    {
+                        "name": "net.ideahut.springboot.job.entity.JobGroup",
+                        "alias": "JobGroup",
+                        "store": "group",
+                        "match": "exact",
+                        "relations": [
+                            {
+                                "source": "groupId",
+                                "target": "groupId"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "net.ideahut.springboot.job.entity.JobType",
+                        "alias": "JobType",
+                        "store": "type",
+                        "match": "exact",
+                        "relations": [
+                            {
+                                "source": "typeId",
+                                "target": "typeId"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "net.ideahut.springboot.job.entity.JobInstance",
+                        "alias": "JobInstance",
+                        "store": "instance",
+                        "match": "contain",
+                        "relations": [
+                            {
+                                "source": "instanceId",
+                                "target": "instanceId"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "id": {
+                "type": "STANDARD",
+                "fields": [
+                    "triggerId"
+                ]
+            },
+            "relations": [
+                {
+                    "source": "groupId",
+                    "target": "groupId"
+                }
+            ],
+            "labels": [
+                {
+                    "title": "GroupId",
+                    "value": "groupId"
+                },
+                {
+                    "title": "Name",
+                    "value": "name"
+                }
+            ],
+            "table": {
+                "separator": "cell",
+                "selection": "single",
+                "page": {
+                    "options": [
+                        5,
+                        10,
+                        15,
+                        20,
+                        25,
+                        30,
+                        50
+                    ],
+                    "default": 20,
+                    "count": false
+                },
+                "order": {
+                    "field": "name",
+                    "descending": false
+                },
+                "filters": [
+                    {
+                        "name": "triggerId",
+                        "label": "TriggerId",
+                        "type": "text",
+                        "condition": "ANY_LIKE"
+                    },
+                    {
+                        "name": "name",
+                        "label": "Name",
+                        "type": "text",
+                        "condition": "ANY_LIKE"
+                    },
+                    {
+                        "or": [
+                            "JobType.typeId",
+                            "JobType.name",
+                            "JobType.classname"
+                        ],
+                        "label": "Type",
+                        "type": "text",
+                        "condition": "ANY_LIKE"
+                    },
+                    {
+                        "name": "isActive",
+                        "label": "Active",
+                        "type": "option",
+                        "option": "YES_NO",
+                        "condition": "EQUAL"
+                    },
+                    {
+                        "name": "isLocking",
+                        "label": "Locking",
+                        "type": "option",
+                        "option": "YES_NO",
+                        "condition": "EQUAL"
+                    },
+                    {
+                        "or": [
+                            "JobInstance.instanceId",
+                            "JobInstance.name"
+                        ],
+                        "label": "Instance",
+                        "type": "text",
+                        "condition": "ANY_LIKE"
+                    }
+                ],
+                "visibles": [
+                    "name",
+                    "JobType.name",
+                    "cronExpression",
+                    "isActive",
+                    "isLocking",
+                    "isSaveResult",
+                    "isRunOnStartup",
+                    "JobInstance.name",
+                    "lastRunTime",
+                    "updatedOn",
+                    "createdOn"
+                ],
+                "columns": [
+                    {
+                        "name": "name",
+                        "label": "Name",
+                        "field": "name",
+                        "align": "left",
+                        "sortable": true
+                    },
+                    {
+                        "name": "JobType.name",
+                        "label": "Type",
+                        "field": "type",
+                        "align": "left",
+                        "sortable": true,
+                        "format": "function(val, row) { return $h.grid.field(val, 'name'); }"
+                    },
+                    {
+                        "name": "cronExpression",
+                        "label": "CronExpression",
+                        "field": "cronExpression",
+                        "align": "left",
+                        "sortable": true
+                    },
+                    {
+                        "name": "isActive",
+                        "label": "Active",
+                        "field": "isActive",
+                        "align": "center",
+                        "sortable": true,
+                        "format": "function(val, row) { return $h.grid.option(val, row, 'YES_NO'); }"
+                    },
+                    {
+                        "name": "isLocking",
+                        "label": "Locking",
+                        "field": "isLocking",
+                        "align": "center",
+                        "sortable": true,
+                        "format": "function(val, row) { return $h.grid.option(val, row, 'YES_NO'); }"
+                    },
+                    {
+                        "name": "isSaveResult",
+                        "label": "SaveResult",
+                        "field": "isSaveResult",
+                        "align": "center",
+                        "sortable": true,
+                        "format": "function(val, row) { return $h.grid.option(val, row, 'YES_NO'); }"
+                    },
+                    {
+                        "name": "isRunOnStartup",
+                        "label": "RunOnStartup",
+                        "field": "isRunOnStartup",
+                        "align": "center",
+                        "sortable": true,
+                        "format": "function(val, row) { return $h.grid.option(val, row, 'YES_NO'); }"
+                    },
+                    {
+                        "name": "JobInstance.name",
+                        "label": "Instance",
+                        "field": "instance",
+                        "align": "left",
+                        "sortable": true,
+                        "format": "function(val, row) { return $h.grid.field(val, 'name'); }"
+                    },
+                    {
+                        "name": "zoneOffsetSeconds",
+                        "label": "ZoneOffsetSeconds",
+                        "field": "zoneOffsetSeconds",
+                        "align": "right",
+                        "sortable": true
+                    },
+                    {
+                        "name": "description",
+                        "label": "Description",
+                        "field": "description",
+                        "align": "left",
+                        "sortable": true
+                    },
+                    {
+                        "name": "lastRunTime",
+                        "label": "LastRunTime",
+                        "field": "lastRunTime",
+                        "align": "left",
+                        "sortable": true,
+                        "format": "function(val, row) { return $h.grid.date(val, row); }"
+                    },
+                    {
+                        "name": "lastRunData",
+                        "label": "LastRunData",
+                        "field": "lastRunData",
+                        "align": "left",
+                        "sortable": true
+                    },
+                    {
+                        "name": "updatedOn",
+                        "label": "UpdatedOn",
+                        "field": "updatedOn",
+                        "align": "center",
+                        "sortable": true,
+                        "format": "function(val, row) { return $h.grid.date(val, row); }"
+                    },
+                    {
+                        "name": "createdOn",
+                        "label": "CreatedOn",
+                        "field": "createdOn",
+                        "align": "center",
+                        "sortable": true,
+                        "format": "function(val, row) { return $h.grid.date(val, row); }"
+                    }
+                ]
+            },
+            "fields": [
+                {
+                    "name": "name",
+                    "label": "Name",
+                    "type": "text",
+                    "nullable": false,
+                    "insertable": true,
+                    "editable": true,
+                    "validations": [
+                        "required",
+                        "maxlength:100"
+                    ]
+                },
+                {
+                    "name": "type",
+                    "label": "Type",
+                    "type": "pick",
+                    "pick": "type",
+                    "nullable": false,
+                    "insertable": true,
+                    "editable": true,
+                    "validations": [
+                        "required"
+                    ],
+                    "rowToValue": "function(row) { try { return {'typeId': row.type.typeId, 'name': row.type.name}; } catch(e) { return null; } }",
+                    "format": "function(val, row) { try { if(val) { return val.name; } else { return ''; } } catch(e) { return val; } }",
+                    "toValue": "function(val) { try { return {'typeId': val.typeId}; } catch(e) { return null; } }"
+                },
+                {
+                    "name": "cronExpression",
+                    "label": "CronExpression",
+                    "type": "text",
+                    "nullable": false,
+                    "insertable": true,
+                    "editable": true,
+                    "validations": [
+                        "required",
+                        "maxlength:100"
+                    ]
+                },
+                {
+                    "name": "isActive",
+                    "label": "Active",
+                    "type": "option",
+                    "option": "YES_NO",
+                    "nullable": false,
+                    "insertable": true,
+                    "editable": true,
+                    "validations": [
+                        "required",
+                        "maxlength:1"
+                    ]
+                },
+                {
+                    "name": "isSaveResult",
+                    "label": "SaveResult",
+                    "type": "option",
+                    "option": "YES_NO",
+                    "nullable": false,
+                    "insertable": true,
+                    "editable": true,
+                    "validations": [
+                        "required",
+                        "maxlength:1"
+                    ]
+                },
+                {
+                    "name": "isRunOnStartup",
+                    "label": "RunOnStartup",
+                    "type": "option",
+                    "option": "YES_NO",
+                    "nullable": false,
+                    "insertable": true,
+                    "editable": true,
+                    "validations": [
+                        "required",
+                        "maxlength:1"
+                    ]
+                },
+                {
+                    "name": "isLocking",
+                    "label": "Locking",
+                    "type": "option",
+                    "option": "YES_NO",
+                    "nullable": false,
+                    "insertable": false,
+                    "editable": true,
+                    "validations": [
+                        "maxlength:1"
+                    ]
+                },
+                {
+                    "name": "zoneOffsetSeconds",
+                    "label": "ZoneOffsetSeconds",
+                    "type": "number",
+                    "nullable": true,
+                    "insertable": true,
+                    "editable": true,
+                    "validations": [
+                        "number"
+                    ]
+                },
+                {
+                    "name": "description",
+                    "label": "Description",
+                    "type": "words",
+                    "nullable": true,
+                    "insertable": true,
+                    "editable": true,
+                    "validations": [
+                        "maxlength:255"
+                    ]
+                },
+                {
+                    "name": "instance",
+                    "label": "Instance",
+                    "type": "pick",
+                    "pick": "instance",
+                    "nullable": true,
+                    "insertable": true,
+                    "editable": true,
+                    "rowToValue": "function(row) { try { return {'instanceId': row.instance.instanceId, 'name': row.instance.name}; } catch(e) { return null; } }",
+                    "format": "function(val, row) { try { if(val) { return val.name; } else { return ''; } } catch(e) { return val; } }",
+                    "toValue": "function(val) { try { return {'instanceId': val.instanceId}; } catch(e) { return null; } }",
+                    "nullValue": "function() { return {'instanceId': null}; }"
+                }
+            ],
+            "children": [
+                {
+                    "title": "Configuration",
+                    "crud": {
+                        "name": "net.ideahut.springboot.job.entity.JobTriggerConfig"
+                    },
+                    "id": {
+                        "type": "COMPOSITE",
+                        "fields": [
+                            "triggerId",
+                            "typeId",
+                            "name"
+                        ]
+                    },
+                    "copy": false,
+                    "action": {
+                        "exclude": [
+                            "PAGE"
+                        ]
+                    },
+                    "relations": [
+                        {
+                            "source": "triggerId",
+                            "target": "triggerId"
+                        },
+                        {
+                            "source": "type.typeId",
+                            "target": "typeId"
+                        }
+                    ],
+                    "labels": [
+                        {
+                            "title": "Trigger",
+                            "value": "name"
+                        },
+                        {
+                            "title": "Group",
+                            "value": "group.name"
+                        },
+                        {
+                            "title": "Type",
+                            "value": "type.name"
+                        }
+                    ],
+                    "table": {
+                        "separator": "cell",
+                        "selection": "single",
+                        "page": {
+                            "options": [
+                                5,
+                                10,
+                                15,
+                                20,
+                                25,
+                                30,
+                                50
+                            ],
+                            "default": 20,
+                            "count": false
+                        },
+                        "order": {
+                            "field": "name",
+                            "descending": false
+                        },
+                        "visibles": [
+                            "name",
+                            "value",
+                            "updatedOn",
+                            "createdOn"
+                        ],
+                        "columns": [
+                            {
+                                "name": "name",
+                                "label": "Name",
+                                "field": "name",
+                                "align": "left",
+                                "sortable": true
+                            },
+                            {
+                                "name": "value",
+                                "label": "Value",
+                                "field": "value",
+                                "align": "left",
+                                "sortable": true
+                            },
+                            {
+                                "name": "updatedOn",
+                                "label": "UpdatedOn",
+                                "field": "updatedOn",
+                                "align": "center",
+                                "sortable": true,
+                                "format": "function(val, row) { return $h.grid.date(val, row); }"
+                            },
+                            {
+                                "name": "createdOn",
+                                "label": "CreatedOn",
+                                "field": "createdOn",
+                                "align": "center",
+                                "sortable": true,
+                                "format": "function(val, row) { return $h.grid.date(val, row); } "
+                            }
+                        ]
+                    },
+                    "fields": [
+                        {
+                            "name": "name",
+                            "label": "Name",
+                            "type": "pick",
+                            "pick": "parameter",
+                            "nullable": false,
+                            "insertable": true,
+                            "editable": false,
+                            "validations": [
+                                "required",
+                                "maxlength:100"
+                            ],
+                            "format": "function(val, row) { try { return val.name || row.name; } catch(e) { return val.name; } }",
+                            "toValue": "function(val) { try { return {'name': val.name}; } catch(e) { return null; } }"
+                        },
+                        {
+                            "name": "value",
+                            "label": "Value",
+                            "type": "text",
+                            "nullable": true,
+                            "insertable": true,
+                            "editable": true
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "options": [
+        "YES_NO"
+    ],
+    "additionals": [
+        "MONTHS",
+        "DAYS"
+    ]
+}

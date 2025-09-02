@@ -1,0 +1,311 @@
+name: InformationLink
+title: InformationLink
+allUseSameReplica: true
+replicas:
+    - 1
+    - 2
+crud:
+    name: net.ideahut.springboot.template.entity.app.InformationLink
+    joins:
+        -
+            name: net.ideahut.springboot.template.entity.app.Information
+            store: information
+            match: contain
+            enableReplica: true
+            relations:
+                -
+                    source: information
+                    target: informationId
+id:
+    type: STANDARD
+    fields:
+        - linkId
+table:
+    separator: none
+    selection: single
+    page:
+        options:
+            - 5
+            - 10
+            - 15
+            - 20
+            - 25
+            - 30
+            - 50
+        default: 20
+        count: false
+    order:
+        field: createdOn
+        descending: true
+    filters:
+        -
+            name: code
+            label: Code
+            type: text
+            condition: ANY_LIKE
+        -
+            name: label
+            label: Label
+            type: text
+            condition: ANY_LIKE
+        -
+            name: target
+            label: Target
+            type: text
+            condition: ANY_LIKE
+    visibles:
+        - code
+        - label
+        - seqno
+        - information
+        - updatedOn
+        - createdOn
+        - target
+    columns:
+        -
+            name: code
+            label: Code
+            field: code
+            align: left
+            sortable: true
+        -
+            name: label
+            label: Label
+            field: label
+            align: left
+            sortable: true
+        -
+            name: seqno
+            label: Seqno
+            field: seqno
+            align: right
+            sortable: true
+        -
+            name: target
+            label: Target
+            field: target
+            align: left
+            sortable: true
+        -
+            name: information
+            label: Information
+            field: information
+            align: left
+            sortable: true
+            format: >-
+                function(val, row) { try { if(val) { return val.title + ' (' +
+                val.informationId + ')'; } else { return ''; }; } catch(e) {
+                return val; } }
+        -
+            name: updatedOn
+            label: UpdatedOn
+            field: updatedOn
+            align: left
+            sortable: true
+            format: 'function(val, row) { return $h.grid.date(val, row); }'
+        -
+            name: createdOn
+            label: CreatedOn
+            field: createdOn
+            align: left
+            sortable: true
+            format: 'function(val, row) { return $h.grid.date(val, row); }'
+fields:
+    -
+        name: code
+        label: Code
+        type: text
+        nullable: false
+        insertable: true
+        editable: true
+        validations:
+            - required
+            - 'maxlength:16'
+    -
+        name: label
+        label: Label
+        type: text
+        nullable: false
+        insertable: true
+        editable: true
+        validations:
+            - required
+            - 'maxlength:100'
+    -
+        name: seqno
+        label: Seqno
+        type: number
+        nullable: false
+        insertable: true
+        editable: true
+        validations:
+            - required
+            - number
+    -
+        name: target
+        label: Target
+        type: text
+        nullable: false
+        insertable: true
+        editable: true
+        validations:
+            - required
+            - 'maxlength:255'
+    -
+        name: information
+        label: Information
+        type: pick
+        pick: information
+        nullable: false
+        insertable: true
+        editable: true
+        format: >-
+            function(val, row) { try { if(val) { return val.title + ' (' +
+            val.informationId + ')'; } else { return ''; }; } catch(e) { return
+            val; } }
+        validations:
+            - required
+picks:
+    information:
+        title: Information
+        crud:
+            name: net.ideahut.springboot.template.entity.app.Information
+        id:
+            type: STANDARD
+            fields:
+                - informationId
+        enableReplica: true
+        table:
+            separator: none
+            selection: single
+            page:
+                options:
+                    - 5
+                    - 10
+                    - 15
+                    - 20
+                    - 25
+                    - 30
+                    - 50
+                default: 20
+                count: false
+            order:
+                field: createdOn
+                descending: true
+            filters:
+                -
+                    name: isExternal
+                    label: IsExternal
+                    type: option
+                    option: YES_NO
+                    condition: EQUAL
+                -
+                    name: title
+                    label: Title
+                    type: text
+                    condition: ANY_LIKE
+                -
+                    name: description
+                    label: Description
+                    type: text
+                    condition: ANY_LIKE
+                -
+                    name: isActive
+                    label: IsActive
+                    type: option
+                    option: YES_NO
+                    condition: EQUAL
+                -
+                    name: content
+                    label: Content
+                    type: text
+                    condition: ANY_LIKE
+                -
+                    name: url
+                    label: Url
+                    type: text
+                    condition: ANY_LIKE
+            visibles:
+                - informationId
+                - title
+                - isExternal
+                - isActive
+                - seqno
+            columns:
+                -
+                    name: informationId
+                    label: ID
+                    field: informationId
+                    align: left
+                    sortable: true
+                -
+                    name: title
+                    label: Title
+                    field: title
+                    align: left
+                    sortable: true
+                -
+                    name: image
+                    label: Image
+                    field: image
+                    align: left
+                    sortable: true
+                -
+                    name: isExternal
+                    label: IsExternal
+                    field: isExternal
+                    align: center
+                    sortable: true
+                    format: >-
+                        function(val, row) { return $h.grid.option(val, row, 'YES_NO'); }
+                -
+                    name: isActive
+                    label: IsActive
+                    field: isActive
+                    align: center
+                    sortable: true
+                    format: >-
+                        function(val, row) { return $h.grid.option(val, row, 'YES_NO'); }
+                -
+                    name: seqno
+                    label: Seqno
+                    field: seqno
+                    align: left
+                    sortable: true
+                -
+                    name: description
+                    label: Description
+                    field: description
+                    align: left
+                    sortable: true
+                -
+                    name: content
+                    label: Content
+                    field: content
+                    align: left
+                    sortable: true
+                -
+                    name: url
+                    label: Url
+                    field: url
+                    align: left
+                    sortable: true
+                -
+                    name: updatedOn
+                    label: UpdatedOn
+                    field: updatedOn
+                    align: left
+                    sortable: true
+                    format: 'function(val, row) { return $h.grid.date(val, row); }'
+                -
+                    name: createdOn
+                    label: CreatedOn
+                    field: createdOn
+                    align: left
+                    sortable: true
+                    format: 'function(val, row) { return $h.grid.date(val, row); }'
+options:
+    - YES_NO
+additionals:
+    - MONTHS
+    - DAYS
