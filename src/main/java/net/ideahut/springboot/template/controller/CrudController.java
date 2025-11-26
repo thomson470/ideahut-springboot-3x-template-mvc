@@ -1,6 +1,9 @@
 package net.ideahut.springboot.template.controller;
 
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,16 +22,18 @@ import net.ideahut.springboot.crud.CrudAction;
 import net.ideahut.springboot.crud.CrudHandler;
 import net.ideahut.springboot.crud.CrudInput;
 import net.ideahut.springboot.crud.CrudPermission;
+import net.ideahut.springboot.crud.WebMvcCrudController;
 import net.ideahut.springboot.helper.StringHelper;
 import net.ideahut.springboot.helper.WebMvcHelper;
 import net.ideahut.springboot.object.Page;
 import net.ideahut.springboot.object.Result;
+import net.ideahut.springboot.task.TaskHandler;
 
 @Public
 @ComponentScan
 @RestController
 @RequestMapping("/crud")
-class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
+class CrudController extends WebMvcCrudController {
 	
 	private final CrudHandler crudHandler;
 	private final CrudPermission crudPermission;
@@ -46,6 +51,11 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 	protected CrudHandler crudHandler() {
 		return crudHandler;
 	}
+	
+	@Override
+	protected TaskHandler taskHandler() {
+		return null;
+	}
 
 	/*
 	 * Crud Permission bisa di level Handler ataupun di lever Controller.
@@ -57,7 +67,6 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 		return crudPermission;
 	}
 	
-	
 	/*
 	 * INFO
 	 * - Tipe Id: STANDARD, EMBEDDED, COMPOSITE
@@ -66,12 +75,32 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 	 * - Match: EXACT (inner join), CONTAIN (left join)
 	 * - CrudAction: SINGLE, PAGE, LIST, CREATE, UPDATE, DELETE, dll
 	 */
-	@Public
 	@GetMapping(value = "/info/constant")
 	Result infoConstant() {
 		return super.constant();
 	}
 	
+	/*
+	 * BULK LIST
+	 */
+	@PostMapping(value = "/bulk/list")
+	List<Result> bulkList(
+		HttpServletRequest httpRequest
+	) throws Exception {
+		byte[] data = WebMvcHelper.getBodyAsBytes(httpRequest);
+		return super.bulkList(data);
+	}
+	
+	/*
+	 * BULK MAP
+	 */
+	@PostMapping(value = "/bulk/map")
+	Map<String, Result> bulkMap(
+		HttpServletRequest httpRequest
+	) throws Exception {
+		byte[] data = WebMvcHelper.getBodyAsBytes(httpRequest);
+		return super.bulkMap(data);
+	}
 	
 	/*
 	 * BODY ACTION
@@ -84,7 +113,6 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 		byte[] data = WebMvcHelper.getBodyAsBytes(httpRequest);
 		return super.body(CrudAction.valueOf(action.toUpperCase()), data);
 	}
-	
 	
 	/*
 	 * PARAMETER
@@ -105,7 +133,6 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 		return super.parameter(CrudAction.valueOf(action.toUpperCase()), httpRequest);		
 	}
 	
-	
 	/*
 	 * OBJECT (CrudAction.SINGLE)
 	 */
@@ -121,7 +148,6 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 		.setId(id);
 		return super.object(input);
 	}
-	
 	
 	/*
 	 * COLLECTION (CrudAction.PAGE)
@@ -153,7 +179,6 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 		return super.collection(input);
 	}
 	
-	
 	/*
 	 * CREATE
 	 */
@@ -172,7 +197,6 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 		.setData(data);
 		return super.create(input);
 	}
-	
 	
 	/*
 	 * UPDATE
@@ -194,7 +218,6 @@ class CrudController extends net.ideahut.springboot.crud.WebMvcCrudController {
 		.setData(data);
 		return super.update(input);
 	}
-	
 	
 	/*
 	 * DELETE 

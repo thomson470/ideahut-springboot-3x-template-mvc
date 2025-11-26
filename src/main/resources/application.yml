@@ -318,6 +318,10 @@ config:
         enablePermission: false
         alwaysUseNative: false
         defaultMaxLimit: 100
+        infoEnabled: true
+        bulkEnabled: true
+        maxBulkSize: 0
+        maxBulkLayer: 0
     
     #
     # KAFKA

@@ -123,7 +123,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"name\": \"app.AutoGenStrIdHardDel\",\r\n    \"id\": \"2024-206054-1350-29624-25200-0051\"\r\n}",
+											"raw": "{\r\n    \"name\": \"app.AutoGenStrIdHardDel\",\r\n    \"id\": \"2025-411216-1624-05174-25200-0001\"\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -4560,6 +4560,177 @@
 												"crud",
 												"action",
 												"deletes"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Bulk",
+					"item": [
+						{
+							"name": "List",
+							"item": [
+								{
+									"name": "CompositeHardDel-LongIdJoinComposite",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "text/xml",
+												"disabled": true
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer ZTc5YThmMjkyNTFlNDcxMGQ1MWQ1MTk1NDY0ZjNhMzc2Y2JlOTIzNTo6QTExOjptb2JpbGUtYmFja2VuZA==::eyJhbGciOiJIUzI1NiJ9.eyJhdHRyaWJ1dGVzIjp7ImRldmljZUlkIjoiNmY5Yzg4NDJhNDk5Nzk5NmVlMzZiZjIyMTcwNWQ0OTRkN2JmMjQ1YzcyZjhiNzNkYTUxNTY2NGY3ZDYxYjY2YyIsImNoZWNrIjoidHJ1ZSIsImhvc3QiOiIwOjA6MDowOjA6MDowOjEiLCJhZ2VudCI6IlBvc3RtYW5SdW50aW1lLzcuNDAuMCJ9LCJhcGlLZXkiOiJlNzlhOGYyOTI1MWU0NzEwZDUxZDUxOTU0NjRmM2EzNzZjYmU5MjM1IiwiYXBpVXNlciI6eyJhdHRyaWJ1dGVzIjp7ImZ1bGxuYW1lIjoiQWRtaW4ifSwiaWQiOiJVU1IwMDAwLTAwMDAwLTAwMDAtMDAwMDAtMC0wMDAwIiwidXNlcm5hbWUiOiJhZG1pbiJ9LCJ2YWxpZFVudGlsIjoxNzI0MzkzMDc5MzYzLCJzZXJ2aWNlUm9sZSI6eyJpZGVhaHV0LXNwcmluZ2Jvb3QtM3gtdGVtcGxhdGUiOiJURVNUIiwiaWRlYWh1dC1zcHJpbmdib290LXRlbXBsYXRlIjoiVEVTVCIsIm1vYmlsZS1iYWNrZW5kIjoiQURNSU4ifX0.mqtEGoIzQIy7GAaH3ecIQOxAcrf0mhAIBJ2ai9haB8o",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "[\r\n    {\r\n        \"action\": \"save\",\r\n        \"name\": \"app.CompositeHardDel\",\r\n        \"value\": {\r\n            \"type\": 1,\r\n            \"code\": \"A\",\r\n            \"name\": \"COBA\",\r\n            \"isActive\": \"Y\",\r\n            \"description\": \"description\"\r\n        }\r\n    },\r\n    {\r\n        \"action\": \"create\",\r\n        \"after\": 0,\r\n        \"name\": \"app.LongIdJoinComposite\",\r\n        \"value\": {\r\n            \"name\": \"COBA\",\r\n            \"isActive\": \"Y\",\r\n            \"description\": \"description\",\r\n            \"composite\": {\r\n                \"type\": \"{[0].type}\",\r\n                \"code\": \"{[0].code}\"\r\n            }\r\n        }\r\n    },\r\n    {\r\n        \"action\": \"page\",\r\n        \"after\": 0,\r\n        \"name\": \"app.CompositeHardDel\",\r\n        \"page\": {\r\n            \"index\": 1,\r\n            \"size\": 10,\r\n            \"count\": false\r\n        },\r\n        \"filters\": [\r\n            {\r\n                \"field\": \"name\",\r\n                \"condition\": \"NOT_null\"\r\n            }       \r\n        ],\r\n        \"orders\":[\"-createdOn\"]\r\n    },\r\n    {\r\n        \"action\": \"page\",\r\n        \"after\": 1,\r\n        \"name\": \"app.LongIdJoinComposite\",\r\n        \"page\": {\r\n            \"index\": 1,\r\n            \"size\": 10,\r\n            \"count\": true\r\n        },\r\n        \"joins\": [\r\n            {\r\n                \"name\": \"app.CompositeHardDel\",\r\n                \"store\": \"composite\",\r\n                \"relations\": [\r\n                    {\r\n                        \"target\": \"type\",\r\n                        \"value\": \"{[0].type}\"\r\n                    },\r\n                    {\r\n                        \"target\": \"code\",\r\n                        \"value\": \"{[0].code}\"\r\n                    }\r\n                ]\r\n            }\r\n        ],\r\n        \"filters\": [\r\n            {\r\n                \"field\": \"name\",\r\n                \"condition\": \"NOT_NULL\"\r\n            }   \r\n        ],\r\n        \"orders\":[\"-createdOn\"]\r\n    }\r\n]",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/crud/bulk/list",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"crud",
+												"bulk",
+												"list"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "EmbeddedHardDel-LongIdJoinEmbedded",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "text/xml",
+												"disabled": true
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer ZTc5YThmMjkyNTFlNDcxMGQ1MWQ1MTk1NDY0ZjNhMzc2Y2JlOTIzNTo6QTExOjptb2JpbGUtYmFja2VuZA==::eyJhbGciOiJIUzI1NiJ9.eyJhdHRyaWJ1dGVzIjp7ImRldmljZUlkIjoiNmY5Yzg4NDJhNDk5Nzk5NmVlMzZiZjIyMTcwNWQ0OTRkN2JmMjQ1YzcyZjhiNzNkYTUxNTY2NGY3ZDYxYjY2YyIsImNoZWNrIjoidHJ1ZSIsImhvc3QiOiIwOjA6MDowOjA6MDowOjEiLCJhZ2VudCI6IlBvc3RtYW5SdW50aW1lLzcuNDAuMCJ9LCJhcGlLZXkiOiJlNzlhOGYyOTI1MWU0NzEwZDUxZDUxOTU0NjRmM2EzNzZjYmU5MjM1IiwiYXBpVXNlciI6eyJhdHRyaWJ1dGVzIjp7ImZ1bGxuYW1lIjoiQWRtaW4ifSwiaWQiOiJVU1IwMDAwLTAwMDAwLTAwMDAtMDAwMDAtMC0wMDAwIiwidXNlcm5hbWUiOiJhZG1pbiJ9LCJ2YWxpZFVudGlsIjoxNzI0MzkzMDc5MzYzLCJzZXJ2aWNlUm9sZSI6eyJpZGVhaHV0LXNwcmluZ2Jvb3QtM3gtdGVtcGxhdGUiOiJURVNUIiwiaWRlYWh1dC1zcHJpbmdib290LXRlbXBsYXRlIjoiVEVTVCIsIm1vYmlsZS1iYWNrZW5kIjoiQURNSU4ifX0.mqtEGoIzQIy7GAaH3ecIQOxAcrf0mhAIBJ2ai9haB8o",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "[\r\n    {\r\n        \"action\": \"save\",\r\n        \"name\": \"app.EmbeddedHardDel\",\r\n        \"id\": {\r\n            \"type\": 1,\r\n            \"code\": \"A\"\r\n        },\r\n        \"value\": {\r\n            \"name\": \"COBA\",\r\n            \"isActive\": \"Y\",\r\n            \"description\": \"description\"\r\n        }\r\n    },\r\n    {\r\n        \"action\": \"create\",\r\n        \"after\": 0,\r\n        \"name\": \"app.LongIdJoinEmbedded\",\r\n        \"value\": {\r\n            \"name\": \"COBA\",\r\n            \"isActive\": \"Y\",\r\n            \"description\": \"description\",\r\n            \"embedded\": {\r\n                \"id\": {\r\n                    \"type\": \"{[0].id.type}\",\r\n                    \"code\": \"{[0].id.code}\"\r\n                }\r\n            }\r\n        }\r\n    },\r\n    {\r\n        \"action\": \"page\",\r\n        \"after\": 0,\r\n        \"name\": \"app.EmbeddedHardDel\",\r\n        \"page\": {\r\n            \"index\": 1,\r\n            \"size\": 10,\r\n            \"count\": true\r\n        },\r\n        \"filters\": [\r\n            {\r\n                \"field\": \"name\",\r\n                \"condition\": \"NOT_null\"\r\n            }       \r\n        ],\r\n        \"orders\":[\"-createdOn\"]\r\n    },\r\n    {\r\n        \"action\": \"page\",\r\n        \"after\": 1,\r\n        \"name\": \"app.LongIdJoinEmbedded\",\r\n        \"page\": {\r\n            \"index\": 1,\r\n            \"size\": 100,\r\n            \"count\": true\r\n        },\r\n        \"loads\": [\"embedded\"],\r\n        \"filters\": [\r\n            {\r\n                \"field\": \"name\",\r\n                \"condition\": \"NOT_NULL\"\r\n            }  \r\n        ],\r\n        \"orders\":[\"-createdOn\"]\r\n    }\r\n]",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/crud/bulk/list",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"crud",
+												"bulk",
+												"list"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Map",
+							"item": [
+								{
+									"name": "CompositeHardDel-LongIdJoinComposite",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "text/xml",
+												"disabled": true
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer ZTc5YThmMjkyNTFlNDcxMGQ1MWQ1MTk1NDY0ZjNhMzc2Y2JlOTIzNTo6QTExOjptb2JpbGUtYmFja2VuZA==::eyJhbGciOiJIUzI1NiJ9.eyJhdHRyaWJ1dGVzIjp7ImRldmljZUlkIjoiNmY5Yzg4NDJhNDk5Nzk5NmVlMzZiZjIyMTcwNWQ0OTRkN2JmMjQ1YzcyZjhiNzNkYTUxNTY2NGY3ZDYxYjY2YyIsImNoZWNrIjoidHJ1ZSIsImhvc3QiOiIwOjA6MDowOjA6MDowOjEiLCJhZ2VudCI6IlBvc3RtYW5SdW50aW1lLzcuNDAuMCJ9LCJhcGlLZXkiOiJlNzlhOGYyOTI1MWU0NzEwZDUxZDUxOTU0NjRmM2EzNzZjYmU5MjM1IiwiYXBpVXNlciI6eyJhdHRyaWJ1dGVzIjp7ImZ1bGxuYW1lIjoiQWRtaW4ifSwiaWQiOiJVU1IwMDAwLTAwMDAwLTAwMDAtMDAwMDAtMC0wMDAwIiwidXNlcm5hbWUiOiJhZG1pbiJ9LCJ2YWxpZFVudGlsIjoxNzI0MzkzMDc5MzYzLCJzZXJ2aWNlUm9sZSI6eyJpZGVhaHV0LXNwcmluZ2Jvb3QtM3gtdGVtcGxhdGUiOiJURVNUIiwiaWRlYWh1dC1zcHJpbmdib290LXRlbXBsYXRlIjoiVEVTVCIsIm1vYmlsZS1iYWNrZW5kIjoiQURNSU4ifX0.mqtEGoIzQIy7GAaH3ecIQOxAcrf0mhAIBJ2ai9haB8o",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"CompositeHardDel-Save\":\r\n    {\r\n        \"action\": \"save\",\r\n        \"name\": \"app.CompositeHardDel\",\r\n        \"value\": {\r\n            \"type\": 1,\r\n            \"code\": \"A\",\r\n            \"name\": \"COBA\",\r\n            \"isActive\": \"Y\",\r\n            \"description\": \"description\"\r\n        }\r\n    },\r\n    \"LongIdJoinComposite-Create\":\r\n    {\r\n        \"action\": \"create\",\r\n        \"after\": \"CompositeHardDel-Save\",\r\n        \"name\": \"app.LongIdJoinComposite\",\r\n        \"value\": {\r\n            \"name\": \"COBA\",\r\n            \"isActive\": \"Y\",\r\n            \"description\": \"description\",\r\n            \"composite\": {\r\n                \"type\": \"{[CompositeHardDel-Save].type}\",\r\n                \"code\": \"{[CompositeHardDel-Save].code}\"\r\n            }\r\n        }\r\n    },\r\n    \"CompositeHardDel-Page\":\r\n    {\r\n        \"action\": \"page\",\r\n        \"after\": \"CompositeHardDel-Save\",\r\n        \"name\": \"app.CompositeHardDel\",\r\n        \"page\": {\r\n            \"index\": 1,\r\n            \"size\": 10,\r\n            \"count\": false\r\n        },\r\n        \"filters\": [\r\n            {\r\n                \"field\": \"name\",\r\n                \"condition\": \"NOT_null\"\r\n            }       \r\n        ],\r\n        \"orders\":[\"-createdOn\"]\r\n    },\r\n    \"LongIdJoinComposite-Page\":\r\n    {\r\n        \"action\": \"page\",\r\n        \"after\": \"LongIdJoinComposite-Create\",\r\n        \"name\": \"app.LongIdJoinComposite\",\r\n        \"page\": {\r\n            \"index\": 1,\r\n            \"size\": 100,\r\n            \"count\": true\r\n        },\r\n        \"joins\": [\r\n            {\r\n                \"name\": \"app.CompositeHardDel\",\r\n                \"store\": \"composite\",\r\n                \"alias\": \"CompositeHardDel\",\r\n                \"relations\": [\r\n                    {\r\n                        \"target\": \"type\",\r\n                        \"source\": \"composite.type\"\r\n                    },\r\n                    {\r\n                        \"target\": \"code\",\r\n                        \"source\": \"composite.code\"\r\n                    }\r\n                ]\r\n            }\r\n        ],\r\n        \"filters\": [\r\n            {\r\n                \"field\": \"CompositeHardDel.type\",\r\n                \"condition\": \"EQUAL\",\r\n                \"value\": \"{[CompositeHardDel-Save].type}\"\r\n            },\r\n            {\r\n                \"field\": \"CompositeHardDel.code\",\r\n                \"condition\": \"EQUAL\",\r\n                \"value\": \"{[CompositeHardDel-Save].code}\"\r\n            }   \r\n        ],\r\n        \"orders\":[\"-createdOn\"]\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/crud/bulk/map",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"crud",
+												"bulk",
+												"map"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "EmbeddedHardDel-LongIdJoinEmbedded",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "text/xml",
+												"disabled": true
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer ZTc5YThmMjkyNTFlNDcxMGQ1MWQ1MTk1NDY0ZjNhMzc2Y2JlOTIzNTo6QTExOjptb2JpbGUtYmFja2VuZA==::eyJhbGciOiJIUzI1NiJ9.eyJhdHRyaWJ1dGVzIjp7ImRldmljZUlkIjoiNmY5Yzg4NDJhNDk5Nzk5NmVlMzZiZjIyMTcwNWQ0OTRkN2JmMjQ1YzcyZjhiNzNkYTUxNTY2NGY3ZDYxYjY2YyIsImNoZWNrIjoidHJ1ZSIsImhvc3QiOiIwOjA6MDowOjA6MDowOjEiLCJhZ2VudCI6IlBvc3RtYW5SdW50aW1lLzcuNDAuMCJ9LCJhcGlLZXkiOiJlNzlhOGYyOTI1MWU0NzEwZDUxZDUxOTU0NjRmM2EzNzZjYmU5MjM1IiwiYXBpVXNlciI6eyJhdHRyaWJ1dGVzIjp7ImZ1bGxuYW1lIjoiQWRtaW4ifSwiaWQiOiJVU1IwMDAwLTAwMDAwLTAwMDAtMDAwMDAtMC0wMDAwIiwidXNlcm5hbWUiOiJhZG1pbiJ9LCJ2YWxpZFVudGlsIjoxNzI0MzkzMDc5MzYzLCJzZXJ2aWNlUm9sZSI6eyJpZGVhaHV0LXNwcmluZ2Jvb3QtM3gtdGVtcGxhdGUiOiJURVNUIiwiaWRlYWh1dC1zcHJpbmdib290LXRlbXBsYXRlIjoiVEVTVCIsIm1vYmlsZS1iYWNrZW5kIjoiQURNSU4ifX0.mqtEGoIzQIy7GAaH3ecIQOxAcrf0mhAIBJ2ai9haB8o",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"EmbeddedHardDel-Save\":\r\n    {\r\n        \"action\": \"save\",\r\n        \"name\": \"app.EmbeddedHardDel\",\r\n        \"id\": {\r\n            \"type\": 1,\r\n            \"code\": \"A\"\r\n        },\r\n        \"value\": {\r\n            \"name\": \"COBA\",\r\n            \"isActive\": \"Y\",\r\n            \"description\": \"description\"\r\n        }\r\n    },\r\n    \"LongIdJoinEmbedded-Create\": \r\n    {\r\n        \"action\": \"create\",\r\n        \"after\": \"EmbeddedHardDel-Save\",\r\n        \"name\": \"app.LongIdJoinEmbedded\",\r\n        \"value\": {\r\n            \"name\": \"COBA\",\r\n            \"isActive\": \"Y\",\r\n            \"description\": \"description\",\r\n            \"embedded\": {\r\n                \"id\": {\r\n                    \"type\": \"{[EmbeddedHardDel-Save].id.type}\",\r\n                    \"code\": \"{[EmbeddedHardDel-Save].id.code}\"\r\n                }\r\n            }\r\n        }\r\n    },\r\n    \"EmbeddedHardDel-Page\": \r\n    {\r\n        \"action\": \"page\",\r\n        \"after\": \"EmbeddedHardDel-Save\",\r\n        \"name\": \"app.EmbeddedHardDel\",\r\n        \"page\": {\r\n            \"index\": 1,\r\n            \"size\": 10,\r\n            \"count\": true\r\n        },\r\n        \"filters\": [\r\n            {\r\n                \"field\": \"name\",\r\n                \"condition\": \"NOT_null\"\r\n            }       \r\n        ],\r\n        \"orders\":[\"-createdOn\"]\r\n    },\r\n    \"LongIdJoinEmbedded-Page\":\r\n    {\r\n        \"action\": \"page\",\r\n        \"after\": \"LongIdJoinEmbedded-Create\",\r\n        \"name\": \"app.LongIdJoinEmbedded\",\r\n        \"page\": {\r\n            \"index\": 1,\r\n            \"size\": 100,\r\n            \"count\": true\r\n        },\r\n        \"loads\": [\"embedded\"],\r\n        \"filters\": [\r\n            {\r\n                \"field\": \"embedded.id.type\",\r\n                \"condition\": \"EQUAL\",\r\n                \"value\": \"{[EmbeddedHardDel-Save].id.type}\"\r\n            },\r\n            {\r\n                \"field\": \"embedded.id.code\",\r\n                \"condition\": \"EQUAL\",\r\n                \"value\": \"{[EmbeddedHardDel-Save].id.code}\"\r\n            } \r\n        ],\r\n        \"orders\":[\"-createdOn\"]\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/crud/bulk/map",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"crud",
+												"bulk",
+												"map"
 											]
 										}
 									},

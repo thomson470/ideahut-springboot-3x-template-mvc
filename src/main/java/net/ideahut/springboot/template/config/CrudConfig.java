@@ -54,6 +54,9 @@ class CrudConfig {
 		// EntityTrxManager
 		.setEntityTrxManager(entityTrxManager)
 		
+		// Informasi aksi disertakan di respon atau tidak
+		.setInfoEnabled(crud.getInfoEnabled())
+		
 		// CrudPermission
 		.setPermission(permission)
 		
@@ -61,7 +64,16 @@ class CrudConfig {
 		.setResource(resource)
 		
 		// Daftar filter specific yang akan disertakan saat query
-		.setSpecificValueGetters(CrudSupport.getSpecificValueGetters());
+		.setSpecificValueGetters(CrudSupport.getSpecificValueGetters())
+		
+		// Flag apakah bulk diaktifkan atau tidak
+		.setBulkEnabled(crud.getBulkEnabled())
+		
+		// Maksimum jumlah operasi / aksi CRUD yang dibolehkan, diisi 0 untuk tak terbatas
+		.setMaxBulkSize(crud.getMaxBulkSize())
+		
+		// Maksimum jumlah dependensi / layer CRUD yang dibolehkan, diisi 0 untuk tak terbatas
+		.setMaxBulkLayer(crud.getMaxBulkLayer());
 		
 	}
 	

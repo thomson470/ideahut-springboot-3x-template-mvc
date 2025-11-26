@@ -2,7 +2,6 @@ package net.ideahut.springboot.template.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +38,7 @@ import net.ideahut.springboot.message.dto.LanguageDto;
 import net.ideahut.springboot.object.Message;
 import net.ideahut.springboot.object.Option;
 import net.ideahut.springboot.object.StringMap;
+import net.ideahut.springboot.redis.RedisHelper;
 import net.ideahut.springboot.redis.RedisParam;
 import net.ideahut.springboot.template.app.AppConstants;
 import net.ideahut.springboot.template.properties.AppProperties;
@@ -115,16 +115,11 @@ class MessageServiceImpl implements MessageService, BeanReload, BeanConfigure<Me
 
 	@Override
 	public boolean onReloadBean() throws Exception {
-		if (configured) {
-			if (!messageHandler.onReloadBean()) {
-				return false;
-			}
-			clearResources();
-			loadResources();
-		} else {
-			clearResources();
-			loadResources();
+		if (configured && !messageHandler.onReloadBean()) {
+			return false;
 		}
+		clearResources();
+		loadResources();
 		return true;
 	}
 	
@@ -266,19 +261,8 @@ class MessageServiceImpl implements MessageService, BeanReload, BeanConfigure<Me
 	}
 	
 	private void clearResources() {
-		Set<String> allkeys = new HashSet<>();
-		ListOperations<String, byte[]> lisops = redisTemplate.opsForList();
-		String rkey = Keys.resources(redisPrefix);
-		Long size = lisops.size(rkey);
-		if (size != null && size > 0) {
-			List<byte[]> bkeys = lisops.leftPop(rkey, size);
-			if (bkeys != null) {
-				while(!bkeys.isEmpty()) {
-					allkeys.add(new String(bkeys.remove(0)));
-				}
-			}
-		}
-		redisTemplate.delete(allkeys);
+		String key = Keys.resources(redisPrefix);
+		RedisHelper.ListValueBytes.clear(redisTemplate, key);
 	}
 
 }
