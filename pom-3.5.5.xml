@@ -50,12 +50,12 @@
 		<dependency>
 			<groupId>net.ideahut</groupId>
 			<artifactId>ideahut-springboot-3x</artifactId>
-			<version>3.2.2</version>
+			<version>25.12.12</version>
 		</dependency>
 		<dependency>
 			<groupId>net.ideahut</groupId>
 			<artifactId>ideahut-springboot-3.5.5</artifactId>
-			<version>3.2.2</version>
+			<version>25.12.12</version>
 		</dependency>
 
 

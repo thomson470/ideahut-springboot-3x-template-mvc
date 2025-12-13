@@ -137,7 +137,7 @@ class CrudController extends WebMvcCrudController {
 	 * OBJECT (CrudAction.SINGLE)
 	 */
 	@GetMapping(value = "/rest/{name}/{id}")
-	protected Result object(
+	Result object(
 		@PathVariable("name") String name, 
 		@PathVariable("id") String id,
 		@RequestParam(value = "manager", required = false) String manager
@@ -223,7 +223,7 @@ class CrudController extends WebMvcCrudController {
 	 * DELETE 
 	 */
 	@DeleteMapping(value = "/rest/{name}/{id}")
-	protected Result delete(
+	Result delete(
 		@PathVariable("name") String name,
 		@PathVariable("id") String id,
 		@RequestParam(value = "manager", required = false) String manager

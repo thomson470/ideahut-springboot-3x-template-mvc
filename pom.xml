@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.2.3</version>
+		<version>3.2.2</version>
 		<relativePath/>
 	</parent>
 	
@@ -49,12 +49,12 @@
 		<dependency>
 			<groupId>net.ideahut</groupId>
 			<artifactId>ideahut-springboot-3x</artifactId>
-			<version>3.2.2</version>
+			<version>25.12.12</version>
 		</dependency>
 		<dependency>
 			<groupId>net.ideahut</groupId>
-			<artifactId>ideahut-springboot-3.2.3</artifactId>
-			<version>3.2.2</version>
+			<artifactId>ideahut-springboot-3.2.2</artifactId>
+			<version>25.12.12</version>
 		</dependency>
 
 
